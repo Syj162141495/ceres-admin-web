@@ -1,18 +1,28 @@
 <template>
   <div>
     <el-card class="box-card">
-      <span class="addTitle">商品详情</span>
+      <span class="addTitle">服务详情</span>
       <el-button type="success" class="btnList" @click="back">关闭</el-button>
     </el-card>
     <el-card class="box-card">
-      <label>商品详情</label>
+      <label>服务详情</label>
       <div class="GoodBox">
         <el-row class="detail-box">
           <el-col :span="12">
-            <div>商品名称：{{ productItem.productName }}</div>
-            <div>商品卖点：{{ productItem.productBrief }}</div>
+            <div>服务名称：{{ productItem.productName }}</div>
+            <div >
+              商品标签：
+              <el-tag
+                v-for="(item, index) in productItem.labels"
+                :key="index"
+                :color="item.color"
+                style="margin-left: 2px; margin-right: 2px;"
+              >
+                <span style="color: azure;">{{ item.label }}</span>
+              </el-tag>
+            </div>
             <div>
-              商品图片：
+              服务图片：
               <div>
                 <img
                   class="proImage"
@@ -24,14 +34,14 @@
                 />
               </div>
             </div>
-            <div>商品款式：</div>
+            <div>服务款式：</div>
           </el-col>
           <el-col :span="12">
-            <div>官方分类：{{ productItem.classifyName }}</div>
-            <div>商家分组：{{ productItem.shopGroupName }}</div>
+            <div>服务分类：{{ productItem.classifyName }}</div>
+            <!-- <div>商家分组：{{ productItem.shopGroupName }}</div> -->
             <div>商家名称：{{ productItem.shopName }}</div>
             <div>
-              商品状态：
+              服务状态：
               <span v-if="productItem.shelveState == 0">已下架 </span>
               <span v-if="productItem.shelveState == 1">已上架</span>
               <span v-if="productItem.shelveState == 2">待审核</span>
@@ -111,7 +121,7 @@
     </el-card>
 
     <el-card class="box-card">
-      <label>商品简介</label>
+      <label>服务简介</label>
       <!-- <Tinymce
         ref="content"
         v-model="productItem.productText"
@@ -152,6 +162,18 @@ export default {
       dialogVisible: false,
       dialogImageUrl: "",
       productItem: {},
+      colorList: [
+        "#F6C600",
+        "#EF7F00",
+        "#F29596",
+        "#EC453C",
+        "#8A43E1",
+        "#87CB4C",
+        "#43A79E",
+        "#73B8EE",
+        "#3C80E8",
+        "#21317B"
+      ]
     };
   },
   filters: {
@@ -229,6 +251,18 @@ export default {
       });
       console.log(this.productItem.skuAttrList, "skuAttrList");
       this.productItem.skuList = this.productItem.skus;
+      this.productItem.labels = this.productItem.productBrief === '' ? [] : this.productItem.productBrief.split(',').map(item => ({
+        label: item,
+        color: ''
+      }));
+      // 标签上色
+      let index = Math.floor(Math.random() * this.colorList.length);
+      for (const item of this.productItem.labels) {
+        if (index === this.colorList.length) {
+          index = 0;
+        }
+        item.color = this.colorList[index++];
+      }
     },
   },
 };

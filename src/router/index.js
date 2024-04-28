@@ -84,7 +84,7 @@ export const constantRoutes = [{
   component: Layout,
   name: 'renovation',
   meta: {
-    title: '平台装修',
+    title: '运营管理',
     icon: 'el-icon-s-help'
   },
   children: [{
@@ -110,7 +110,7 @@ export const constantRoutes = [{
     name: 'commdityClass',
     component: () => import('@/views/renovation/commdityClass/index'),
     meta: {
-      title: '商品类别',
+      title: '服务分类',
       icon: 'tree'
     }
   },
@@ -119,7 +119,7 @@ export const constantRoutes = [{
     name: 'commoditySystem',
     component: () => import('@/views/renovation/commoditySystem/index'),
     meta: {
-      title: '商品管理',
+      title: '服务管理',
       icon: 'tree'
     }
   },

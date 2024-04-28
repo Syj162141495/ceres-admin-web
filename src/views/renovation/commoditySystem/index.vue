@@ -5,7 +5,7 @@
       <!-- 搜索 -->
       <div class="formSearch">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="商品状态">
+          <el-form-item label="服务状态">
             <el-radio-group
               @change="changeState"
               v-model="formInline.shelveState"
@@ -18,16 +18,16 @@
             </el-radio-group>
           </el-form-item>
           <br />
-          <el-form-item label="商品ID">
+          <el-form-item label="服务ID">
             <el-input
               v-model="formInline.productId"
-              placeholder="请输入商品ID"
+              placeholder="请输入服务ID"
             />
           </el-form-item>
-          <el-form-item label="商品名称">
+          <el-form-item label="服务名称">
             <el-input
               v-model="formInline.productName"
-              placeholder="请输入商品名称"
+              placeholder="请输入服务名称"
             />
           </el-form-item>
           <el-form-item label="商户名称">
@@ -64,16 +64,16 @@
         >
           <el-table-column
             prop="productId"
-            label="商品id"
+            label="服务id"
             show-overflow-tooltip
             width="80"
           />
-          <el-table-column label="商品主图" width="150" align="center">
+          <el-table-column label="服务主图" width="150" align="center">
             <template slot-scope="scope">
               <img height="80" width="80" :src="scope.row.image" alt srcset />
             </template>
           </el-table-column>
-          <el-table-column prop="productName" label="商品名称" width="180" />
+          <el-table-column prop="productName" label="服务名称" width="180" />
           <el-table-column prop="shopName" label="商家名称" width="180" />
           <el-table-column
             prop="sectionPrice"
@@ -223,9 +223,9 @@ export default {
       btnList: "",
       activeName: "first",
       formInline: {
-        shelveState: "", // 商品状态 0-已下架 1-已上架 2-待审核 3-审核失败
-        productName: "", // 商品名称
-        productId: "", //商品ID
+        shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
+        productName: "", // 服务名称
+        productId: "", //服务ID
         shopName: "", //商户名称
         page: 1, // 当前页
         pageSize: 5,
@@ -282,7 +282,7 @@ export default {
     },
     // 强制下架
     OutForced(row) {
-      this.$alert("确定下架此商品吗？", "提示", {
+      this.$alert("确定下架此服务吗？", "提示", {
         confirmButtonText: "确定",
         callback: (action) => {
           console.log(action);
@@ -334,7 +334,7 @@ export default {
       this.formInline.page = 1;
       this.getAll(this.formInline);
     },
-    //商品状态查询
+    //服务状态查询
     changeState(e) {
       console.log(e);
       this.formInline.shelveState = e;
@@ -343,9 +343,9 @@ export default {
     // 重置
     clear() {
       this.formInline = {
-        shelveState: "", // 商品状态 0-已下架 1-已上架 2-待审核 3-审核失败
-        productName: "", // 商品名称
-        productId: "", //商品ID
+        shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
+        productName: "", // 服务名称
+        productId: "", //服务ID
         shopName: "", //商户名称
         page: 1, // 当前页
         pageSize: 5,
