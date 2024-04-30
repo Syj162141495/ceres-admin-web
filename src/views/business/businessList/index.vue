@@ -5,12 +5,12 @@
       <!-- 搜索 -->
       <div class="formSearch">
         <el-form :inline="true" :model="formInline">
-          <el-form-item label="店铺名称">
-            <el-input v-model="formInline.shopName" placeholder="请输入店铺名称" />
+          <el-form-item label="服务商名称">
+            <el-input v-model="formInline.shopName" placeholder="请输入服务商名称" />
           </el-form-item>
-          <el-form-item label="店铺编码">
-            <el-input v-model="formInline.shopCode" placeholder="请输入店铺编码" />
-          </el-form-item>
+          <!--<el-form-item label="服务商编码">
+            <el-input v-model="formInline.shopCode" placeholder="请输入服务商编码" />
+          </el-form-item>-->
           <el-form-item label="负责人">
             <el-input v-model="formInline.chargePersonName" placeholder="请输入负责人" />
           </el-form-item>
@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="onSubmit">查询</el-button>
-            <el-button type="success" plain @click="addbuss">新建商家</el-button>
+            <el-button type="success" plain @click="addbuss">新建服务商</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -36,10 +36,14 @@
           tooltip-effect="dark"
           style="width: 100%"
         >
-          <el-table-column label="店铺名称" width="220">
+          <el-table-column label="服务商名称" width="220">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
-          <el-table-column prop="shopCode" label="店铺编码" />
+          <!--<el-table-column prop="shopCode" label="服务商编码" />-->
+          <el-table-column prop="shopAdress" label="区域" />
+          <el-table-column prop="classify" label="大类" />
+          <el-table-column prop="coordinate" label="坐标" />
+          <el-table-column prop="service" label="提供服务" />
           <el-table-column prop="chargePersonName" label="负责人" />
           <el-table-column prop="chargePersonPhone" label="联系电话" />
           <el-table-column label="合同状态">
@@ -73,14 +77,14 @@
         </div>
       </div>
       <!-- ******************************************************弹框开始****************************************************** -->
-      <!-- 新建商家弹框 -->
+      <!-- 新建服务商弹框 -->
       <el-dialog
         :title="
           userState === 0
-            ? '新增商家'
+            ? '新增服务商'
             : userState === 1
-              ? '修改商家'
-              : '查看商家'
+              ? '修改服务商'
+              : '查看服务商'
         "
         :visible.sync="dialogVisible"
         width="30%"
@@ -91,18 +95,72 @@
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="授权信息" name="first">
               <el-form ref="ruleFormInfo" :model="ruleForm" :rules="rulesInfo" label-width="100px">
-                <el-form-item label="店铺名称" prop="shopName">
+                <el-form-item label="服务商名称" prop="shopName">
                   <el-input v-model="ruleForm.shopName" :disabled="disabled" />
                 </el-form-item>
-                <el-form-item label="店铺负责人" prop="chargePersonName">
+                <el-form-item label="服务商负责人" prop="chargePersonName">
                   <el-input v-model="ruleForm.chargePersonName" :disabled="disabled" />
                 </el-form-item>
                 <el-form-item label="负责人电话" prop="chargePersonPhone">
                   <el-input v-model="ruleForm.chargePersonPhone" :disabled="disabled" />
                 </el-form-item>
-                <el-form-item label="店铺地址" prop="shopAdress">
+                <el-form-item label="服务商地址" prop="shopAdress">
                   <el-input v-model="ruleForm.shopAdress" :disabled="disabled" />
                 </el-form-item>
+
+
+                <!-- <el-form-item label="大类" prop="classify">
+                  <el-input v-model="ruleForm.classify" :disabled="disabled" />
+                </el-form-item> -->
+                <el-form-item label="大类">
+                  <el-select v-model="ruleForm.classify" placeholder="请选择">
+                    <el-option label="医疗" value="medical"></el-option>
+                    <el-option label="康复" value="recovered"></el-option>
+                    <el-option label="养老" value="retirement"></el-option>
+                    <el-option label="其他" value="other"></el-option>
+                  </el-select>
+                </el-form-item>
+
+
+                <el-form-item label="坐标" prop="coordinate">
+                  <el-input v-model="ruleForm.coordinate" :disabled="disabled" />
+                </el-form-item>
+
+
+
+                <!-- <el-form-item label="提供服务" prop="service">
+                  <el-input v-model="ruleForm.service" :disabled="disabled" />
+                </el-form-item> -->
+                <el-form-item label="提供服务">
+                  <el-cascader
+                    v-model="ruleForm.service"
+                    :options="serviceList"
+                    clearable
+                    :props="{
+                      checkStrictly: true,
+                      label:'categoryName',
+                      value:'id',
+                      children:'childs'
+                    }"
+                  />
+                </el-form-item>
+                <!-- <el-form-item label="提供服务">
+                  <el-select
+                    v-model="ruleForm.service"
+                    multiple
+                    clearable
+                  >
+                    <el-option
+                      v-for="option in serviceList"
+                      :key="option.id"
+                      :label="option.categoryName"
+                      :value="option.id"
+                    ></el-option>
+                  </el-select>
+                </el-form-item> -->
+
+
+
                 <el-form-item label="生效日期" prop="effectiveDate">
                   <el-date-picker
                     v-model="ruleForm.effectiveDate"
@@ -163,30 +221,34 @@ import {
   businessListSave,
   businessListGetById,
   businessListUpdate,
-  businessListStart
+  businessListStart,
+  getClassify
 } from '@/api/business'
 export default {
   components: {},
   data() {
     // 这里存放数据
     return {
-      // 新建商家弹框
+      // 新建服务商弹框
       dialogVisible: false,
       activeName: 'first',
       formInline: {
-        shopName: '', // 店铺名称
-        shopCode: '', // 店铺编码
-        chargePersonName: '', // 店铺负责人
+        shopName: '', // 服务商名称
+        shopCode: '', // 服务商编码
+        chargePersonName: '', // 服务商负责人
         contractState: '', // 合同状态 1-有效 0-无效
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
       },
       disabled: false,
       ruleForm: {
-        shopName: '', // 店铺名称
-        chargePersonName: '', // 店铺负责人
+        shopName: '', // 服务商名称
+        chargePersonName: '', // 服务商负责人
         chargePersonPhone: '', // 负责人电话
         shopAdress: '', // 地址
+        classify: '', //大类
+        coordinate: '', //坐标
+        service: '', //提供服务
         effectiveDate: '', // 生效日期
         effectiveYear: '', // 生效年限
         contractState: 1, // 合同状态 1-有效 0-无效
@@ -198,16 +260,25 @@ export default {
           { required: true, message: '请输入生效时限', trigger: 'blur' }
         ],
         shopName: [
-          { required: true, message: '请输入店铺名称', trigger: 'blur' }
+          { required: true, message: '请输入服务商名称', trigger: 'blur' }
         ],
         chargePersonName: [
-          { required: true, message: '请输入店铺负责人', trigger: 'blur' }
+          { required: true, message: '请输入服务商负责人', trigger: 'blur' }
         ],
         chargePersonPhone: [
           { required: true, message: '请输入负责人电话', trigger: 'blur' }
         ],
         shopAdress: [
           { required: true, message: '请输入地址', trigger: 'blur' }
+        ],
+        classify: [
+          { required: true, message: '请输入大类', trigger: 'blur' }
+        ],
+        coordinate: [
+          { required: true, message: '请输入坐标', trigger: 'blur' }
+        ],
+        service: [
+          { required: true, message: '请输入提供服务', trigger: 'blur' }
         ],
         contractState: [
           {
@@ -242,6 +313,7 @@ export default {
         ]
       },
       total: 1,
+      serviceList: [],
       tableData: [],
       currentPage: 1,
       userState: 1
@@ -273,15 +345,18 @@ export default {
     onSubmit() {
       this.getAll(this.formInline)
     },
-    // 新建商家
+    // 新建服务商
     addbuss() {
       this.userState = 0
       this.disabled = false
       this.ruleForm = {
-        shopName: '', // 店铺名称
-        chargePersonName: '', // 店铺负责人
+        shopName: '', // 服务商名称
+        chargePersonName: '', // 服务商负责人
         chargePersonPhone: '', // 负责人电话
         shopAdress: '', // 地址
+        classify: '', //大类
+        coordinate: '', //坐标
+        service: '', //提供服务
         effectiveDate: '', // 生效日期
         effectiveYear: '', // 生效年限
         contractState: 1, // 合同状态 1-有效 0-无效
@@ -289,6 +364,11 @@ export default {
         shopPassword: '' // 密码
       }
       this.dialogVisible = true
+      this.ruleForm.service =
+        this.ruleForm.service[2] ||
+        this.ruleForm.service[1] ||
+        this.ruleForm.service[0] ||
+        this.ruleForm.service
       console.log(this.userState)
     },
     next() {
@@ -301,14 +381,14 @@ export default {
         this.dialogVisible = false
       })
     },
-    // 新建商家确定
+    // 新建服务商确定
     addCheck(ruleForm) {
       this.$refs[ruleForm].validate(valid => {
         if (valid) {
           console.log(this.userState)
           console.log(this.ruleForm)
           if (this.ruleForm.shopName === '') {
-            this.$message.error('请输入店铺名称')
+            this.$message.error('请输入服务商名称')
             return
           }
           if (this.ruleForm.effectiveDate === '') {
@@ -409,6 +489,11 @@ export default {
       const res = await businessListGetAll(formInline)
       this.total = res.data.total
       this.tableData = res.data.list
+    },
+
+    async selectList() {
+      const res = await getClassify()
+      this.serviceList = res.data
     }
   }
 }

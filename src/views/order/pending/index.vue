@@ -75,29 +75,11 @@
           <el-table-column label="订单id" show-overflow-tooltip>
             <template slot-scope="scope">{{ scope.row.orderId }}</template>
           </el-table-column>
-          <el-table-column
-            prop="number"
-            label="服务数量"
-            show-overflow-tooltip
-          />
+          <el-table-column prop="number" label="服务数量" width="220" />
           <el-table-column prop="shopName" label="服务商名称" width="220" />
-          <!-- 原下单账户 -->
-          <el-table-column
-            prop="customerName"
-            label="客户姓名"
-            show-overflow-tooltip
-          />
-          <!-- 原收件人 -->
-          <el-table-column
-            prop="receiveName"
-            label="联系方式"
-            show-overflow-tooltip
-          />
-          <el-table-column
-            prop="receivePhone"
-            label="手机号"
-            show-overflow-tooltip
-          />
+          <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip />
+          <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip />
+          <el-table-column prop="receivePhone" label="手机号" show-overflow-tooltip />
           <el-table-column prop="price" label="支付金额（元）" width="220" />
           <el-table-column
             prop="createTime"

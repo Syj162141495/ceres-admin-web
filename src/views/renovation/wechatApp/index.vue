@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="">商品类别</div>
+  <div class="">服务分类</div>
 </template>
 
 <script>

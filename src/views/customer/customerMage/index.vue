@@ -63,10 +63,21 @@
             :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
             style="width: 100%"
           >
-            <el-table-column prop="name" label="客户昵称" />
+            <!-- <el-table-column prop="name" label="客户昵称" />
             <el-table-column prop="phone" label="手机号" />
             <el-table-column prop="total" label="消费总额" />
             <el-table-column prop="buyers" label="购买次数" />
+            <el-table-column prop="time" label="最近消费时间" />
+            <el-table-column prop="createTime" label="注册时间" /> -->
+            <el-table-column prop="name" label="客户昵称" />
+            <el-table-column prop="sex" label="性别" />
+            <el-table-column prop="phone" label="手机号" /> <!--中间四位-->
+            <el-table-column prop="age" label="年龄" />
+            <el-table-column prop="cid" label="身份证" /> <!--中间6位-->
+            <el-table-column prop="address" label="地址" />
+            <!--<el-table-column prop="memberLevelName" label="客户等级" />-->
+            <el-table-column prop="total" label="消费总额" />
+            <el-table-column prop="buyers" label="服务次数" />
             <el-table-column prop="time" label="最近消费时间" />
             <el-table-column prop="createTime" label="注册时间" />
             <el-table-column label="操作">
@@ -149,6 +160,10 @@ export default {
       showMore: false,
       formParams: {
         name: '', // 用户昵称
+        // sex: '', //性别
+        // age: '', //年龄
+        // cid: '', //身份证
+        // address: '', //地址
         phone: '', // 手机号
         labelId: '', // 标签id
         dates: [], // 最近消费时间日期数组
@@ -301,10 +316,26 @@ export default {
         params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
       })
     },
+    hidePhone(phone) {
+      if (phone && phone.length === 11) {
+        return phone.substring(0, 3) + '****' + phone.substring(7);
+      }
+      return phone;
+    },
+    hideIdCard(cid) {
+      if (cid && cid.length === 18) {
+        return cid.substring(0, 6) + '******' + cid.substring(12);
+      }
+      return cid;
+    },
     // 初始化查询所有数据
     async getAll(formParams) {
       const res = await customerMageGetAll(formParams)
-      this.tableData = res.data.list
+      this.tableData = res.data.list.map(item => ({
+        ...item,
+        cid: this.hideIdCard(item.cid),
+        phone: this.hidePhone(item.phone)
+      }));
       this.total = res.data.total
     },
     // 初始化查询所有标签

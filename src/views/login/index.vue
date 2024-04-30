@@ -2,7 +2,7 @@
   <div class="login">
     <!-- 登录 -->
     <div v-if="getPassword" class="loginBox">
-      <div v-if="getPassword" class="topText">平台登录</div>
+      <div v-if="getPassword" class="topText">协作网运营平台</div>
       <div class="rightBox">
         <div class="tabTouch">
           <div
@@ -62,6 +62,7 @@
           </el-form>
         </div>
         <!-- 手机号登录 -->
+        <!--
         <div v-else>
           <el-form
             ref="loginForm"
@@ -106,7 +107,7 @@
             <div class="boxBottom">
               <el-checkbox v-model="loginForm.rememberMe" style="margin: 0 0 25px 0">自动登录</el-checkbox>
             </div>
-
+            
             <el-form-item style="width: 100%">
               <el-button
                 :loading="loading"
@@ -120,7 +121,7 @@
               </el-button>
             </el-form-item>
           </el-form>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -217,7 +218,7 @@
       </el-card>
     </div>
     <!--  底部  -->
-    <div class="login-footer">© 2019 cereshop</div>
+    <div class="login-footer">© 协作网</div>
   </div>
 </template>
 
@@ -254,14 +255,14 @@ export default {
       },
       tabIndex: 0,
       activeList: [
-        {
-          name: '账户密码登录',
-          id: 0
-        },
-        {
-          name: '手机号码登录',
-          id: 1
-        }
+        // {
+        //   name: '账户密码登录',
+        //   id: 0
+        // }
+        // {
+        //   name: '手机号码登录',
+        //   id: 1
+        // }
       ],
       loginRules: {
         username: [
@@ -440,7 +441,7 @@ export default {
   text-align: center;
   position: absolute;
   top: -70px;
-  left: 105px;
+  left: 40px;
 }
 .login {
   height: 100%;
@@ -453,11 +454,11 @@ export default {
 }
 .loginBox {
   width: 360px !important;
-  height: 400px;
+  height: 300px;
   background: #ffffff;
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 78%;
   transform: translate(-50%, -50%);
 }
 .topback {
@@ -473,9 +474,10 @@ export default {
 }
 .loginBoxs {
   width: 1000px;
-  height: 660px;
+  height: 600px;
 }
 .rightBox {
+  // top: 10%;
   margin: auto;
   h2 {
     text-align: center;
@@ -485,6 +487,7 @@ export default {
   }
 }
 .tabTouch {
+  top: 30px;
   display: flex;
   justify-content: space-around;
   align-content: center;

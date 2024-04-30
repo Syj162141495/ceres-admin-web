@@ -80,7 +80,7 @@
             </p>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="参与店铺" name="second">
+        <el-tab-pane label="参与服务商" name="second">
           <!-- 搜索 -->
           <div class="formSearch">
             <el-form
@@ -88,16 +88,16 @@
               :model="shopQuery"
               class="demo-form-inline"
             >
-              <el-form-item label="店铺名称">
+              <el-form-item label="服务商名称">
                 <el-input
                   v-model="shopQuery.shopName"
-                  placeholder="请输入店铺名称"
+                  placeholder="请输入服务商名称"
                 />
               </el-form-item>
-              <el-form-item label="店铺编码">
+              <el-form-item label="服务商编码">
                 <el-input
                   v-model="shopQuery.shopCode"
-                  placeholder="请输入店铺编码"
+                  placeholder="请输入服务商编码"
                 />
               </el-form-item>
               <el-form-item label="审核状态">
@@ -128,10 +128,10 @@
               tooltip-effect="dark"
               style="width: 100%"
             >
-              <el-table-column label="店铺名称" width="220">
+              <el-table-column label="服务商名称" width="220">
                 <template slot-scope="scope">{{ scope.row.shopName }}</template>
               </el-table-column>
-              <el-table-column prop="shopCode" label="店铺编码" />
+              <el-table-column prop="shopCode" label="服务商编码" />
               <el-table-column prop="products" label="参与商品数" />
               <el-table-column prop="examines" label="审核次数" />
               <el-table-column label="审核状态">
@@ -195,8 +195,8 @@
                   style="width: 100%"
                 >
                   >
-                  <el-table-column prop="shopName" label="店铺名称" />
-                  <el-table-column prop="shopCode" label="店铺编码" />
+                  <el-table-column prop="shopName" label="服务商名称" />
+                  <el-table-column prop="shopCode" label="服务商编码" />
                   <el-table-column prop="products" label="参与商品数(件)" />
                   <el-table-column prop="persons" label="访客数" />
                   <el-table-column prop="orders" label="提交订单数" />
@@ -383,8 +383,8 @@ export default {
         'page': 1,
         'pageSize': 10,
         'seckillId': 0, // 平台秒杀活动id
-        'shopCode': '', // 店铺编码
-        'shopName': '', // 店铺名称
+        'shopCode': '', // 服务商编码
+        'shopName': '', // 服务商名称
         'state': '', // 审核状态 0-待审核 1-报名成功 2-报名失败 3-报名进行中(未支付)
         'signType': 2 // 1-平台优惠券 2-平台秒杀 3-平台限时折扣
       },
@@ -521,7 +521,7 @@ export default {
       const res = await getSeckillDetail({ seckillId: this.seckillId })
       this.form = res.data
     },
-    // 查询参数店铺
+    // 查询参数服务商
     async getShopsData() {
       const res = await getSeckillShop(this.shopQuery)
       this.tableData = res.data.list

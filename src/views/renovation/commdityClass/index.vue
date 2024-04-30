@@ -11,7 +11,7 @@
       :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
       :tree-props="{ children: 'childs' }"
     >
-      <el-table-column prop="classifyName" label="商品类别" />
+      <el-table-column prop="classifyName" label="服务分类" />
       <el-table-column prop="status" label="操作">
         <template slot-scope="scope">
           <el-button type="text" @click.native.prevent="checkRow(scope.row)">查看</el-button>

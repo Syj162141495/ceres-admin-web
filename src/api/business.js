@@ -19,6 +19,15 @@ export function businessListSave(data) {
   })
 }
 
+// 商品分类
+export function getClassify(data) {
+  return request({
+    url: '/canvas/getClassify',
+    method: 'post',
+    data
+  })
+}
+
 // 商家编辑查询
 export function businessListGetById(data) {
   return request({

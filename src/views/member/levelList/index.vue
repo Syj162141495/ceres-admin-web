@@ -5,7 +5,7 @@
     <div class="formSearch">
       <el-form :inline="true" :model="formInline">
         <el-form-item>
-          <el-button type="primary" @click="add">新增会员等级</el-button>
+          <el-button type="primary" @click="add">新增客户等级</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -19,7 +19,7 @@
         tooltip-effect="dark"
         style="width: 100%"
       >
-        <el-table-column prop="memberLevelName" label="会员等级" />
+        <el-table-column prop="memberLevelName" label="" />
         <el-table-column prop="growth" label="成长值" />
         <el-table-column label="等级图标" width="140" align="center">
           <template slot-scope="scope">

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'cereShop平台端',
+  title: '协作网运营平台',
 
   /**
    * @type {boolean} true | false

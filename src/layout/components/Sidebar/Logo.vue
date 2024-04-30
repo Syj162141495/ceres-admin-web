@@ -7,11 +7,13 @@
         class="sidebar-logo-link"
         to="/"
       >
-        <img src="../../../assets/images/logo.png" class="sidebar-logo">
+        <!--<img src="../../../assets/images/logo.png" class="sidebar-logo">-->
+        <img src="../../../assets/images/ykylogo.png" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img src="../../../assets/images/logo.png" class="sidebar-logo">
+        <!--<img src="../../../assets/images/logo.png" class="sidebar-logo">-->
+        <img src="../../../assets/images/ykylogo.png" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
     </transition>
@@ -29,7 +31,7 @@ export default {
   },
   data() {
     return {
-      title: 'cereShop平台端'
+      title: '协作网运营平台'
     }
   }
 }

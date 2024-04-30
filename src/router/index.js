@@ -45,7 +45,7 @@ export const constantRoutes = [{
   component: Layout,
   redirect: '/businessList',
   meta: {
-    title: '商家管理',
+    title: '服务商管理',
     icon: 'el-icon-s-help'
   },
   children: [{
@@ -53,7 +53,7 @@ export const constantRoutes = [{
     name: 'businessList',
     component: () => import('@/views/business/businessList/index'),
     meta: {
-      title: '商家列表',
+      title: '服务商列表',
       icon: 'table'
     }
   },
@@ -618,14 +618,14 @@ export const constantRoutes = [{
   }
   ]
 },
-// 会员中心
+// 客户中心
 {
   path: '/member',
   component: Layout,
   redirect: '/member/memberList',
   name: 'member',
   meta: {
-    title: '会员管理',
+    title: '客户管理',
     icon: 'el-icon-s-help'
   },
   children: [{
@@ -633,7 +633,7 @@ export const constantRoutes = [{
     name: 'memberList',
     component: () => import('@/views/member/memberList/index'),
     meta: {
-      title: '会员管理',
+      title: '客户管理',
       icon: 'table'
     }
   },
@@ -642,7 +642,7 @@ export const constantRoutes = [{
     name: 'equity',
     component: () => import('@/views/member/equity/index'),
     meta: {
-      title: '会员权益',
+      title: '客户权益',
       icon: 'table'
     }
   },
@@ -652,7 +652,7 @@ export const constantRoutes = [{
     name: 'customerDetails',
     component: () => import('@/views/member/customerMage/customerDetails'),
     meta: {
-      title: '会员详情',
+      title: '客户详情',
       icon: 'table'
     }
   },
@@ -670,7 +670,7 @@ export const constantRoutes = [{
     name: 'levelList',
     component: () => import('@/views/member/levelList/index'),
     meta: {
-      title: '会员等级',
+      title: '客户等级',
       icon: 'tree'
     }
   },

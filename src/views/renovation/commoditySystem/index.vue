@@ -30,10 +30,10 @@
               placeholder="请输入服务名称"
             />
           </el-form-item>
-          <el-form-item label="商户名称">
+          <el-form-item label="服务商名称">
             <el-input
               v-model="formInline.shopName"
-              placeholder="请输入商户名称"
+              placeholder="请输入服务商名称"
             />
           </el-form-item>
           <el-form-item>
@@ -74,7 +74,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="productName" label="服务名称" width="180" />
-          <el-table-column prop="shopName" label="商家名称" width="180" />
+          <el-table-column prop="shopName" label="服务商名称" width="180" />
           <el-table-column
             prop="sectionPrice"
             label="售价区间"
@@ -226,7 +226,7 @@ export default {
         shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
         productName: "", // 服务名称
         productId: "", //服务ID
-        shopName: "", //商户名称
+        shopName: "", //服务商名称
         page: 1, // 当前页
         pageSize: 5,
       },
@@ -346,7 +346,7 @@ export default {
         shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
         productName: "", // 服务名称
         productId: "", //服务ID
-        shopName: "", //商户名称
+        shopName: "", //服务商名称
         page: 1, // 当前页
         pageSize: 5,
       };

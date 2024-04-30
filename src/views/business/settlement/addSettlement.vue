@@ -30,18 +30,18 @@
         <div class="msgDetail">
           <div class="detail">
             <div class="shop_info">
-              <p class="detail_title">店铺信息</p>
+              <p class="detail_title">服务商信息</p>
               <p class="detail_text">
                 <span>
                   <font>*</font>
-                  店铺名称：
+                  服务商名称：
                 </span>
                 <span>{{ shopDetails.shopName }}</span>
               </p>
               <p class="detail_text">
                 <span>
                   <font>*</font>
-                  店铺类型：
+                  服务商类型：
                 </span>
                 <span v-if="shopDetails.authenType == 1">个人</span>
                 <span v-if="shopDetails.authenType == 2">个体工商户</span>
@@ -58,7 +58,7 @@
               <p class="detail_text">
                 <span>
                   <font>*</font>
-                  店铺负责人：
+                  服务商负责人：
                 </span>
                 <span>{{ shopDetails.chargePersonName }}</span>
               </p>
@@ -72,7 +72,7 @@
               <p class="detail_text">
                 <span>
                   <font>*</font>
-                  店铺地址：
+                  服务商地址：
                 </span>
                 <span>{{ shopDetails.shopAdress }}</span>
               </p>
@@ -259,7 +259,7 @@ export default {
       idCardCopyFilePath: [],
       chooseDate: '',
       addForm: {
-        shopId: '', // 店铺id
+        shopId: '', // 服务商id
         checkHandle: '', // 1-同意入驻 0-拒绝入驻
         effectiveDate: '', // 生效日期  null-即时生效 有值-指定日期生效
         effectiveYear: '', // 生效时限（年）
@@ -300,7 +300,7 @@ export default {
         this.chooseDate = ''
       }
     },
-    // 查询店铺详情
+    // 查询服务商详情
     async getAll(shopId) {
       const res = await settlementGetById({ shopId })
       this.shopDetails = res.data

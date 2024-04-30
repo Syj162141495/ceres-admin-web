@@ -10,10 +10,10 @@
     <!-- 搜索 -->
     <div class="formSearch">
       <el-form :inline="true" :model="formInline">
-        <el-form-item label="商家名称">
+        <el-form-item label="服务商名称">
           <el-input
             v-model="formInline.shopName"
-            placeholder="请输入商家名称"
+            placeholder="请输入服务商名称"
           />
         </el-form-item>
         <el-form-item label="注册手机号">
@@ -22,7 +22,7 @@
             placeholder="请输入注册手机号"
           />
         </el-form-item>
-        <el-form-item label="店铺类型">
+        <el-form-item label="服务商类型">
           <el-select
             v-model="formInline.authenType"
             clearable
@@ -59,10 +59,10 @@
         tooltip-effect="dark"
         style="width: 100%"
       >
-        <el-table-column label="商家名称" width="220">
+        <el-table-column label="服务商名称" width="220">
           <template slot-scope="scope">{{ scope.row.shopName }}</template>
         </el-table-column>
-        <el-table-column label="店铺类型">
+        <el-table-column label="服务商类型">
           <template slot-scope="scope">
             <span v-if="scope.row.authenType == 1">个人</span>
             <span v-if="scope.row.authenType == 2">个体工商户</span>
@@ -121,9 +121,9 @@ export default {
     return {
       activeName: '0',
       formInline: {
-        shopName: '', // 商家名称
+        shopName: '', // 服务商名称
         shopPhone: '', // 注册手机号
-        authenType: '', // 店铺类型 1-个人 2-个体工商户 3-企业 4-其他组织
+        authenType: '', // 服务商类型 1-个人 2-个体工商户 3-企业 4-其他组织
         dates: [], // 时间数组
         checkState: '0', // 入驻处理状态 0-未处理 1-通过 2-拒绝
         page: 1,

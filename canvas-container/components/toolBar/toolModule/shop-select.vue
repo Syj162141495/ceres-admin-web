@@ -2,7 +2,7 @@
   <div class="product-select">
     <el-form :inline="true" :model="formData" class="demo-form-inline">
       <el-form-item label="">
-        <el-input v-model="formData.keyword" placeholder="店铺名称"></el-input>
+        <el-input v-model="formData.keyword" placeholder="服务商名称"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column
         prop="shopName"
-        label="店铺名称">
+        label="服务商名称">
       </el-table-column>
       <el-table-column
         prop="phone"

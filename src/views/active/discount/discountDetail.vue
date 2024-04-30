@@ -5,7 +5,7 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="活动信息" name="first">
           <div class="shop_info">
-            <h3 class="detail_title">店铺信息</h3>
+            <h3 class="detail_title">服务商信息</h3>
             <div class="shopInfo_left">
               <p class="detail_text">
                 <span>活动名称：</span>
@@ -70,7 +70,7 @@
             </p>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="参与店铺" name="second">
+        <el-tab-pane label="参与服务商" name="second">
           <!-- 搜索 -->
           <div class="formSearch">
             <el-form
@@ -78,16 +78,16 @@
               :model="formInline"
               class="demo-form-inline"
             >
-              <el-form-item label="店铺名称">
+              <el-form-item label="服务商名称">
                 <el-input
                   v-model="formInline.shopName"
-                  placeholder="请输入店铺名称"
+                  placeholder="请输入服务商名称"
                 />
               </el-form-item>
-              <el-form-item label="店铺编码">
+              <el-form-item label="服务商编码">
                 <el-input
                   v-model="formInline.shopCode"
-                  placeholder="请输入店铺编码"
+                  placeholder="请输入服务商编码"
                 />
               </el-form-item>
               <el-form-item label="审核状态">
@@ -116,10 +116,10 @@
               tooltip-effect="dark"
               style="width: 100%"
             >
-              <el-table-column label="店铺名称" width="220">
+              <el-table-column label="服务商名称" width="220">
                 <template slot-scope="scope">{{ scope.row.shopName }}</template>
               </el-table-column>
-              <el-table-column prop="shopCode" label="店铺编码" />
+              <el-table-column prop="shopCode" label="服务商编码" />
               <el-table-column prop="products" label="参与商品数" />
               <el-table-column prop="examines" label="审核次数" />
               <el-table-column label="审核状态">
@@ -183,8 +183,8 @@
                   style="width: 100%"
                 >
                   >
-                  <el-table-column prop="shopName" label="店铺名称" />
-                  <el-table-column prop="shopCode" label="店铺编码" />
+                  <el-table-column prop="shopName" label="服务商名称" />
+                  <el-table-column prop="shopCode" label="服务商编码" />
                   <el-table-column prop="products" label="参与商品数(件)" />
                   <el-table-column prop="persons" label="访客数" />
                   <el-table-column prop="orders" label="提交订单数" />
@@ -354,8 +354,8 @@ export default {
       radio: '1',
       formInline: {
         // activityId: 0,
-        // shopName: '', // 店铺名称
-        // shopCode: '', // 店铺编码
+        // shopName: '', // 服务商名称
+        // shopCode: '', // 服务商编码
         // state: '', // 审核状态 0-待审核 1-报名成功 2-报名失败
         page: 1,
         pageSize: 10,

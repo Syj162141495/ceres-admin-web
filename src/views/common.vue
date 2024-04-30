@@ -13,10 +13,10 @@
     <!-- 搜索 -->
     <div class="formSearch">
       <el-form :inline="true" :model="formInline">
-        <el-form-item label="商家名称">
+        <el-form-item label="服务商名称">
           <el-input
             v-model="formInline.user"
-            placeholder="请输入商家名称"
+            placeholder="请输入服务商名称"
           />
         </el-form-item>
         <el-form-item label="注册手机号">
@@ -43,7 +43,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" plain @click="onSubmit">查询</el-button>
-          <el-button type="success" plain @click="onSubmit">新建商家</el-button>
+          <el-button type="success" plain @click="onSubmit">新建服务商</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -59,7 +59,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column label="商家名称" width="220">
+        <el-table-column label="服务商名称" width="220">
           <template slot-scope="scope">{{ scope.row.date }}</template>
         </el-table-column>
         <el-table-column prop="name" label="店铺类型" />

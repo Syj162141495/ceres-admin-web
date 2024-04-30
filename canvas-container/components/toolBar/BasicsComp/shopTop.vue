@@ -3,7 +3,7 @@
     <h3 class="toolTit">店铺头部</h3>
 
     <div class="modelTit titleBox">
-      <h4>商品类别</h4>
+      <h4>服务分类</h4>
       <el-switch
       v-model="activeComponent.componentContent.categoryShow"
       active-color="#FF7800"

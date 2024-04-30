@@ -110,7 +110,7 @@
           },
           {
             value: '/detail',
-            label: '商品详情'
+            label: '服务详情'
           },
           // {
           //   value: '/custom',

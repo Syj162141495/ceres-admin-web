@@ -5,7 +5,7 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="活动信息" name="first">
           <div class="shop_info">
-            <h3 class="detail_title">店铺信息</h3>
+            <h3 class="detail_title">服务商信息</h3>
             <div class="shopInfo_left">
               <p class="detail_text">
                 <span>活动名称：</span>
@@ -98,24 +98,24 @@
             </p>
           </div>
         </el-tab-pane>
-        <!-- 参与店铺 -->
-        <el-tab-pane label="参与店铺" name="second">
+        <!-- 参与服务商 -->
+        <el-tab-pane label="参与服务商" name="second">
           <div class="formSearch">
             <el-form
               :inline="true"
               :model="formInline"
               class="demo-form-inline"
             >
-              <el-form-item label="店铺名称">
+              <el-form-item label="服务商名称">
                 <el-input
                   v-model="formInline.shopName"
-                  placeholder="请输入店铺名称"
+                  placeholder="请输入服务商名称"
                 />
               </el-form-item>
-              <el-form-item label="店铺编码">
+              <el-form-item label="服务商编码">
                 <el-input
                   v-model="formInline.shopCode"
-                  placeholder="请输入店铺编码"
+                  placeholder="请输入服务商编码"
                 />
               </el-form-item>
               <el-form-item label="审核状态">
@@ -142,10 +142,10 @@
               tooltip-effect="dark"
               style="width: 100%"
             >
-              <el-table-column label="店铺名称" width="220">
+              <el-table-column label="服务商名称" width="220">
                 <template slot-scope="scope">{{ scope.row.shopName }}</template>
               </el-table-column>
-              <el-table-column prop="shopCode" label="店铺编码" />
+              <el-table-column prop="shopCode" label="服务商编码" />
               <el-table-column prop="productNumber" label="参与商品数" />
               <el-table-column prop="examine" label="审核次数" />
               <el-table-column label="审核状态">
@@ -342,8 +342,8 @@ export default {
       radio: '1',
       formInline: {
         activityId: 0,
-        shopName: '', // 店铺名称
-        shopCode: '', // 店铺编码
+        shopName: '', // 服务商名称
+        shopCode: '', // 服务商编码
         state: '', // 审核状态 0-待审核 1-报名成功 2-报名失败
         page: 1,
         signType: 1, // 1-平台优惠券 2-平台秒杀 3-平台限时折扣
@@ -479,7 +479,7 @@ export default {
       const res = await getCouponDetail({ activityId: this.info })
       this.form = res.data
     },
-    // 查询参与店铺
+    // 查询参与服务商
     async getAll(formInline) {
       // const res = await activeGetShops(formInline)
       const res = await getCouponShops(formInline)

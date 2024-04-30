@@ -63,11 +63,22 @@
             :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
             style="width: 100%"
           >
-            <el-table-column prop="name" label="客户昵称" />
-            <el-table-column prop="phone" label="手机号" />
-            <el-table-column prop="memberLevelName" label="会员等级" />
+            <!-- <el-table-column prop="name" label="客户姓名" />
+            <el-table-column prop="sex" label="性别" />
+            <el-table-column prop="phone" label="手机号" /> 
+            <el-table-column prop="age" label="年龄" />
+            <el-table-column prop="nid" label="身份证" /> 
+            <el-table-column prop="address" label="地址" />
             <el-table-column prop="total" label="消费总额" />
-            <el-table-column prop="buyers" label="购买次数" />
+            <el-table-column prop="buyers" label="服务次数" />
+            <el-table-column prop="time" label="最近消费时间" />
+            <el-table-column prop="createTime" label="注册时间" /> -->
+
+            <el-table-column prop="name" label="客户姓名" />
+            <el-table-column prop="phone" label="手机号" />
+            <el-table-column prop="memberLevelName" label="客户等级" />
+            <el-table-column prop="total" label="消费总额" />
+            <el-table-column prop="buyers" label="服务次数" />
             <el-table-column prop="time" label="最近消费时间" />
             <el-table-column prop="createTime" label="注册时间" />
             <el-table-column label="操作">

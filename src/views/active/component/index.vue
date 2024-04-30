@@ -84,8 +84,8 @@
                 style="width: 100%"
               >
                 >
-                <el-table-column prop="shopName" label="店铺名称" />
-                <el-table-column prop="shopCode" label="店铺编码" />
+                <el-table-column prop="shopName" label="服务商名称" />
+                <el-table-column prop="shopCode" label="服务商编码" />
                 <el-table-column prop="products" label="参与商品数(件)" />
                 <el-table-column prop="persons" label="访客数(人)" />
                 <el-table-column prop="orders" label="订单数(笔)" />

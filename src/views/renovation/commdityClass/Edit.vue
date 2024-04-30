@@ -219,7 +219,7 @@ export default {
   },
   async created() {
     const res = await getSelect({
-      dictName: '商品类别链接'
+      dictName: '服务分类链接'
     })
     console.log(res)
     this.dictList = res.data
