@@ -61,67 +61,6 @@
             </el-form-item>
           </el-form>
         </div>
-        <!-- 手机号登录 -->
-        <!--
-        <div v-else>
-          <el-form
-            ref="loginForm"
-            :model="anthorForm"
-            :rules="anthorRules"
-            label-position="left"
-            label-width="0px"
-            class="login-form"
-          >
-            <el-form-item prop="username">
-              <el-input
-                v-model="anthorForm.username"
-                type="text"
-                maxlength="11"
-                auto-complete="off"
-                placeholder="请输入手机号码"
-                class="iptHeight"
-              />
-            </el-form-item>
-            <el-form-item prop="code">
-              <el-input
-                v-model="anthorForm.code"
-                type="text"
-                class="iptHeight"
-                auto-complete="off"
-                style="width: 63%"
-                placeholder="请输入验证码"
-                @keyup.enter.native="handleLogin"
-              />
-              <div class="login-code">
-                <el-button
-                  class="codeBtn"
-                  type="primary"
-                  :loading="codeloading"
-                  @click="getCode(anthorForm.username)"
-                >
-                  <span v-if="!codeloading">获取验证码</span>
-                  <span v-else>{{ count }} s</span>
-                </el-button>
-              </div>
-            </el-form-item>
-            <div class="boxBottom">
-              <el-checkbox v-model="loginForm.rememberMe" style="margin: 0 0 25px 0">自动登录</el-checkbox>
-            </div>
-            
-            <el-form-item style="width: 100%">
-              <el-button
-                :loading="loading"
-                size="medium"
-                type="primary"
-                style="width: 100%; border-radius: 20px"
-                @click.native.prevent="anhandleLogin"
-              >
-                <span v-if="!loading">登录</span>
-                <span v-else>登 录 中...</span>
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div> -->
       </div>
     </div>
 
@@ -437,29 +376,34 @@ export default {
 .topText {
   font-size: 40px;
   font-weight: bold;
-  color: #ffffff;
+  color: #050505;
   text-align: center;
-  position: absolute;
-  top: -70px;
-  left: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -10%;
+  // position: absolute;
+  // top: -70px;
+  // left: 40px;
 }
 .login {
   height: 100%;
-  background-size: cover;
+  background-size: 1550px, 650px;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('../../assets/images/background.jpg');
+  background-image: url('../../assets/images/bk1.jpg');
 }
 .loginBox {
   width: 360px !important;
-  height: 300px;
+  height: 280px;
   background: #ffffff;
+  border-radius: 10px;
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 78%;
   transform: translate(-50%, -50%);
+  padding-top: 70px;
 }
 .topback {
   width: 1000px;
@@ -481,7 +425,7 @@ export default {
   margin: auto;
   h2 {
     text-align: center;
-    font-size: 40px;
+    // font-size: 40px;
     font-weight: bold;
     color: #ffffff;
   }

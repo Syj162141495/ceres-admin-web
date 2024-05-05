@@ -5,20 +5,11 @@
       <!-- 搜索 -->
       <div class="formSearch">
         <el-form :inline="true" :model="formInline">
-          <el-form-item label="服务商名称">
-            <el-input v-model="formInline.shopName" placeholder="请输入服务商名称" />
+          <el-form-item label="服务机构名称">
+            <el-input v-model="formInline.shopName" placeholder="请输入服务机构名称" />
           </el-form-item>
-          <!--<el-form-item label="服务商编码">
-            <el-input v-model="formInline.shopCode" placeholder="请输入服务商编码" />
-          </el-form-item>-->
-          <el-form-item label="负责人">
-            <el-input v-model="formInline.chargePersonName" placeholder="请输入负责人" />
-          </el-form-item>
-          <el-form-item label="合同状态">
-            <el-select v-model="formInline.contractState" placeholder="请选择">
-              <el-option label="有效" value="1" />
-              <el-option label="无效" value="0" />
-            </el-select>
+          <el-form-item label="联系人">
+            <el-input v-model="formInline.chargePersonName" placeholder="请输入联系人" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="onSubmit">查询</el-button>
@@ -36,24 +27,22 @@
           tooltip-effect="dark"
           style="width: 100%"
         >
-          <el-table-column label="服务商名称" width="220">
+          <el-table-column label="服务商名称" show-overflow-tooltip width="100">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
-          <!--<el-table-column prop="shopCode" label="服务商编码" />-->
-          <el-table-column prop="shopAdress" label="区域" />
-          <el-table-column prop="classify" label="大类" />
-          <el-table-column prop="coordinate" label="坐标" />
-          <el-table-column prop="service" label="提供服务" />
-          <el-table-column prop="chargePersonName" label="负责人" />
+          <el-table-column prop="city" label="城市" />
+          <el-table-column prop="area" label="地区" />
+          <el-table-column prop="serviceClassify" label="服务类型" />
+          <el-table-column prop="institutionalClassify" label="机构类型" />
+          <el-table-column prop="institutionalGrade" label="机构等级" />
+          <el-table-column prop="address" label="机构地址" />
+          <el-table-column prop="reditCode" label="信用代码" />
+          <el-table-column prop="chargePersonName" label="联系人" />
           <el-table-column prop="chargePersonPhone" label="联系电话" />
-          <el-table-column label="合同状态">
-            <template slot-scope="scope">
-              <span v-if="scope.row.contractState === 0">无效</span>
-              <span v-if="scope.row.contractState === 1">有效</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" />
-          <el-table-column label="操作" show-overflow-tooltip>
+          <el-table-column prop="coordinateX" label="经度" />
+          <el-table-column prop="coordinateY" label="纬度" />
+          <el-table-column prop="introduction" label="机构简介" />
+          <el-table-column label="操作" width="100">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button type="text" @click="seeMore(scope.row)">查看</el-button>
@@ -87,111 +76,66 @@
               : '查看服务商'
         "
         :visible.sync="dialogVisible"
-        width="30%"
+        width="45%"
         center
         :close-on-click-modal="false"
       >
         <div>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="授权信息" name="first">
-              <el-form ref="ruleFormInfo" :model="ruleForm" :rules="rulesInfo" label-width="100px">
-                <el-form-item label="服务商名称" prop="shopName">
-                  <el-input v-model="ruleForm.shopName" :disabled="disabled" />
-                </el-form-item>
-                <el-form-item label="服务商负责人" prop="chargePersonName">
-                  <el-input v-model="ruleForm.chargePersonName" :disabled="disabled" />
-                </el-form-item>
-                <el-form-item label="负责人电话" prop="chargePersonPhone">
-                  <el-input v-model="ruleForm.chargePersonPhone" :disabled="disabled" />
-                </el-form-item>
-                <el-form-item label="服务商地址" prop="shopAdress">
-                  <el-input v-model="ruleForm.shopAdress" :disabled="disabled" />
-                </el-form-item>
-
-
-                <!-- <el-form-item label="大类" prop="classify">
-                  <el-input v-model="ruleForm.classify" :disabled="disabled" />
-                </el-form-item> -->
-                <el-form-item label="大类">
-                  <el-select v-model="ruleForm.classify" placeholder="请选择">
-                    <el-option label="医疗" value="medical"></el-option>
-                    <el-option label="康复" value="recovered"></el-option>
-                    <el-option label="养老" value="retirement"></el-option>
-                    <el-option label="其他" value="other"></el-option>
-                  </el-select>
-                </el-form-item>
-
-
-                <el-form-item label="坐标" prop="coordinate">
-                  <el-input v-model="ruleForm.coordinate" :disabled="disabled" />
-                </el-form-item>
-
-
-
-                <!-- <el-form-item label="提供服务" prop="service">
-                  <el-input v-model="ruleForm.service" :disabled="disabled" />
-                </el-form-item> -->
-                <el-form-item label="提供服务">
-                  <el-cascader
-                    v-model="ruleForm.service"
-                    :options="serviceList"
-                    clearable
-                    :props="{
-                      checkStrictly: true,
-                      label:'categoryName',
-                      value:'id',
-                      children:'childs'
-                    }"
-                  />
-                </el-form-item>
-                <!-- <el-form-item label="提供服务">
-                  <el-select
-                    v-model="ruleForm.service"
-                    multiple
-                    clearable
-                  >
-                    <el-option
-                      v-for="option in serviceList"
-                      :key="option.id"
-                      :label="option.categoryName"
-                      :value="option.id"
-                    ></el-option>
-                  </el-select>
-                </el-form-item> -->
-
-
-
-                <el-form-item label="生效日期" prop="effectiveDate">
-                  <el-date-picker
-                    v-model="ruleForm.effectiveDate"
-                    :disabled="disabled"
-                    value-format="yyyy-MM-dd"
-                    type="date"
-                    placeholder="选择日期"
-                  />
-                </el-form-item>
-                <el-form-item label="生效年限" prop="effectiveYear">
-                  <el-input
-                    v-model="ruleForm.effectiveYear"
-                    type="text"
-                    :disabled="disabled"
-                    placeholder="请输入内容"
-                    maxlength="4"
-                    class="elipt"
-                    style="width: 50%"
-                    show-word-limit
-                  />
-                  <span class="elspan">年</span>
-                </el-form-item>
-                <el-form-item label="合同状态" prop="contractState">
-                  <el-radio-group v-model="ruleForm.contractState">
-                    <el-radio :disabled="disabled" :label="1">有效</el-radio>
-                    <el-radio :disabled="disabled" :label="0">无效</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-form>
+              <div class="two-column-tabs">
+                <el-form ref="ruleFormInfo" :model="ruleForm" :rules="rulesInfo" label-width="100px">
+                  <div class="tab-content-column1">
+                    <p>
+                      <el-form-item label="服务商名称" prop="shopName">
+                        <el-input v-model="ruleForm.shopName" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="城市" prop="city">
+                        <el-input v-model="ruleForm.city" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="地区" prop="area">
+                        <el-input v-model="ruleForm.area" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="服务类型" prop="serviceClassify">
+                        <el-input v-model="ruleForm.serviceClassify" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="机构类型" prop="institutionalClassify">
+                        <el-input v-model="ruleForm.institutionalClassify" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="机构等级" prop="institutionalGrade">
+                        <el-input v-model="ruleForm.institutionalGrade" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="机构地址" prop="address">
+                        <el-input v-model="ruleForm.address" :disabled="disabled" />
+                      </el-form-item>
+                    </p>
+                  </div>
+                  <div class="tab-content-column2">
+                    <p>
+                      <el-form-item label="信用代码" prop="reditCode">
+                        <el-input v-model="ruleForm.reditCode" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="联系人" prop="chargePersonName">
+                        <el-input v-model="ruleForm.chargePersonName" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="联系电话" prop="chargePersonPhone">
+                        <el-input v-model="ruleForm.chargePersonPhone" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="经度" prop="coordinateX">
+                        <el-input v-model="ruleForm.coordinateX" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="纬度" prop="coordinateY">
+                        <el-input v-model="ruleForm.coordinateY" :disabled="disabled" />
+                      </el-form-item>
+                      <el-form-item label="机构简介" prop="introduction">
+                        <el-input v-model="ruleForm.introduction" :disabled="disabled" />
+                      </el-form-item>
+                    </p>
+                  </div>
+                </el-form>
+              </div>
             </el-tab-pane>
-            <el-tab-pane label="客户信息" name="second">
+            <el-tab-pane label="服务商信息" name="second">
               <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px">
                 <el-form-item label="账号" prop="shopPhone">
                   <el-input v-model="ruleForm.shopPhone" :disabled="disabled" maxlength="20" />
@@ -234,65 +178,69 @@ export default {
       activeName: 'first',
       formInline: {
         shopName: '', // 服务商名称
-        shopCode: '', // 服务商编码
+        // shopCode: '', // 服务商编码
         chargePersonName: '', // 服务商负责人
-        contractState: '', // 合同状态 1-有效 0-无效
+        // contractState: '', // 合同状态 1-有效 0-无效
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
       },
       disabled: false,
       ruleForm: {
         shopName: '', // 服务商名称
+        city: '',
+        area: '',
+        serviceClassify: '',
+        institutionalClassify: '',
+        institutionalGrade: '',
+        address: '',
+        reditCode: '',
         chargePersonName: '', // 服务商负责人
         chargePersonPhone: '', // 负责人电话
-        shopAdress: '', // 地址
-        classify: '', //大类
-        coordinate: '', //坐标
-        service: '', //提供服务
-        effectiveDate: '', // 生效日期
-        effectiveYear: '', // 生效年限
-        contractState: 1, // 合同状态 1-有效 0-无效
+        coordinateX: '',
+        coordinateY: '',
+        introduction: '',
         shopPhone: '', // 账号
         shopPassword: '' // 密码
       },
       rulesInfo: {
-        effectiveYear: [
-          { required: true, message: '请输入生效时限', trigger: 'blur' }
-        ],
         shopName: [
           { required: true, message: '请输入服务商名称', trigger: 'blur' }
         ],
+        city: [
+          { required: true, message: '请输入城市', trigger: 'blur' }
+        ],
+        area: [
+          { required: true, message: '请输入地区', trigger: 'blur' }
+        ],
+        serviceClassify: [
+          { required: true, message: '请输入服务类型', trigger: 'blur' }
+        ],
+        institutionalClassify: [
+          { required: true, message: '请输入机构类型', trigger: 'blur' }
+        ],
+        institutionalGrade: [
+          { required: true, message: '请输入机构等级', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入机构地址', trigger: 'blur' }
+        ],
+        reditCode: [
+          { required: true, message: '请输入信用代码', trigger: 'blur' }
+        ],
         chargePersonName: [
-          { required: true, message: '请输入服务商负责人', trigger: 'blur' }
+          { required: true, message: '请输入联系人', trigger: 'blur' }
         ],
         chargePersonPhone: [
-          { required: true, message: '请输入负责人电话', trigger: 'blur' }
+          { required: true, message: '请输入联系人电话', trigger: 'blur' }
         ],
-        shopAdress: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
+        coordinateX: [
+          { required: true, message: '请输入经度', trigger: 'blur' }
         ],
-        classify: [
-          { required: true, message: '请输入大类', trigger: 'blur' }
+        coordinateY: [
+          { required: true, message: '请输入纬度', trigger: 'blur' }
         ],
-        coordinate: [
-          { required: true, message: '请输入坐标', trigger: 'blur' }
-        ],
-        service: [
-          { required: true, message: '请输入提供服务', trigger: 'blur' }
-        ],
-        contractState: [
-          {
-            required: true,
-            message: '请选择合同状态',
-            trigger: 'change'
-          }
-        ],
-        effectiveDate: [
-          {
-            required: true,
-            message: '请选择日期',
-            trigger: 'change'
-          }
+        introduction: [
+          { required: true, message: '请输入机构简介', trigger: 'blur' }
         ]
       },
       rules: {
@@ -351,15 +299,25 @@ export default {
       this.disabled = false
       this.ruleForm = {
         shopName: '', // 服务商名称
+        city: '',
+        area: '',
+        serviceClassify: '',
+        institutionalClassify: '',
+        institutionalGrade: '',
+        address: '',
+        reditCode: '',
         chargePersonName: '', // 服务商负责人
         chargePersonPhone: '', // 负责人电话
-        shopAdress: '', // 地址
-        classify: '', //大类
-        coordinate: '', //坐标
-        service: '', //提供服务
-        effectiveDate: '', // 生效日期
-        effectiveYear: '', // 生效年限
-        contractState: 1, // 合同状态 1-有效 0-无效
+        coordinateX: '',
+        coordinateY: '',
+        introduction: '',
+        // shopAdress: '', // 地址
+        // classify: '', //大类
+        // coordinate: '', //坐标
+        // service: '', //提供服务
+        // effectiveDate: '', // 生效日期
+        // effectiveYear: '', // 生效年限
+        // contractState: 1, // 合同状态 1-有效 0-无效
         shopPhone: '', // 账号
         shopPassword: '' // 密码
       }
@@ -391,12 +349,12 @@ export default {
             this.$message.error('请输入服务商名称')
             return
           }
-          if (this.ruleForm.effectiveDate === '') {
-            this.$message.error('请输入生效日期')
+          if (this.ruleForm.city === '') {
+            this.$message.error('请输入城市')
             return
           }
-          if (this.ruleForm.effectiveYear === '') {
-            this.$message.error('请输入生效年限')
+          if (this.ruleForm.chargePersonName === '') {
+            this.$message.error('请输入联系人')
             return
           }
           if (!this.userState) {
@@ -499,6 +457,23 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+.tableBox {
+  overflow-x: auto;
+}
+.two-column-tabs {
+  display: flex;
+  justify-content: space-between; /* 根据需要调整内容间距 */
+  /* 根据实际情况可能需要设置最大宽度、溢出处理等 */
+}
+.tab-content-column1,
+.tab-content-column2 {
+  display: inline-block;
+  vertical-align: top; /* 确保垂直对齐 */
+  width: 50%; /* 各占一半宽度 */
+  box-sizing: border-box; /* 包括padding和border在内计算宽度 */
+  font-size: 16px; /* 重置字体大小 */
+  /* 其他样式，如 padding、margin、border 等 */
+}
 @import url("../../../styles/elDialog.scss");
 .pending {
   padding: 30px;
