@@ -10,7 +10,12 @@
         <el-row class="detail-box">
           <el-col :span="12">
             <div>服务名称：{{ productItem.productName }}</div>
-            <div >
+            <div>服务简介：{{ productItem.productBrief }}</div>
+            <div style="overflow-wrap: break-word;">
+              服务介绍：
+              <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
+            </div>
+            <!-- <div >
               商品标签：
               <el-tag
                 v-for="(item, index) in productItem.labels"
@@ -20,8 +25,8 @@
               >
                 <span style="color: azure;">{{ item.label }}</span>
               </el-tag>
-            </div>
-            <div>
+            </div> -->
+            <!-- <div>
               服务图片：
               <div>
                 <img
@@ -33,13 +38,47 @@
                   @click="handlePictureCardPreview(item)"
                 />
               </div>
-            </div>
-            <div>服务款式：</div>
+            </div> -->
           </el-col>
           <el-col :span="12">
-            <div>服务分类：{{ productItem.classifyName }}</div>
+            <div>服务类型：{{ productItem.productType }}</div>
+            <div>服务大类：{{ productItem.classifyParent }}</div>
+            <div>服务小类：{{ productItem.classify }}</div>
+            <!-- <el-form-item label="服务大类">
+              <el-select v-model="productItem.classifyParentId" placeholder="请选择服务大类">
+                <el-option
+                  v-for="(item,index) in classifyList.find(item => item.categoryName === '养老服务')['childs']"
+                  :key="index"
+                  :label="item.categoryName"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="服务小类">
+              <el-select v-model="productItem.classifyId" placeholder="请选择服务小类" :disabled="!productItem.classifyParentId || productItem.classifyParentId === ''">
+                <el-option
+                  v-for="(item,index) in classifyList.find(item => item.categoryName === '养老服务')['childs'].find(item => item.id === productItem.classifyParentId) && classifyList.find(item => item.categoryName === '养老服务')['childs'].find(item => item.id === productItem.classifyParentId)['childs']"
+                  :key="index"
+                  :label="item.categoryName"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item> -->
+            <!-- <div>服务分类：{{ productItem.classifyName }}</div> -->
             <!-- <div>商家分组：{{ productItem.shopGroupName }}</div> -->
-            <div>商家名称：{{ productItem.shopName }}</div>
+            <div>服务提供商：{{ productItem.shopName }}</div>
+            <div>是否推荐：
+              <el-radio-group v-model="productItem.isRecommended" :disabled="true">
+                <el-radio :label="1">是</el-radio>
+                <el-radio :label="0">否</el-radio>
+              </el-radio-group>
+            </div>
+            <div>物流：
+              <el-radio-group v-model="productItem.ifLogistics" :disabled="true">
+                <el-radio :label="1">是</el-radio>
+                <el-radio :label="0">否</el-radio>
+              </el-radio-group>
+            </div>
             <div>
               服务状态：
               <span v-if="productItem.shelveState == 0">已下架 </span>
@@ -47,10 +86,25 @@
               <span v-if="productItem.shelveState == 2">待审核</span>
               <span v-if="productItem.shelveState == 3">审核失败</span>
             </div>
+            <div>超卖：
+              <el-radio-group v-model="productItem.ifOversold" :disabled="true">
+                <el-radio :label="1">是</el-radio>
+                <el-radio :label="0">否</el-radio>
+              </el-radio-group>
+            </div>
           </el-col>
         </el-row>
         <el-row class="detail-box">
+          <el-row class="detail-box" v-show="productItem.additionalInfoFlag">
+            <el-col :span="12">
+              <div>机构星级：{{ productItem.starRating }}</div>
+            </el-col>
+            <el-col :span="12">
+              <div>机构面积：{{ productItem.area }}</div>
+            </el-col>
+          </el-row>
           <el-col :span="24">
+            <div>服务规格：</div>
             <el-table
               :data="productItem.skuList"
               style="width: 100%"
@@ -69,7 +123,7 @@
                   }}
                 </template>
               </el-table-column>
-              <el-table-column label="售价">
+              <!-- <el-table-column label="售价">
                 <template slot-scope="scope">
                   <el-input
                     v-model="scope.row.price"
@@ -113,6 +167,26 @@
                 <template slot-scope="scope">
                   <el-input disabled v-model="scope.row.sku" />
                 </template>
+              </el-table-column> -->
+              <el-table-column label="服务价格">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.price }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="原价格">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.originalPrice }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="成本价格">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.stockNumber }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="服务介绍">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.sku }}</span>
+                </template>
               </el-table-column>
             </el-table>
           </el-col>
@@ -120,14 +194,14 @@
       </div>
     </el-card>
 
-    <el-card class="box-card">
+    <!-- <el-card class="box-card">
       <label>服务简介</label>
-      <!-- <Tinymce
+      <Tinymce
         ref="content"
         v-model="productItem.productText"
         class="tinymce-wrap"
         :height="180"
-      /> -->
+      />
       <br/>
       <br/>
       <div v-html="productItem.productText"></div>
@@ -142,15 +216,20 @@
       <div class="img">
         <img width="80%" height="80%" :src="dialogImageUrl" alt />
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
+
 import Tinymce from "@/components/Tinymce";
-import { getProductById } from "@/api/commodity";
+import {
+  getClassify,
+  getProductById
+} from "@/api/commodity";
 import { uploadUrl } from "@/utils/request";
 import StyleInformation from "./addComponent";
+import { selectCanvasCustomList } from "@/api/renovation";
 export default {
   name: "",
   components: {
@@ -173,7 +252,8 @@ export default {
         "#73B8EE",
         "#3C80E8",
         "#21317B"
-      ]
+      ],
+      classifyList: []
     };
   },
   filters: {
@@ -222,9 +302,11 @@ export default {
     },
   },
   mounted() {
-    if (this.productId) {
-      this.details();
-    }
+    this.selectList().then(() => {
+      if (this.productId) {
+        this.details();
+      }
+    })
   },
   methods: {
     handlePictureCardPreview(item) {
@@ -255,6 +337,27 @@ export default {
         label: item,
         color: ''
       }));
+      this.productItem.additionalInfoFlag = false;
+      for (const parentCatefory of this.classifyList) {
+        for (const category of parentCatefory['childs']) {
+          for (const subCategory of category["childs"]) {
+            if (subCategory["id"] === this.productItem.classifyId) {
+              this.productItem.classifyParent = category["categoryName"];
+              this.productItem.classify = subCategory["categoryName"];
+              if (category["categoryName"] === "机构服务" || category["categoryName"] === "居家上门") {
+                this.productItem.additionalInfoFlag = true;
+              }
+            }
+          }
+        }
+      }
+      // for (const category of this.classifyList.find(item => item.categoryName === '养老服务')['childs']) {
+      //   for (const subCategory of category["childs"]) {
+      //     if (subCategory["id"] === this.form.classifyId) {
+      //       this.form.classifyParentId = category["id"];
+      //     }
+      //   }
+      // }
       // 标签上色
       let index = Math.floor(Math.random() * this.colorList.length);
       for (const item of this.productItem.labels) {
@@ -264,6 +367,10 @@ export default {
         item.color = this.colorList[index++];
       }
     },
+    async selectList() {
+      const res = await getClassify()
+      this.classifyList = res.data
+    }
   },
 };
 </script>

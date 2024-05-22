@@ -104,7 +104,7 @@ export function examine(data) {
 export function getClassify(data) {
   return request({
     url: '/canvas/getClassify',
-    method: 'post',
+    method: 'get',
     data
   })
 }

@@ -64,20 +64,23 @@
         >
           <el-table-column
             prop="productId"
-            label="服务id"
+            label="序号"
             show-overflow-tooltip
             width="80"
           />
-          <el-table-column label="服务主图" width="150" align="center">
+          <!-- <el-table-column label="服务主图" width="150" align="center">
             <template slot-scope="scope">
               <img height="80" width="80" :src="scope.row.image" alt srcset />
             </template>
-          </el-table-column>
+          </el-table-column> -->
+          <el-table-column prop="productType" label="类型" width="180" />
+          <el-table-column prop="productCategory" label="大类" width="180" />
+          <el-table-column prop="productSubCategory" label="小类" width="180" />
           <el-table-column prop="productName" label="服务名称" width="180" />
           <el-table-column prop="shopName" label="服务商名称" width="180" />
           <el-table-column
             prop="sectionPrice"
-            label="售价区间"
+            label="价格区间"
             show-overflow-tooltip
           />
           <!-- <el-table-column
@@ -86,6 +89,11 @@
             show-overflow-tooltip
           /> -->
           <el-table-column
+            prop="shopLocation"
+            label="区域"
+            show-overflow-tooltip
+          />
+          <!-- <el-table-column
             prop="stockNumber"
             label="库存"
             show-overflow-tooltip
@@ -99,11 +107,16 @@
             prop="fictitiousNumber"
             label="虚拟销售"
             show-overflow-tooltip
+          /> -->
+          <el-table-column
+            prop="isRecommended"
+            label="是否推荐"
+            show-overflow-tooltip
           />
-          <el-table-column prop="createTime" label="创建时间" width="180" />
+          <!-- <el-table-column prop="createTime" label="创建时间" width="180" /> -->
           <el-table-column
             prop="shelveState"
-            label="上架状态"
+            label="服务状态"
             show-overflow-tooltip
           >
             <template slot-scope="scope">
@@ -209,6 +222,7 @@
 
 <script>
 import {
+  getClassify,
   getClassifyGetAll,
   Forced,
   setFictitious,
@@ -243,6 +257,7 @@ export default {
         shelveState: 1,
       },
       examineVisible: false,
+      classifyList: []
     };
   },
   // 监听属性 类似于data概念
@@ -252,8 +267,9 @@ export default {
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.getAll(this.formInline);
+  async mounted() {
+    await this.queryAllCategory();
+    await this.getAll(this.formInline);
   },
   // 方法集合
   methods: {
@@ -356,9 +372,30 @@ export default {
     // 初始化查询所有数据
     async getAll(formInline) {
       const res = await getClassifyGetAll(formInline);
+      for (const item of res.data.list) {
+        let productCategory = "";
+        let productSubCategory = "";
+        for (const parentCatefory of this.categoryList) {
+          for (const category of parentCatefory['childs']) {
+            for (const subCategory of category["childs"]) {
+              if (subCategory["id"].toString() === item.classifyId) {
+                productCategory = category["categoryName"];
+                productSubCategory = subCategory["categoryName"];
+              }
+            }
+          }
+        }
+        item.productCategory = productCategory;
+        item.productSubCategory = productSubCategory;
+      }
       this.loading = false;
       this.total = res.data.total;
       this.tableData = res.data.list;
+    },
+    // 初始化查询所有分类
+    async queryAllCategory() {
+      const res = await getClassify()
+      this.categoryList = res.data
     },
   },
 };
