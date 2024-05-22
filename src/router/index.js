@@ -53,7 +53,25 @@ export const constantRoutes = [{
     name: 'businessList',
     component: () => import('@/views/business/businessList/index'),
     meta: {
-      title: '服务商列表',
+      title: '医疗服务商管理',
+      icon: 'table'
+    }
+  },
+  {
+    path: 'retirementList',
+    name: 'retirementList',
+    component: () => import('@/views/business/retirementList/index'),
+    meta: {
+      title: '养老服务商管理',
+      icon: 'table'
+    }
+  },
+  {
+    path: 'otherList',
+    name: 'otherList',
+    component: () => import('@/views/business/otherList/index'),
+    meta: {
+      title: '其他服务商管理',
       icon: 'table'
     }
   },
