@@ -21,44 +21,29 @@
         :data="treeData"
         :props="{ children: 'childs' }"
         node-key="id"
-        default-expand-all
         :expand-on-click-node="false"
       >
         <div slot-scope="{ node, data }" class="custom-tree-node">
           <div class="content">
-            <template v-if="data.depth < 3">
+            <template v-if="data.depth <= 3">
               <el-input
                 v-model="data.categoryName"
                 class="input"
-                :disabled="isCheck"
+                :disabled="isCheck || isAdd(data)"
                 maxlength="20"
                 size="mini"
                 :placeholder="data.depth | placeholderTips"
               />
-              <el-select v-model.number="data.link" size="mini" placeholder="请选择链接">
-                <el-option
-                  v-for="(item, index) in dictList"
-                  :key="index"
-                  :label="item.dictName"
-                  :value="item.dictId"
-                />
-              </el-select>
-              <el-upload
-                class="upload-uploader"
-                :on-success="handleImageSuccessOne"
-                :multiple="false"
-                :show-file-list="false"
-                :action="action"
-                :file-list="data.categoryImgArray"
-              >
-                <img
-                  v-if="data.categoryImgArray.length && data.categoryImgArray[0].imgPath"
-                  width="80"
-                  height="80"
-                  :src="data.categoryImgArray.length && data.categoryImgArray[0].imgPath"
-                >
-                <i v-else class="el-icon-plus" />
-              </el-upload>
+              <el-input
+                v-model="data.categoryDescription"
+                class="input"
+                style="width: 300px"
+                :disabled="isCheck || isAdd(data)"
+                maxlength="200"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                type="textarea"
+                placeholder="添加分类描述（不超过200字）"
+              />
             </template>
             <template v-else>
               <div class="level-3-wrap">
@@ -100,7 +85,7 @@
             <el-button
               type="text"
               size="mini"
-              @click="() => append(data)"
+              @click="() => append(node,data)"
             >{{ data.depth | addTips }}</el-button>
             <el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button>
           </div>
@@ -112,11 +97,11 @@
         </template>
         <template v-else>
           <el-button
-            v-if="type === 'add'"
+            v-if="type === 'addFirst'"
             class="add"
             type="primary"
             size="small"
-            @click="addClassification"
+            @click="addFirstClassification"
           >添加一级类别名称</el-button>
           <el-button type="primary" size="small" @click="onSubmit">保存</el-button>
         </template>
@@ -148,7 +133,8 @@ export default {
       depth = depth + ''
       const tipsMp = {
         1: '输入一级类别名称',
-        2: '输入二级类别名称'
+        2: '输入二级类别名称',
+        3: '输入三级类别名称'
       }
       return tipsMp[depth]
     }
@@ -192,7 +178,8 @@ export default {
         folderId: 1
       },
       deleteArr: [],
-      dictList: []
+      dictList: [],
+      dialogLevel: 1
     }
   },
   computed: {
@@ -208,11 +195,13 @@ export default {
     title() {
       const stateMap = {
         add: '新建类别',
+        addFirst: '新建类别',
         edit: '修改类别',
         check: '查看类别'
       }
       return stateMap[this.type]
     },
+    // check状态下所有数据都不允许修改
     isCheck() {
       return this.type === 'check'
     }
@@ -225,58 +214,13 @@ export default {
     this.dictList = res.data
   },
   methods: {
-    async queryOneCategory(oneClassifyId) {
-      console.log(oneClassifyId)
-      if (oneClassifyId === undefined) {
-        this.treeData = []
-        return
-      }
-      const res = await commdityClassgetById({
-        oneClassifyId
-      })
-      console.log(res)
-      const resData = res.data
-      const treeFilter = item => {
-        const {
-          categoryName,
-          categoryImg,
-          categoryPath,
-          parentName,
-          categoryImgArray,
-          depth,
-          id,
-          link
-        } = item
-        const newMap = {
-          depth: depth,
-          categoryName,
-          categoryPath: categoryPath || '',
-          parentName,
-          categoryImgArray,
-          link,
-          id
-        }
-        console.log(depth)
-        if (depth === 3) {
-          newMap.categoryImgArray = [
-            {
-              url: categoryImg
-            }
-          ]
-        }
-        if (item.childs && item.childs.length) {
-          newMap.childs = item.childs.map(treeFilter)
-        }
-        return newMap
-      }
-      if (resData) {
-        resData.childs =
-          resData && resData.childs && resData.childs.map(treeFilter)
-        this.treeData = [resData]
+    // Add状态下不允许修改之前的类（除非是新加的）
+    isAdd(data) {
+      if (data.newAdd && data.newAdd === true) {
+        return false
       } else {
-        this.treeData = []
+        return this.type === 'add'
       }
-      console.log(this.treeData)
     },
     handleImageSuccess(response, file, fileList) {
       console.log(response)
@@ -294,7 +238,50 @@ export default {
     reset() {
       this.treeData = []
     },
-    addClassification() {
+    // 查询已有的树形结构
+    async queryOneCategory(oneClassifyId) {
+      if (oneClassifyId === undefined) {
+        this.treeData = []
+        return
+      }
+      const res = await commdityClassgetById({
+        oneClassifyId
+      })
+      console.error(res.data)
+      const resData = res.data
+      const treeFilter = item => {
+        const {
+          categoryName,
+          categoryPath,
+          parentName,
+          depth,
+          id,
+          link
+        } = item
+        const newMap = {
+          depth: depth,
+          categoryName,
+          categoryPath: categoryPath || '',
+          parentName,
+          link,
+          id
+        }
+        if (item.childs && item.childs.length) {
+          newMap.childs = item.childs.map(treeFilter)
+        }
+        return newMap
+      }
+      if (resData) {
+        resData.childs =
+          resData && resData.childs && resData.childs.map(treeFilter)
+        this.treeData = [resData]
+      } else {
+        this.treeData = []
+      }
+      console.error(this.treeData)
+    },
+    // 添加一级类别名称，仅涉及前端
+    addFirstClassification() {
       this.treeData.push({
         placeholder: '输入一级类别名称',
         addTips: '添加二级类别名称',
@@ -310,8 +297,9 @@ export default {
         ]
       })
     },
-    append(data) {
-      console.log(data)
+    // 增添el-tree，仅涉及前端
+    append(node, data) {
+      node.expanded = true
       const { categoryName } = data
       const depth = data.depth + 1
       let newChild
@@ -349,31 +337,32 @@ export default {
           idx: idx++
         }
       }
+      newChild.newAdd = true
       data.childs.push(newChild)
     },
+    // 删除el-tree，仅涉及前端
     remove(node, data) {
-      // console.log(node,'node')
-      // console.log(data.id,'data')
       const parent = node.parent
       const children = parent.data.childs || parent.data
       const index = children.findIndex(d => d.id === data.id)
       children.splice(index, 1)
       this.deleteArr.push(data.id || '')
     },
+    // "保存"触发
     onSubmit() {
-      console.log(this.type)
-      if (this.type === 'add') {
+      // console.log(this.type)
+      if (this.type === 'addFirst') {
         this.addGroup()
       } else {
         this.updateGroup()
       }
     },
+    //
     async addGroup() {
-      console.log(this.treeData)
+      // console.log(this.treeData)
       const treeFilter = item => {
         const {
           categoryName,
-          categoryImgArray,
           categoryPath,
           parentName,
           depth,
@@ -386,19 +375,13 @@ export default {
           parentName,
           link
         }
-        if (categoryImgArray) {
-          newMap.categoryImg = categoryImgArray[0].imgPath
-        }
-        if (depth === 3) {
-          newMap.categoryImg = categoryImgArray[0].url
-        }
         if (item.childs && item.childs.length) {
           newMap.childs = item.childs.map(treeFilter)
         }
         return newMap
       }
       const params = this.treeData.map(treeFilter)
-      console.log(params)
+      console.log('!!!', params)
       if (params.length === 0) {
         this.$message.error('请添加分类')
         return
@@ -417,11 +400,11 @@ export default {
         this.deleteArr = []
       }
     },
+    //
     async updateGroup() {
       const treeFilter = item => {
         const {
           categoryName,
-          categoryImgArray,
           categoryPath,
           parentName,
           depth,
@@ -437,12 +420,6 @@ export default {
           id
         }
 
-        if (categoryImgArray) {
-          newMap.categoryImg = categoryImgArray[0].imgPath
-        }
-        if (depth === 3) {
-          newMap.categoryImg = categoryImgArray[0].url
-        }
         if (item.childs && item.childs.length) {
           newMap.childs = item.childs.map(treeFilter)
         }
@@ -465,8 +442,10 @@ export default {
         this.deleteArr = []
       }
     },
-    setParams({ id }) {
-      console.log(id)
+    //
+    setParams({ id, classifyLevel }) {
+      this.dialogLevel = classifyLevel
+      // id应该是顶级
       this.queryOneCategory(id)
     }
   }
@@ -555,8 +534,5 @@ export default {
   .add-btn-wrap {
     text-align: center;
   }
-}
-.upload-uploader {
-  margin-left: 30px;
 }
 </style>

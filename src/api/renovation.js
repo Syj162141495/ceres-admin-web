@@ -11,16 +11,23 @@ export function commdityClassGetAll(data) {
     data
   })
 }
-
-// 添加商品类别
-export function commdityClassAdd(data) {
+// 按照分类级别查询
+export function commdityClassGetByClassifyLevel(data) {
   return request({
-    url: '/classify/save',
+    url: '/classify/getByClassifyLevel',
     method: 'post',
     data
   })
 }
-// 编辑商品类别
+// 添加商品类别
+export function commdityClassAdd(data) {
+  return request({
+    url: '/classify/add',
+    method: 'post',
+    data
+  })
+}
+// 通过ID查询商品
 export function commdityClassgetById(data) {
   return request({
     url: '/classify/getById',
