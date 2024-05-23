@@ -43,14 +43,14 @@
           <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
           <el-table-column prop="institutionalClassify" label="注册类型" />
           <el-table-column prop="institutionalGrade" label="机构等级" />
-          <el-table-column prop="medicalcollaboration" label="医疗联合" />
+          <!-- <el-table-column prop="medicalcollaboration" label="医疗联合" /> -->
           <el-table-column prop="area" label="省/地/区县" />
           <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
           <el-table-column prop="reditCode" label="社会信用码" />
           <el-table-column prop="chargePersonName" label="联系人" />
           <el-table-column prop="chargePersonPhone" label="联系电话" />
         <!-- <el-table-column prop="coordinateX" label="经度" />
-                <el-table-column prop="coordinateY" label="纬度" /> -->
+              <el-table-column prop="coordinateY" label="纬度" /> -->
           <!-- <el-table-column prop="introduction" label="机构简介" /> -->
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
@@ -228,8 +228,6 @@ export default {
         reditCode: '',
         chargePersonName: '', // 服务商负责人
         chargePersonPhone: '', // 负责人电话
-        // location: '北京',
-        // keyword: '百度',
         coordinateX: '',
         coordinateY: '',
         introduction: '',
@@ -340,10 +338,6 @@ export default {
     onSubmit() {
       this.getAll(this.formInline)
     },
-    getLocation() {
-      this.ruleForm.coordinateX
-      this.ruleForm.coordinateY
-    },
     initMapConfirm() {
       this.amapVisible = true
     },
@@ -367,7 +361,7 @@ export default {
         shopName: '', // 服务商名称
         city: '',
         area: '',
-        serviceClassify: '医疗服务',
+        serviceClassify: '其他服务',
         institutionalClassify: '',
         institutionalGrade: '',
         address: '',
@@ -407,6 +401,12 @@ export default {
     },
     // 新建服务商确定
     addCheck(ruleForm) {
+      // console.log(this.ruleForm.serviceClassify)
+      // this.ruleForm.serviceClassify =
+      //   this.ruleForm.serviceClassify[2] ||
+      //   this.ruleForm.serviceClassify[1] ||
+      //   this.ruleForm.serviceClassify[0] ||
+      //   this.ruleForm.serviceClassify
       this.$refs[ruleForm].validate(valid => {
         if (valid) {
           console.log(this.userState)
@@ -468,7 +468,7 @@ export default {
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
       },
-        this.getAll(this.formInline)
+      this.getAll(this.formInline)
     },
     // 查看
     async seeMore(row) {
@@ -524,7 +524,7 @@ export default {
     // 初始化查询所有数据
     async getAll(formInline) {
       console.log(this.ruleForm.serviceClassify)
-      this.formInline.serviceClassify = '医疗服务'
+      this.formInline.serviceClassify = '其他服务'
       const res = await businessListGetAll(formInline)
       this.total = res.data.total
       this.tableData = res.data.list

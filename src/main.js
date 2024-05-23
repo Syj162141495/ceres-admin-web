@@ -14,6 +14,12 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import BaiduMap from 'vue-baidu-map'
+
+Vue.use(BaiduMap, {
+  // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+  ak: '33B192o1jPaqOHASGGAIkoMuwi8W76j3'
+})
 
 /**
  * If you don't want to use mock-server

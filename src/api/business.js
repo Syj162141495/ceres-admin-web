@@ -22,7 +22,7 @@ export function businessListSave(data) {
 // 商品分类
 export function getClassify(data) {
   return request({
-    url: '/canvas/getClassify',
+    url: '/classify/getClassify',
     method: 'post',
     data
   })

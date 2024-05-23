@@ -386,8 +386,11 @@ export default {
   // left: 40px;
 }
 .login {
-  height: 100%;
-  background-size: 1550px, 650px;
+  // height: 100%;
+  // background-size: 1550px, 650px;
+  height: 100vh; /* 设置容器高度为视口高度 */
+  width: 100vw; /* 设置容器宽度为视口宽度 */
+  background-size: cover; /* 图片等比例缩放以填充容器 */
   position: relative;
   display: flex;
   justify-content: center;
