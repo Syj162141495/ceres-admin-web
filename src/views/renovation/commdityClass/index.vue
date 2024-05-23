@@ -39,7 +39,7 @@
       :dialog-visible="dialog.isVisible"
       :type="dialog.type"
       @close="editClose"
-      @success="init(formParams)"
+      @success="init"
     />
   </div>
 </template>
@@ -71,7 +71,7 @@ export default {
     }
   },
   created() {
-    this.init(this.formParams)
+    this.init()
   },
   methods: {
     handleSizeChange(val) {
@@ -138,7 +138,7 @@ export default {
                 message: '删除成功!'
               })
             }
-            this.init(this.formParams)
+            this.init()
           })
         })
         .catch(() => {
@@ -151,7 +151,7 @@ export default {
 
     async getProductCategory() {
       // this.getAll(this.formParams)
-      this.init(this.formParams)
+      this.init()
     },
 
     async getAll(formParams) {
@@ -160,33 +160,29 @@ export default {
       this.total = res.data.total
     },
 
-    async getByClassifyHierarchy(formParams, classifyLevel) {
-      const hierarchyParams = formParams
-      hierarchyParams.classifyLevel = classifyLevel
-      const res = await commdityClassGetByClassifyLevel(hierarchyParams)
-      this.tableData = res.data.list
-      this.total = res.data.total
+    async getByClassifyHierarchy(classifyLevel) {
+      const res = await commdityClassGetByClassifyLevel({ 'classifyLevel': classifyLevel })
+      this.tableData = res.data
+      this.total = res.data.length
     },
 
-    async init(formParams) {
+    async init() {
       let classifyLevel = 1
       let tableData = []
       const id_item_map = {}
       let pid_ids_map = {}
       // eslint-disable-next-line no-constant-condition
       while (true) {
-        const hierarchyParams = formParams
-        hierarchyParams.classifyLevel = classifyLevel
-        const res = await commdityClassGetByClassifyLevel(hierarchyParams)
-        if (res.data.total === 0) {
+        const res = await commdityClassGetByClassifyLevel({ 'classifyLevel': classifyLevel })
+        if (res.data.length === 0) {
           break
         }
-        const rawTableData = res.data.list
+        const rawTableData = res.data
         rawTableData.sort((a, b) => a.classifyId - b.classifyId)
         if (classifyLevel === 1) {
           // 先获得所有1级的分类，存入id_item_map。
           // 对id进行排序，获得排序号X，存入item.sortNumb。
-          this.total = res.data.total
+          this.total = res.data.length
           let sortNumb = 1
           for (let i = 0; i < rawTableData.length; i++) {
             const item = rawTableData[i]
@@ -223,7 +219,7 @@ export default {
               item.level = classifyLevel
               item.previousClassifyName = pitem.classifyName
               item.sortNumb = pitem.sortNumb + sortNumb.toString().padStart(2, '0')
-              id_item_map[pid] = item
+              // id_item_map[ids[i]] = item
               if ('children' in pitem) {
                 pitem['children'].push(item)
               } else {
