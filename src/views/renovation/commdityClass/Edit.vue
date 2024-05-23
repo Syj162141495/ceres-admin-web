@@ -21,6 +21,7 @@
         :data="treeData"
         :props="{ children: 'childs' }"
         node-key="id"
+        :default-expand-all="isCheck"
         :expand-on-click-node="false"
       >
         <div slot-scope="{ node, data }" class="custom-tree-node">
@@ -35,7 +36,7 @@
                 :placeholder="data.depth | placeholderTips"
               />
               <el-input
-                v-model="data.categoryDescription"
+                v-model="data.description"
                 class="input"
                 style="width: 300px"
                 :disabled="isCheck || isAdd(data)"
@@ -247,7 +248,7 @@ export default {
       const res = await commdityClassgetById({
         oneClassifyId
       })
-      console.error(res.data)
+      // console.error(res.data)
       const resData = res.data
       const treeFilter = item => {
         const {
@@ -256,7 +257,8 @@ export default {
           parentName,
           depth,
           id,
-          link
+          link,
+          description
         } = item
         const newMap = {
           depth: depth,
@@ -264,7 +266,8 @@ export default {
           categoryPath: categoryPath || '',
           parentName,
           link,
-          id
+          id,
+          description
         }
         if (item.childs && item.childs.length) {
           newMap.childs = item.childs.map(treeFilter)
@@ -278,7 +281,7 @@ export default {
       } else {
         this.treeData = []
       }
-      console.error(this.treeData)
+      // console.error(this.treeData)
     },
     // 添加一级类别名称，仅涉及前端
     addFirstClassification() {
@@ -342,11 +345,29 @@ export default {
     },
     // 删除el-tree，仅涉及前端
     remove(node, data) {
-      const parent = node.parent
-      const children = parent.data.childs || parent.data
-      const index = children.findIndex(d => d.id === data.id)
-      children.splice(index, 1)
+      console.error('node', node)
+      console.error('data', data)
+      // 处理子节点
+      for (const i in data.childs) {
+        const child = data.childs[i]
+        this.deleteArr.push(child.id || '')
+      }
+      data.childs = null
+      // // 处理自身（在父节点中将自己清除）
+      const parentNode = node.parent
+      console.error('parentNode', parentNode)
+      // 如果不存在父节点，parentNode.data是Array反之是Object
+      if (Array.isArray(parentNode.data)) {
+        const index = parentNode.data.findIndex(d => d.idx === data.idx)
+        parentNode.data.splice(index, 1)
+      } else {
+        const parentChilds = parentNode.data.childs
+        const index = parentChilds.findIndex(d => d.idx === data.idx)
+        parentChilds.splice(index, 1)
+      }
       this.deleteArr.push(data.id || '')
+      console.error(this.deleteArr)
+      console.error(this.treeData)
     },
     // "保存"触发
     onSubmit() {
@@ -357,7 +378,7 @@ export default {
         this.updateGroup()
       }
     },
-    //
+    // 增添
     async addGroup() {
       // console.log(this.treeData)
       const treeFilter = item => {
@@ -366,14 +387,16 @@ export default {
           categoryPath,
           parentName,
           depth,
-          link
+          link,
+          description
         } = item
         const newMap = {
           depth: depth,
           categoryName,
           categoryPath: categoryPath || '',
           parentName,
-          link
+          link,
+          description
         }
         if (item.childs && item.childs.length) {
           newMap.childs = item.childs.map(treeFilter)
@@ -400,7 +423,7 @@ export default {
         this.deleteArr = []
       }
     },
-    //
+    // 更新
     async updateGroup() {
       const treeFilter = item => {
         const {
@@ -409,7 +432,8 @@ export default {
           parentName,
           depth,
           id,
-          link
+          link,
+          description
         } = item
         const newMap = {
           depth: depth,
@@ -417,7 +441,8 @@ export default {
           categoryPath: categoryPath || '',
           parentName,
           link,
-          id
+          id,
+          description
         }
 
         if (item.childs && item.childs.length) {

@@ -8,12 +8,12 @@
       style="width: 100%"
       row-key="classifyId"
       border
-      :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+      :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
       <el-table-column prop="classifyName" label="服务分类" />
       <el-table-column prop="previousClassifyName" label="上级分类" align="center" />
       <el-table-column prop="sortNumb" label="排序号" align="center" />
-      <el-table-column prop="serviceIntroduction" label="介绍" />
+      <el-table-column prop="description" label="介绍" />
       <el-table-column prop="status" label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="text" @click.native.prevent="checkRow(scope.row)">查看</el-button>
