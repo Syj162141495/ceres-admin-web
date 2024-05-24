@@ -391,13 +391,14 @@ export default {
           description
         } = item
         const newMap = {
-          depth: depth,
           categoryName,
           categoryPath: categoryPath || '',
           parentName,
+          depth,
           link,
           description
         }
+
         if (item.childs && item.childs.length) {
           newMap.childs = item.childs.map(treeFilter)
         }
@@ -436,12 +437,12 @@ export default {
           description
         } = item
         const newMap = {
-          depth: depth,
           categoryName,
           categoryPath: categoryPath || '',
           parentName,
-          link,
+          depth,
           id,
+          link,
           description
         }
 
@@ -470,7 +471,6 @@ export default {
     //
     setParams({ id, classifyLevel }) {
       this.dialogLevel = classifyLevel
-      // id应该是顶级
       this.queryOneCategory(id)
     }
   }
