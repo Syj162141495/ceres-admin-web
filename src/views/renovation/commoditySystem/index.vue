@@ -112,7 +112,12 @@
             prop="isRecommended"
             label="是否推荐"
             show-overflow-tooltip
-          />
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.isRecommended==0">否</span>
+              <span v-if="scope.row.isRecommended==1">是</span>
+            </template>
+          </el-table-column>
           <!-- <el-table-column prop="createTime" label="创建时间" width="180" /> -->
           <el-table-column
             prop="shelveState"
@@ -237,6 +242,7 @@ export default {
       btnList: "",
       activeName: "first",
       formInline: {
+        productType: this.$route.meta.title.substring(0, 4), // 服务类型
         shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
         productName: "", // 服务名称
         productId: "", //服务ID

@@ -150,12 +150,39 @@ export const constantRoutes = [{
       icon: 'tree'
     }
   },
+  // {
+  //   path: 'commoditySystem',
+  //   name: 'commoditySystem',
+  //   component: () => import('@/views/renovation/commoditySystem/index'),
+  //   meta: {
+  //     title: '服务管理',
+  //     icon: 'tree'
+  //   }
+  // },
   {
-    path: 'commoditySystem',
-    name: 'commoditySystem',
+    path: 'commoditySystemMedical',
+    name: 'commoditySystemMedical',
     component: () => import('@/views/renovation/commoditySystem/index'),
     meta: {
-      title: '服务管理',
+      title: '医疗服务管理',
+      icon: 'tree'
+    }
+  },
+  {
+    path: 'commoditySystemOlderCaring',
+    name: 'commoditySystemOlderCaring',
+    component: () => import('@/views/renovation/commoditySystem/index'),
+    meta: {
+      title: '养老服务管理',
+      icon: 'tree'
+    }
+  },
+  {
+    path: 'commoditySystemOthers',
+    name: 'commoditySystemOthers',
+    component: () => import('@/views/renovation/commoditySystem/index'),
+    meta: {
+      title: '其他服务管理',
       icon: 'tree'
     }
   },
