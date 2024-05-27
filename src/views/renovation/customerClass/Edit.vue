@@ -40,11 +40,19 @@
                 type="textarea"
                 placeholder="添加分类描述（不超过200字）"
               />
+              <el-input
+                v-model="data.sort"
+                class="input"
+                style="width: 100px"
+                :disabled="isCheck || isAdd(data)"
+                maxlength="10"
+                size="mini"
+                placeholder="自定义排序值"
+              />
             </template>
           </div>
           <div v-if="!isCheck" class="setting-box">
-            <el-button type="text" size="mini" @click="() => append(node, data)">{{ data.classifyLevel | addTips
-            }}</el-button>
+            <el-button type="text" size="mini" @click="() => append(node, data)">{{ data.classifyLevel | addTips }}</el-button>
             <el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button>
           </div>
         </div>
@@ -162,6 +170,7 @@ export default {
         classifyLevel,
         children,
         description,
+        sort,
         parentName // 前端设置
       } = item
       const newMap = {
@@ -171,6 +180,7 @@ export default {
         classifyLevel,
         children,
         description,
+        sort,
         parentName
       }
       if (item.children && item.children.length) {
@@ -187,7 +197,6 @@ export default {
 
       const res = await getCustomerClassById({ 'classifyId': classifyId })
       const resData = res.data
-      console.error(resData)
 
       if (resData) {
         resData.children = resData && resData.children && resData.children.map(this.treeFilter)
@@ -270,7 +279,6 @@ export default {
     // 增添
     async addGroup() {
       const params = this.treeData.map(this.treeFilter)
-      console.error('add', params)
       if (params.length === 0) {
         this.$message.error('请添加分类')
         return
