@@ -61,6 +61,48 @@ export function getSelect(data) {
   })
 }
 
+// ******客户分类******
+// 添加客户分类
+export function customerClassAdd(data) {
+  return request({
+    url: '/customerClassify/add',
+    method: 'post',
+    data
+  })
+}
+// 删除客户分类
+export function customerClassDelete(data) {
+  return request({
+    url: '/customerClassify/delete',
+    method: 'post',
+    data
+  })
+}
+// 修改客户分类
+export function customerClassUpdate(data) {
+  return request({
+    url: '/customerClassify/update',
+    method: 'post',
+    data
+  })
+}
+// 获取客户分类（通过ID)
+export function getCustomerClassById(data) {
+  return request({
+    url: '/customerClassify/getById',
+    method: 'post',
+    data
+  })
+}
+// 获取客户分类（通过PID）
+export function getCustomerClassByPid(data) {
+  return request({
+    url: '/customerClassify/getByPid',
+    method: 'post',
+    data
+  })
+}
+
 // ******自定义页面******
 // 自定义页面查询
 export function selectCanvasCustomList(data) {
