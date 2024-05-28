@@ -30,6 +30,7 @@
               <el-input
                 v-model="data.categoryName"
                 class="input"
+                style="width: 150px"
                 :disabled="isCheck || isAdd(data)"
                 maxlength="20"
                 size="mini"
@@ -41,7 +42,7 @@
                 style="width: 300px"
                 :disabled="isCheck || isAdd(data)"
                 maxlength="200"
-                :autosize="{ minRows: 2, maxRows: 4 }"
+                :autosize="{ minRows: 1, maxRows: 2 }"
                 type="textarea"
                 :placeholder="showPlaceholder ? '添加分类描述（不超过200字）' : ''"
               />
@@ -52,7 +53,7 @@
                 :disabled="isCheck || isAdd(data)"
                 maxlength="10"
                 size="mini"
-                placeholder="自定义排序值"
+                placeholder="排序值"
               />
             </template>
             <template v-else>
@@ -259,7 +260,8 @@ export default {
         depth,
         id,
         link,
-        description
+        description,
+        sort
       } = item
       const newMap = {
         categoryName,
@@ -268,7 +270,8 @@ export default {
         depth,
         id,
         link,
-        description
+        description,
+        sort
       }
       if (item.childs && item.childs.length) {
         newMap.childs = item.childs.map(this.treeFilter)

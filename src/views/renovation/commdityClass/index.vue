@@ -10,16 +10,16 @@
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
-      <el-table-column prop="classifyName" label="服务分类" />
+      <el-table-column prop="classifyName" label="服务分类" width="300px" />
       <el-table-column prop="previousClassifyName" label="上级分类" align="center" />
       <el-table-column prop="sortID" label="编码" align="center" />
       <el-table-column prop="sort" label="排序号" align="center" />
-      <el-table-column prop="description" label="介绍" />
-      <el-table-column prop="status" label="操作" align="center">
+      <el-table-column prop="description" label="介绍" width="300px" />
+      <el-table-column prop="status" label="操作" align="center" width="200px">
         <template slot-scope="scope">
           <el-button type="text" @click.native.prevent="checkRow(scope.row)">查看</el-button>
           <el-button type="text" @click.native.prevent="updateRow(scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.level<3" type="text" @click.native.prevent="addRow(scope.row)">添加</el-button>
+          <el-button v-if="scope.row.classifyLevel<3" type="text" @click.native.prevent="addRow(scope.row)">添加</el-button>
           <el-button type="text" @click.native.prevent="deleteRow(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -28,7 +28,7 @@
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="10"
+        :page-size="20"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -164,7 +164,6 @@ export default {
     async init() {
       const res = await getCommdityClassByPid({ oneClassifyId: 0 })
       const items = res.data
-      console.error(items)
       let sortID = 1
       for (const item of items) {
         item.sortID = 'O' + sortID.toString()

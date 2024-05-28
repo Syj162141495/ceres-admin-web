@@ -17,7 +17,7 @@
         'text-align': 'center',
       }"
     >
-      <el-table-column prop="classifyName" label="服务商分类" />
+      <el-table-column prop="classifyName" label="服务商分类" width="300px" />
       <el-table-column
         prop="previousClassifyName"
         label="上级分类"
@@ -25,8 +25,8 @@
       />
       <el-table-column prop="sortID" label="编码" align="center" />
       <el-table-column prop="sort" label="排序号" align="center" />
-      <el-table-column prop="description" label="介绍" />
-      <el-table-column prop="status" label="操作" align="center">
+      <el-table-column prop="description" label="介绍" width="300px" />
+      <el-table-column prop="status" label="操作" align="center" width="200px">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -52,7 +52,7 @@
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="10"
+        :page-size="20"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
