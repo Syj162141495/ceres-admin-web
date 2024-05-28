@@ -3,22 +3,6 @@ import request from '@/utils/request'
 // 平台装修
 
 // ******商品类别******
-// 商品类别管理查询
-export function commdityClassGetAll(data) {
-  return request({
-    url: '/classify/getAll',
-    method: 'post',
-    data
-  })
-}
-// 按照分类级别查询
-export function commdityClassGetByClassifyLevel(data) {
-  return request({
-    url: '/classify/getByClassifyLevel',
-    method: 'post',
-    data
-  })
-}
 // 添加商品类别
 export function commdityClassAdd(data) {
   return request({
@@ -27,14 +11,16 @@ export function commdityClassAdd(data) {
     data
   })
 }
-// 通过ID查询商品
-export function commdityClassgetById(data) {
+
+// 删除商品类别
+export function commdityClassDelete(data) {
   return request({
-    url: '/classify/getById',
+    url: '/classify/delete',
     method: 'post',
     data
   })
 }
+
 // 修改商品类别
 export function commdityClassUpdate(data) {
   return request({
@@ -43,10 +29,29 @@ export function commdityClassUpdate(data) {
     data
   })
 }
-// 删除商品类别
-export function commdityClassDelete(data) {
+
+// 通过ID查询商品
+export function commdityClassgetById(data) {
   return request({
-    url: '/classify/delete',
+    url: '/classify/getById',
+    method: 'post',
+    data
+  })
+}
+
+// 通过ID查询商品
+export function getCommdityClassByPid(data) {
+  return request({
+    url: '/classify/getByPid',
+    method: 'post',
+    data
+  })
+}
+
+// 商品类别管理查询
+export function commdityClassGetAll(data) {
+  return request({
+    url: '/classify/getAll',
     method: 'post',
     data
   })

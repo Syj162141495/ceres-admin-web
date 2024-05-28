@@ -43,7 +43,16 @@
                 maxlength="200"
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 type="textarea"
-                placeholder="添加分类描述（不超过200字）"
+                :placeholder="showPlaceholder ? '添加分类描述（不超过200字）' : ''"
+              />
+              <el-input
+                v-model="data.sort"
+                class="input"
+                style="width: 100px"
+                :disabled="isCheck || isAdd(data)"
+                maxlength="10"
+                size="mini"
+                placeholder="自定义排序值"
               />
             </template>
             <template v-else>
@@ -205,13 +214,15 @@ export default {
     // check状态下所有数据都不允许修改
     isCheck() {
       return this.type === 'check'
+    },
+    showPlaceholder() {
+      return !this.isCheck
     }
   },
   async created() {
     const res = await getSelect({
       dictName: '服务分类链接'
     })
-    console.log(res)
     this.dictList = res.data
   },
   methods: {
@@ -239,6 +250,31 @@ export default {
     reset() {
       this.treeData = []
     },
+    // 数据映射
+    treeFilter(item) {
+      const {
+        categoryName,
+        categoryPath,
+        parentName,
+        depth,
+        id,
+        link,
+        description
+      } = item
+      const newMap = {
+        categoryName,
+        categoryPath: categoryPath || '',
+        parentName,
+        depth,
+        id,
+        link,
+        description
+      }
+      if (item.childs && item.childs.length) {
+        newMap.childs = item.childs.map(this.treeFilter)
+      }
+      return newMap
+    },
     // 查询已有的树形结构
     async queryOneCategory(oneClassifyId) {
       if (oneClassifyId === undefined) {
@@ -248,40 +284,24 @@ export default {
       const res = await commdityClassgetById({
         oneClassifyId
       })
-      // console.error(res.data)
       const resData = res.data
-      const treeFilter = item => {
-        const {
-          categoryName,
-          categoryPath,
-          parentName,
-          depth,
-          id,
-          link,
-          description
-        } = item
-        const newMap = {
-          depth: depth,
-          categoryName,
-          categoryPath: categoryPath || '',
-          parentName,
-          link,
-          id,
-          description
-        }
-        if (item.childs && item.childs.length) {
-          newMap.childs = item.childs.map(treeFilter)
-        }
-        return newMap
-      }
       if (resData) {
         resData.childs =
-          resData && resData.childs && resData.childs.map(treeFilter)
+          resData && resData.childs && resData.childs.map(this.treeFilter)
         this.treeData = [resData]
       } else {
         this.treeData = []
       }
-      // console.error(this.treeData)
+
+      this.sortTreeData({ children: this.treeData })
+    },
+    sortTreeData(root) {
+      if (root.children) {
+        root.children.sort((a, b) => a.sort - b.sort)
+        for (const child of root.children) {
+          this.sortTreeData(child)
+        }
+      }
     },
     // 添加一级类别名称，仅涉及前端
     addFirstClassification() {
@@ -345,8 +365,6 @@ export default {
     },
     // 删除el-tree，仅涉及前端
     remove(node, data) {
-      console.error('node', node)
-      console.error('data', data)
       // 处理子节点
       for (const i in data.childs) {
         const child = data.childs[i]
@@ -355,7 +373,6 @@ export default {
       data.childs = null
       // // 处理自身（在父节点中将自己清除）
       const parentNode = node.parent
-      console.error('parentNode', parentNode)
       // 如果不存在父节点，parentNode.data是Array反之是Object
       if (Array.isArray(parentNode.data)) {
         const index = parentNode.data.findIndex(d => d.idx === data.idx)
@@ -366,12 +383,9 @@ export default {
         parentChilds.splice(index, 1)
       }
       this.deleteArr.push(data.id || '')
-      console.error(this.deleteArr)
-      console.error(this.treeData)
     },
     // "保存"触发
     onSubmit() {
-      // console.log(this.type)
       if (this.type === 'addFirst') {
         this.addGroup()
       } else {
@@ -380,32 +394,7 @@ export default {
     },
     // 增添
     async addGroup() {
-      // console.log(this.treeData)
-      const treeFilter = item => {
-        const {
-          categoryName,
-          categoryPath,
-          parentName,
-          depth,
-          link,
-          description
-        } = item
-        const newMap = {
-          categoryName,
-          categoryPath: categoryPath || '',
-          parentName,
-          depth,
-          link,
-          description
-        }
-
-        if (item.childs && item.childs.length) {
-          newMap.childs = item.childs.map(treeFilter)
-        }
-        return newMap
-      }
-      const params = this.treeData.map(treeFilter)
-      console.log('!!!', params)
+      const params = this.treeData.map(this.treeFilter)
       if (params.length === 0) {
         this.$message.error('请添加分类')
         return
@@ -426,33 +415,8 @@ export default {
     },
     // 更新
     async updateGroup() {
-      const treeFilter = item => {
-        const {
-          categoryName,
-          categoryPath,
-          parentName,
-          depth,
-          id,
-          link,
-          description
-        } = item
-        const newMap = {
-          categoryName,
-          categoryPath: categoryPath || '',
-          parentName,
-          depth,
-          id,
-          link,
-          description
-        }
-
-        if (item.childs && item.childs.length) {
-          newMap.childs = item.childs.map(treeFilter)
-        }
-        return newMap
-      }
       console.log(this.treeData)
-      const params = this.treeData.map(treeFilter)
+      const params = this.treeData.map(this.treeFilter)
       const obj = {
         classifies: params,
         deleteIds: this.deleteArr

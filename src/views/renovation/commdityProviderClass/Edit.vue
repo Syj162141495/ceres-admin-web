@@ -43,7 +43,7 @@
                 maxlength="200"
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 type="textarea"
-                placeholder="添加分类描述（不超过200字）"
+                :placeholder="showPlaceholder ? '添加分类描述（不超过200字）' : ''"
               />
               <el-input
                 v-model="data.sort"
@@ -165,6 +165,9 @@ export default {
     // check状态下所有数据都不允许修改
     isCheck() {
       return this.type === 'check'
+    },
+    showPlaceholder() {
+      return !this.isCheck
     }
   },
   async created() {},

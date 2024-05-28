@@ -62,7 +62,7 @@ export default {
       // 控制页码相关的变量
       formParams: {
         page: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: 1,
       currentPage: 1,

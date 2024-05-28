@@ -38,7 +38,7 @@
                 maxlength="200"
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 type="textarea"
-                placeholder="添加分类描述（不超过200字）"
+                :placeholder="showPlaceholder ? '添加分类描述（不超过200字）' : ''"
               />
               <el-input
                 v-model="data.sort"
@@ -143,6 +143,9 @@ export default {
     // check状态下所有数据都不允许修改
     isCheck() {
       return this.type === 'check'
+    },
+    showPlaceholder() {
+      return !this.isCheck
     }
   },
   async created() { },
@@ -203,6 +206,16 @@ export default {
         this.treeData = [resData]
       } else {
         this.treeData = []
+      }
+
+      this.sortTreeData({ children: this.treeData })
+    },
+    sortTreeData(root) {
+      if (root.children) {
+        root.children.sort((a, b) => a.sort - b.sort)
+        for (const child of root.children) {
+          this.sortTreeData(child)
+        }
       }
     },
     // 增添el-tree（一级类别），仅涉及前端

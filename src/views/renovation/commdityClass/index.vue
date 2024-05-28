@@ -12,7 +12,8 @@
     >
       <el-table-column prop="classifyName" label="服务分类" />
       <el-table-column prop="previousClassifyName" label="上级分类" align="center" />
-      <el-table-column prop="sortNumb" label="排序号" align="center" />
+      <el-table-column prop="sortID" label="编码" align="center" />
+      <el-table-column prop="sort" label="排序号" align="center" />
       <el-table-column prop="description" label="介绍" />
       <el-table-column prop="status" label="操作" align="center">
         <template slot-scope="scope">
@@ -47,7 +48,7 @@
 import {
   commdityClassGetAll,
   commdityClassDelete,
-  commdityClassGetByClassifyLevel
+  getCommdityClassByPid
 } from '@/api/renovation'
 import EditDialog from './Edit'
 export default {
@@ -59,7 +60,7 @@ export default {
       dialogVisible: false,
       formParams: {
         page: 1,
-        pageSize: 10
+        pageSize: 20
       },
       total: 1,
       tableData: [],
@@ -150,7 +151,6 @@ export default {
     },
 
     async getProductCategory() {
-      // this.getAll(this.formParams)
       this.init()
     },
 
@@ -160,79 +160,34 @@ export default {
       this.total = res.data.total
     },
 
-    async getByClassifyHierarchy(classifyLevel) {
-      const res = await commdityClassGetByClassifyLevel({ 'classifyLevel': classifyLevel })
-      this.tableData = res.data
-      this.total = res.data.length
-    },
-
+    /* 获取数据填充tableData */
     async init() {
-      let classifyLevel = 1
-      let tableData = []
-      const id_item_map = {}
-      let pid_ids_map = {}
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const res = await commdityClassGetByClassifyLevel({ 'classifyLevel': classifyLevel })
-        if (res.data.length === 0) {
-          break
-        }
-        const rawTableData = res.data
-        rawTableData.sort((a, b) => a.classifyId - b.classifyId)
-        if (classifyLevel === 1) {
-          // 先获得所有1级的分类，存入id_item_map。
-          // 对id进行排序，获得排序号X，存入item.sortNumb。
-          this.total = res.data.length
-          let sortNumb = 1
-          for (let i = 0; i < rawTableData.length; i++) {
-            const item = rawTableData[i]
-            item.level = classifyLevel
-            id_item_map[item.classifyId] = item
-            item.sortNumb = 'O' + sortNumb.toString()
-            sortNumb++
-          }
-          tableData = rawTableData
-        } else {
-          // 再获得所有2级(及以上)分类，存入id_item_map。
-          // 遍历所有2级分类的pid，存入pid_ids_map，其中一个k-v对为 pid:[id1,id2,...]
-          // 针对其中的一个k-v对，通过id_item_map[pid]获得上级分类pitem
-          // 上级分类名为pitem.classifyName，存入item.previousClassifyName
-          // 对[id1,id2,...]进行排序，获得序号XX，将其与上级排序号相加，存入item.sortNumb
-          pid_ids_map = {}
-          for (let i = 0; i < rawTableData.length; i++) {
-            const item = rawTableData[i]
-            id_item_map[item.classifyId] = item
-            const pid = item.classifyPid
-            if (pid in pid_ids_map) {
-              pid_ids_map[pid].push(item.classifyId)
-            } else {
-              pid_ids_map[pid] = [item.classifyId]
-            }
-          }
-          for (const pid in pid_ids_map) {
-            const pitem = id_item_map[pid]
-            const ids = pid_ids_map[pid]
-            ids.sort()
-            let sortNumb = 1
-            for (let i = 0; i < ids.length; i++) {
-              const item = id_item_map[ids[i]]
-              item.level = classifyLevel
-              item.previousClassifyName = pitem.classifyName
-              item.sortNumb = pitem.sortNumb + sortNumb.toString().padStart(2, '0')
-              // id_item_map[ids[i]] = item
-              if ('children' in pitem) {
-                pitem['children'].push(item)
-              } else {
-                pitem['children'] = [item]
-              }
-              sortNumb++
-            }
-          }
-        }
-        classifyLevel++
+      const res = await getCommdityClassByPid({ oneClassifyId: 0 })
+      const items = res.data
+      console.error(items)
+      let sortID = 1
+      for (const item of items) {
+        item.sortID = 'O' + sortID.toString()
+        sortID++
+        item.children = []
+        this.setChildern(item, 2)
       }
-      console.info(tableData)
-      this.tableData = tableData
+      items.sort((a, b) => a.sort - b.sort)
+      this.tableData = items
+    },
+    async setChildern(pitem) {
+      const res = await getCommdityClassByPid({ oneClassifyId: pitem.classifyId })
+      const items = res.data
+      let sortID = 1
+      for (const item of items) {
+        item.sortID = pitem.sortID + sortID.toString().padStart(2, '0')
+        sortID++
+        item.children = []
+        item.previousClassifyName = pitem.classifyName
+        pitem['children'].push(item)
+        this.setChildern(item)
+      }
+      pitem['children'].sort((a, b) => a.sort - b.sort)
     }
   }
 }
