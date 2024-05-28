@@ -61,6 +61,48 @@ export function getSelect(data) {
   })
 }
 
+// ******服务商分类******
+// 添加服务商分类
+export function providerClassAdd(data) {
+  return request({
+    url: 'providerClassify/add',
+    method: 'post',
+    data
+  })
+}
+// 删除服务商分类
+export function providerClassDelete(data) {
+  return request({
+    url: '/providerClassify/delete',
+    method: 'post',
+    data
+  })
+}
+// 修改服务商分类
+export function providerClassUpdate(data) {
+  return request({
+    url: '/providerClassify/update',
+    method: 'post',
+    data
+  })
+}
+// 获取服务商分类（通过ID)
+export function getProviderClassById(data) {
+  return request({
+    url: '/providerClassify/getById',
+    method: 'post',
+    data
+  })
+}
+// 获取服务商分类（通过PID）
+export function getProviderClassByPid(data) {
+  return request({
+    url: '/providerClassify/getByPid',
+    method: 'post',
+    data
+  })
+}
+
 // ******客户分类******
 // 添加客户分类
 export function customerClassAdd(data) {
