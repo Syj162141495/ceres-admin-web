@@ -11,10 +11,6 @@
           <el-col :span="12">
             <div>服务名称：{{ productItem.productName }}</div>
             <div>服务简介：{{ productItem.productBrief }}</div>
-            <div style="overflow-wrap: break-word;">
-              服务介绍：
-              <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
-            </div>
             <!-- <div >
               商品标签：
               <el-tag
@@ -39,8 +35,6 @@
                 />
               </div>
             </div> -->
-          </el-col>
-          <el-col :span="12">
             <div>服务类型：{{ productItem.productType }}</div>
             <div>服务大类：{{ productItem.classifyParent }}</div>
             <div>服务小类：{{ productItem.classify }}</div>
@@ -65,6 +59,8 @@
               </el-select>
             </el-form-item> -->
             <!-- <div>服务分类：{{ productItem.classifyName }}</div> -->
+          </el-col>
+          <el-col :span="12">
             <!-- <div>商家分组：{{ productItem.shopGroupName }}</div> -->
             <div>服务提供商：{{ productItem.shopName }}</div>
             <div>是否推荐：
@@ -95,13 +91,32 @@
           </el-col>
         </el-row>
         <el-row class="detail-box">
-          <el-row class="detail-box" v-show="productItem.additionalInfoFlag">
+          <el-row v-show="productItem.additionalInfoFlag">
             <el-col :span="12">
               <div>机构星级：{{ productItem.starRating }}</div>
             </el-col>
             <el-col :span="12">
               <div>机构面积：{{ productItem.area }}</div>
             </el-col>
+          </el-row>
+          <el-row>
+            <div style="overflow-wrap: break-word;">
+              服务介绍：
+              <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
+            </div>
+            <div>
+              服务图片：
+              <div>
+                <img
+                  class="proImage"
+                  v-for="(item, index) in productItem.images"
+                  :key="index"
+                  :src="item.imgPath"
+                  alt=""
+                  @click="handlePictureCardPreview(item)"
+                />
+              </div>
+            </div>
           </el-row>
           <el-col :span="24">
             <div>服务规格：</div>
