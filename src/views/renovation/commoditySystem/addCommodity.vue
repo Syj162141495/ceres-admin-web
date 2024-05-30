@@ -338,6 +338,11 @@ export default {
       const res = await getProductById({ productId: this.productId });
       console.log(res);
       this.productItem = res.data;
+      this.productItem.images = this.productItem.images.map(item => {
+        item.imgPath = item.imgPath.replace("http://58.59.92.190:17190", process.env.VUE_APP_DOMAIN_PREFIX).replace("local", "file");
+        return item
+      });
+      console.log(this.productItem)
       this.productItem.skuAttrList = res.data.names;
       this.productItem.skuAttrList.forEach((item) => {
         var data = {};
