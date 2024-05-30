@@ -132,6 +132,24 @@ export const constantRoutes = [{
       icon: 'tree'
     }
   },
+  {
+    path: 'commdityProviderClass',
+    name: 'commdityProviderClass',
+    component: () => import('@/views/renovation/commdityProviderClass/index'),
+    meta: {
+      title: '服务商分类',
+      icon: 'tree'
+    }
+  },
+  {
+    path: 'customerClass',
+    name: 'customerClass',
+    component: () => import('@/views/renovation/customerClass/index'),
+    meta: {
+      title: '客户分类',
+      icon: 'tree'
+    }
+  },
   // {
   //   path: 'commoditySystem',
   //   name: 'commoditySystem',
