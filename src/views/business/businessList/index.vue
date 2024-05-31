@@ -197,7 +197,7 @@ import Vue from 'vue'
 import Plugin from 'v-fit-columns'
 import {
   getGroupSelect,
-  getClassify,
+  getserverClassify,
   getClassifyAdd,
   getClassifyGetById,
   getClassifyUpdate
@@ -701,7 +701,7 @@ export default {
       this.groupList = res.data
     },
     async selectList() {
-      const res = await getClassify()
+      const res = await getserverClassify()
       this.classifyList = res.data
     },
     changeParentClass() {

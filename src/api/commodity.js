@@ -108,6 +108,15 @@ export function getClassify(data) {
   })
 }
 
+// 服务商分类
+export function getserverClassify(data) {
+  return request({
+    url: '/providerClassify/getClassify',
+    method: 'post',
+    data
+  })
+}
+
 // 删除商品
 export function getClassifyDelete(data) {
   return request({
