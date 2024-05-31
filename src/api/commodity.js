@@ -102,7 +102,7 @@ export function examine(data) {
 // 商品分类
 export function getClassify(data) {
   return request({
-    url: '/providerClassify/getClassify',
+    url: '/canvas/getClassify',
     method: 'post',
     data
   })
