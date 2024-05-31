@@ -131,11 +131,12 @@
                 :label="skuAttr.skuName"
               >
                 <template slot-scope="scope">
-                  {{
+                  <!-- {{
                     scope.row.skuAttrCodeDTOList &&
                     scope.row.skuAttrCodeDTOList[index]
                       | attrValueFilter(productItem.skuAttrList)
-                  }}
+                  }} -->
+                  <span>{{ scope.row.skuValue }}</span>
                 </template>
               </el-table-column>
               <!-- <el-table-column label="售价">
@@ -305,15 +306,17 @@ export default {
       return this.$route.params.productId;
     },
     skuAttrName() {
-      return (
-        this.productItem.skuAttrList &&
-        this.productItem.skuAttrList.filter((skuAttr) => {
-          const hasChilds = skuAttr.values.some((attr) => {
-            return attr.skuValue;
-          });
-          return skuAttr.skuName && hasChilds;
-        })
-      );
+      console.log("skuAttrList", this.productItem.skuAttrList)
+      return this.productItem.skuAttrList;
+      // return (
+      //   this.productItem.skuAttrList &&
+      //   this.productItem.skuAttrList.filter((skuAttr) => {
+      //     const hasChilds = skuAttr.values.some((attr) => {
+      //       return attr.skuValue;
+      //     });
+      //     return skuAttr.skuName && hasChilds;
+      //   })
+      // );
     },
   },
   mounted() {
@@ -353,6 +356,10 @@ export default {
       });
       console.log(this.productItem.skuAttrList, "skuAttrList");
       this.productItem.skuList = this.productItem.skus;
+      for (let i = 0; i < this.productItem.skuList.length; i++) {
+        this.productItem.skuList[i]['skuValue'] = this.productItem.skuAttrList[0]['values'][i]['skuValue']
+      }
+      this.productItem.skuAttrList[0]['skuName'] = "服务规格"
       this.productItem.labels = this.productItem.productBrief === '' ? [] : this.productItem.productBrief.split(',').map(item => ({
         label: item,
         color: ''
