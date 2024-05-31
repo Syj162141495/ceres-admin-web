@@ -128,7 +128,7 @@ export default {
         page: 1,
         shopName: '',
         pageSize: 10,
-        queryType: 'medicalService'// 订单种类
+        queryType: 'medical'// 订单种类
       },
       total: 1,
       tableData: [],
