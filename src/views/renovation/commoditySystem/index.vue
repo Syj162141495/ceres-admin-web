@@ -63,6 +63,7 @@
           style="width: 100%"
         >
           <el-table-column
+            type="index"
             prop="productId"
             label="序号"
             show-overflow-tooltip
