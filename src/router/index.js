@@ -445,7 +445,7 @@ export const constantRoutes = [{
     icon: 'el-icon-s-help'
   },
   children: [{
-    path: 'pending',
+    path: 'pending/:queryType',
     name: 'pending',
     component: () => import('@/views/order/pending/index'),
     meta: {
@@ -453,10 +453,9 @@ export const constantRoutes = [{
       icon: 'table'
     }
   },
-  // pendDetails
   {
     hidden: true, // (默认 false)
-    path: 'pendDetails',
+    path: 'pending/:queryType/pendDetails',
     name: 'pendDetails',
     component: () => import('@/views/order/pending/pendDetails'),
     meta: {

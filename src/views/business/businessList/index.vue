@@ -28,7 +28,7 @@
       <div class="tableBox">
         <el-table ref="multipleTable" v-fit-columns :data="tableData" border
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" tooltip-effect="dark" style="width: 100%">
-          <el-table-column prop="number" label="序号">
+          <el-table-column prop="shopId" label="序号">
             <template slot-scope="scope">
               {{ indexMethod(scope.$index) }}
             </template>
@@ -44,7 +44,7 @@
           <el-table-column prop="institutionalClassify" label="注册类型" />
           <el-table-column prop="institutionalGrade" label="机构等级" />
           <el-table-column prop="medicalcollaboration" label="医疗联合" />
-          <el-table-column prop="area" label="省/地/区县" />
+          <el-table-column prop="area" label="省/市/区县" />
           <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
           <el-table-column prop="reditCode" label="社会信用码" />
           <el-table-column prop="chargePersonName" label="联系人" />
@@ -77,7 +77,7 @@
           : userState === 1
             ? '修改服务商'
             : '查看服务商'
-      " :visible.sync="dialogVisible" width="1200px" top="10px" center :close-on-click-modal="false">
+      " :visible.sync="dialogVisible" width="1200px" top="10px" center :close-on-click-modal="false" @close="handleDialogClose">
         <div>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="授权信息" name="first">
@@ -88,22 +88,22 @@
                       <el-input v-model="ruleForm.serviceClassify" :disabled="disabled" />
                     </el-form-item>
                     <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
-                      <el-select v-model="ruleForm.providersSubclass" placeholder="请选择服务商小类" style="width: 390px;">
-                        <el-option v-for="item in providersSubclassList" :key="item.id" :label="item.categoryName"
+                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 390px;" :disabled="isSelectDisabled">
+                        <el-option v-for="(item,index) in classes" :key="index" :label="item.categoryName"
                           :value="item.id" />
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="服务商名称：" prop="shopName" class="form-item">
+                    <el-form-item label="服务商名称：" prop="shopName" class="form-item" :disabled="isSelectDisabled">
                       <el-input v-model="ruleForm.shopName" />
                     </el-form-item>
                     <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
-                      <el-select v-model="ruleForm.medicalcollaboration" placeholder="请选择医疗联合类型" style="width: 390px;">
-                        <el-option label="无" value="option1" />
-                        <el-option label="医联体" value="option2" />
-                        <el-option label="医共体" value="option3" />
+                      <el-select v-model="ruleForm.medicalcollaboration" placeholder="请选择医疗联合类型" style="width: 390px;" :disabled="isSelectDisabled">
+                        <el-option label="无" value="无" />
+                        <el-option label="医联体" value="医联体" />
+                        <el-option label="医共体" value="医共体" />
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="区域：" prop="area" class="form-item">
+                    <el-form-item label="省/市/区县：" prop="area" class="form-item">
                       <el-input v-model="ruleForm.area" :disabled="disabled" />
                     </el-form-item>
                     <el-form-item label="联系人：" prop="chargePersonName" class="form-item">
@@ -112,8 +112,8 @@
                   </div>
                   <div class="tab-content-column2">
                     <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
-                      <el-select v-model="ruleForm.providersMajor" placeholder="请选择服务商大类" style="width: 390px;">
-                        <el-option v-for="item in providersMajorList" :key="item.id" :label="item.categoryName"
+                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 390px;" @change="changeParentClass" :disabled="isSelectDisabled">
+                        <el-option v-for="(item,index) in parentClasses" :key="index" :label="item.categoryName"
                           :value="item.id" />
                       </el-select>
                     </el-form-item>
@@ -139,12 +139,28 @@
                   <div>
                     <el-form-item label="机构位置：" prop="coordinate" class="form-item">
                       <div>
-                        <label>关键词：<input v-model="ruleForm.shopName"></label>
-                        <label>地区：<input v-model="ruleForm.area"></label>
-                        <baidu-map>
-                          <bm-view class="map"></bm-view>
-                          <bm-local-search :keyword="ruleForm.shopName" :auto-viewport="true"
-                            :location="ruleForm.area" @click="getLocation"></bm-local-search>
+                        <baidu-map
+                          style="display:flex;flex-direction: column-reverse;" 
+                          id="allmap"
+                          @ready="mapReady"
+                          @click="getLocation"
+                          :scroll-wheel-zoom="true"
+                        >
+                          <div style="display:flex;justify-content:center;margin:15px">
+                            <label>纬度：<input v-model="this.ruleForm.coordinateY" :disabled="isSelectDisabled"></label>
+                            <label>经度：<input v-model="this.ruleForm.coordinateX" :disabled="isSelectDisabled"></label>
+                            <bm-auto-complete v-model="searchJingwei" :sugStyle="{zIndex: 999999}">
+                              <el-input v-model="searchJingwei" style="width:300px;margin-right:15px" placeholder="输入地址" :disabled="isSelectDisabled"></el-input>
+                            </bm-auto-complete>
+                            <el-button type="primary" @click="getBaiduMapPoint">搜索</el-button>
+                          </div>
+                          <bm-marker v-if="infoWindowShow" :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}"> 
+                            <bm-label content="" :v-if="infoWindowShow" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
+                          </bm-marker>
+                          <bm-info-window :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}" :show="infoWindowShow" @clickclose="infoWindowClose">
+                            <p>纬度:{{this.ruleForm.coordinateY}}</p>
+                            <p>经度:{{this.ruleForm.coordinateX}}</p>
+                          </bm-info-window>
                         </baidu-map>
                       </div>
                     </el-form-item>
@@ -179,25 +195,26 @@
 // 例如：import 《组件名称》 from '《组件路径》';
 import Vue from 'vue'
 import Plugin from 'v-fit-columns'
+import {
+  getGroupSelect,
+  getClassify,
+  getClassifyAdd,
+  getClassifyGetById,
+  getClassifyUpdate
+} from '@/api/commodity'
 Vue.use(Plugin)
 import {
   businessListGetAll,
   businessListSave,
   businessListGetById,
   businessListUpdate,
-  businessListStart,
-  getClassify
+  businessListStart
 } from '@/api/business'
 export default {
   components: {},
   data() {
     // 这里存放数据
     return {
-      center: {
-        lng: 116.404,
-        lat: 39.915
-      },
-      zoom: 15,
       // 新建服务商弹框
       dialogVisible: false,
       activeName: 'first',
@@ -208,6 +225,7 @@ export default {
         providersMajor: '',
         providersSubclass: '',
         serviceClassify: '',
+        classifyId: 0,
         // contractState: '', // 合同状态 1-有效 0-无效
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
@@ -215,8 +233,8 @@ export default {
       disabled: false,
       ruleForm: {
         // providersType: '',
-        providersMajor: '',
-        providersSubclass: '',
+        // providersMajor: '',
+        // providersSubclass: '',
         shopName: '', // 服务商名称
         // city: '',
         area: '',
@@ -230,11 +248,13 @@ export default {
         chargePersonPhone: '', // 负责人电话
         // location: '北京',
         // keyword: '百度',
-        coordinateX: '',
-        coordinateY: '',
+        coordinateX:'',
+        coordinateY:'',
         introduction: '',
         shopPhone: '', // 账号
-        shopPassword: '' // 密码
+        shopPassword: '', // 密码
+        classifyParentId: '',
+        classifyId: '' // 分类id
       },
       rulesInfo: {
         shopName: [
@@ -298,7 +318,14 @@ export default {
       serviceList: [],
       tableData: [],
       currentPage: 1,
-      userState: 1
+      userState: 1,
+      shopId: 0,
+      searchJingwei:'',
+      infoWindowShow:true,
+      point:'',
+      classifyList: [],
+      parentClasses: [],
+      classes: []
     }
   },
   // 监听属性 类似于data概念
@@ -312,11 +339,18 @@ export default {
   // 监控data中的数据变化
   watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
-  created() { },
-  // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.getAll(this.formInline)
+  created() {
     this.selectList()
+    this.getAll(this.formInline)
+  },
+  // 生命周期 - 挂载完成（可以访问DOM元素）
+  async mounted() {
+    await this.selectList()
+    this.getAll(this.formInline)
+    // await this.mapReady({ BMap, map })
+    this.parentClasses = this.classifyList.find(item => item.categoryName === '医疗服务')['childs'];
+    this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs'];
+    await this.mapReady({ BMap, map })
   },
   // 方法集合
   methods: {
@@ -337,29 +371,58 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event)
     },
+    handleDialogClose(){
+      // this.infoWindowShow = false; // 隐藏信息窗口
+      this.map.centerAndZoom(this.point, 12); // 将地图视图恢复到初始状态
+      this.ruleForm.coordinateX = ''; // 清空坐标信息
+      this.ruleForm.coordinateY = '';
+      this.searchJingwei = ''
+    },
     onSubmit() {
       this.getAll(this.formInline)
     },
-    getLocation() {
-      this.ruleForm.coordinateX
-      this.ruleForm.coordinateY
-    },
-    initMapConfirm() {
-      this.amapVisible = true
-    },
-    mapConfirm(flag, data) {
-      this.amapVisible = false
-      if (flag) {
-        this.basicFormValidate.businessAddressDetail = data.address
-        this.basicFormValidate.businessAddressLatitude = data.lat
-        this.basicFormValidate.businessAddressLongitude = data.lng
-        this.basicFormValidate.businessProvinceId = data.businessProvinceId
+    //地图初始化
+    mapReady({ BMap, map }) {
+      // 选择一个经纬度作为中心点
+      if (this.userState === 0) {
+        this.point = new BMap.Point(116.3925, 39.9075);
+        map.centerAndZoom(this.point, 12);
+      } else {
+        map.centerAndZoom(new BMap.Point(this.ruleForm.coordinateX, this.ruleForm.coordinateY), 12);
       }
+      this.BMap=BMap
+      this.map=map
+    },
+    //点击获取经纬度
+    getLocation(e){
+      this.ruleForm.coordinateX=e.point.lng
+      this.ruleForm.coordinateY=e.point.lat
+      this.infoWindowShow=true
+    },
+    getBaiduMapPoint(){
+      let that=this
+      let myGeo = new this.BMap.Geocoder()
+      myGeo.getPoint(this.searchJingwei,function(point){
+        if(point){
+          that.map.centerAndZoom(point,15)
+          that.ruleForm.coordinateY=point.lat
+          that.ruleForm.coordinateX=point.lng
+          that.infoWindowShow=true
+        }
+
+      })
+    },
+    //信息窗口关闭
+    infoWindowClose(){
+      this.ruleForm.coordinateY=''
+      this.ruleForm.coordinateX=''
+      this.infoWindowShow=false
     },
     // 新建服务商
     addbuss() {
       this.userState = 0
       this.disabled = false
+      this.isSelectDisabled = false
       this.ruleForm = {
         providersMajor: '',
         providersSubclass: '',
@@ -385,14 +448,11 @@ export default {
         // effectiveYear: '', // 生效年限
         // contractState: 1, // 合同状态 1-有效 0-无效
         shopPhone: '', // 账号
-        shopPassword: '' // 密码
+        shopPassword: '', // 密码
+        classifyParentId: '',
+        classifyId: '' // 分类id
       }
       this.dialogVisible = true
-      // this.ruleForm.service =
-      //   this.ruleForm.service[2] ||
-      //   this.ruleForm.service[1] ||
-      //   this.ruleForm.service[0] ||
-      //   this.ruleForm.service
       console.log(this.userState)
     },
     next() {
@@ -402,6 +462,8 @@ export default {
       this.$nextTick(() => {
         this.$refs['ruleForm'].clearValidate()
         this.$refs['ruleFormInfo'].clearValidate()
+        this.searchJingwei = ''
+        this.infoWindowShow = false
         this.dialogVisible = false
       })
     },
@@ -415,17 +477,23 @@ export default {
             this.$message.error('请输入服务商名称')
             return
           }
-          // if (this.ruleForm.serviceClassify === '') {
-          //   this.$message.error('请选择服务类型')
-          //   return
-          // }
           if (this.ruleForm.chargePersonPhone === '') {
             this.$message.error('请输入联系电话')
             return
           }
           if (!this.userState) {
+            this.ruleForm.serviceClassify = '医疗服务'
+            if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+              for (const category of this.classifyList.find(item => item.categoryName === '医疗服务')['childs']) {
+                for (const subCategory of category["childs"]) {
+                  if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
+                    this.ruleForm.providersMajor = category["categoryName"]
+                    this.ruleForm.providersSubclass = subCategory["categoryName"]
+                  }
+                }
+              }
+            }
             businessListSave(this.ruleForm).then(res => {
-              console.log(res)
               if (res.code === '') {
                 this.$message({
                   message: '新增成功',
@@ -437,8 +505,18 @@ export default {
               this.$refs.ruleForm.clearValidate()
             })
           } else {
+            if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+              for (const category of this.classifyList.find(item => item.categoryName === '医疗服务')['childs']) {
+                for (const subCategory of category["childs"]) {
+                  if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
+                    this.ruleForm.providersMajor = subCategory["categoryName"]
+                    this.ruleForm.providersSubclass = category["categoryName"]
+                    this.ruleForm.classifyId = subCategory["id"]
+                  }
+                }
+              }
+            }
             businessListUpdate(this.ruleForm).then(res => {
-              console.log(res)
               if (res.code === '') {
                 this.$message({
                   message: '修改成功',
@@ -468,26 +546,98 @@ export default {
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
       },
-        this.getAll(this.formInline)
+      this.searchJingwei = ''
+      this.getAll(this.formInline)
     },
     // 查看
     async seeMore(row) {
+      this.isSelectDisabled = true
       const res = await businessListGetById({ shopId: row.shopId })
+      this.ruleForm = {
+        providersMajor: '',
+        providersSubclass: '',
+        medicalcollaboration: '',
+        shopName: '', // 服务商名称
+        city: '',
+        area: '',
+        serviceClassify: '医疗服务',
+        institutionalClassify: '',
+        institutionalGrade: '',
+        address: '',
+        reditCode: '',
+        chargePersonName: '', // 服务商负责人
+        chargePersonPhone: '', // 负责人电话
+        coordinateX: '',
+        coordinateY: '',
+        introduction: '',
+        shopPhone: '', // 账号
+        shopPassword: '', // 密码
+        classifyParentId: '',
+        classifyId: '' // 分类id
+      }
+      this.dialogVisible = true
       if (res.code === '') {
         this.userState = 3
         this.disabled = true
         this.ruleForm = res.data
-        this.dialogVisible = true
+        this.infoWindowShow = true
+        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+          for (const category of this.classifyList.find(item => item.categoryName === '医疗服务')['childs']) {
+            for (const subCategory of category["childs"]) {
+              if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
+                this.ruleForm.classifyId = subCategory["categoryName"]
+                this.ruleForm.classifyParentId = category["categoryName"];
+              }
+            }
+          }
+        }
+        this.mapReady({BMap: this.BMap, map: this.map})
       }
     },
     // 编辑
     async edit(row) {
       this.userState = 1
       this.disabled = false
+      this.isSelectDisabled = false
       const res = await businessListGetById({ shopId: row.shopId })
-      this.ruleForm = res.data
       this.dialogVisible = true
-      console.log(this.ruleForm)
+      this.ruleForm = {
+        providersMajor: '',
+        providersSubclass: '',
+        medicalcollaboration: '',
+        shopName: '', // 服务商名称
+        city: '',
+        area: '',
+        serviceClassify: '医疗服务',
+        institutionalClassify: '',
+        institutionalGrade: '',
+        address: '',
+        reditCode: '',
+        chargePersonName: '', // 服务商负责人
+        chargePersonPhone: '', // 负责人电话
+        coordinateX: '',
+        coordinateY: '',
+        introduction: '',
+        shopPhone: '', // 账号
+        shopPassword: '', // 密码
+        classifyParentId: '',
+        classifyId: '' // 分类id
+      }
+      if (res.code === '') {
+        this.ruleForm = res.data
+        this.infoWindowShow = true
+        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+          for (const category of this.classifyList.find(item => item.categoryName === '医疗服务')['childs']) {
+            for (const subCategory of category["childs"]) {
+              if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
+                this.ruleForm.classifyId = subCategory["categoryName"]
+                this.ruleForm.classifyParentId = category["categoryName"];
+              }
+            }
+          }
+        }
+        this.mapReady({ BMap: this.BMap, map: this.map })
+      }
     },
     // 删除
     async del(row) {
@@ -523,26 +673,52 @@ export default {
     // businessListGetAll
     // 初始化查询所有数据
     async getAll(formInline) {
-      console.log(this.ruleForm.serviceClassify)
       this.formInline.serviceClassify = '医疗服务'
       const res = await businessListGetAll(formInline)
       this.total = res.data.total
       this.tableData = res.data.list
-      // this.ruleForm.serviceClassify =
-      //   this.ruleForm.serviceClassify[2] ||
-      //   this.ruleForm.serviceClassify[1] ||
-      //   this.ruleForm.serviceClassify[0] ||
-      //   this.ruleForm.serviceClassify
+      if (res.code === '') {
+        this.ruleForm = res.data
+        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+          for (const category of this.classifyList.find(item => item.categoryName === '医疗服务')['childs']) {
+            for (const subCategory of category["childs"]) {
+              if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
+                this.ruleForm.classifyId = subCategory["categoryName"]
+                this.ruleForm.classifyParentId = category["categoryName"];
+                this.tableData.providersMajor = category["categoryName"];
+                this.tableData.providersSubclass = subCategory["categoryName"];
+              }
+            }
+          }
+        }
+      }
     },
 
+    // 获取服务分组
+    async groups() {
+      const res = await getGroupSelect({
+      })
+      this.groupList = res.data
+    },
     async selectList() {
       const res = await getClassify()
-      this.serviceList = res.data
+      this.classifyList = res.data
+    },
+    changeParentClass() {
+      this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs'];
+      this.ruleForm.classifyId = this.classes[0].id
+      console.log(this.classes)
+      console.log(this.ruleForm.classifyId)
     }
   }
 }
 </script>
 <style lang='scss' scoped>
+#allmap{
+  height: 450px;
+  width: 100%;
+  margin: 10px 0;
+}
 .map {
   width: 100%;
   height: 300px;
