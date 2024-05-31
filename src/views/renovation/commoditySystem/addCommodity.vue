@@ -104,7 +104,7 @@
               服务介绍：
               <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
             </div>
-            <div>
+            <div v-show="productItem.images.length !== 0">
               服务图片：
               <div>
                 <img
@@ -338,7 +338,7 @@ export default {
       const res = await getProductById({ productId: this.productId });
       console.log(res);
       this.productItem = res.data;
-      this.productItem.images = this.productItem.images.map(item => {
+      this.productItem.images = this.productItem.images.filter(item => item.imgPath !== "").map(item => {
         item.imgPath = item.imgPath.replace("http://58.59.92.190:17190", process.env.VUE_APP_DOMAIN_PREFIX).replace("local", "file");
         return item
       });
