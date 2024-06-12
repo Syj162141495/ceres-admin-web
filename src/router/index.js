@@ -212,6 +212,32 @@ export const constantRoutes = [{
   }
   ]
 },
+// 运营管理
+{
+  path: '/operation',
+  component: Layout,
+  meta: {
+    title: '运营管理',
+    icon: 'el-icon-s-help'
+  },
+  children: [{
+    path: 'serviceRecommendation',
+    name: 'serviceRecommendation',
+    component: () => import('@/views/operation/serviceRecommendation/index'),
+    meta: {
+      title: '服务推荐',
+      icon: 'tree'
+    }
+  }, {
+    path: 'dataInterface',
+    name: 'dataInterface',
+    component: () => import('@/views/operation/dataInterface/index'),
+    meta: {
+      title: '数据接口',
+      icon: 'tree'
+    }
+  }]
+},
 {
   path: '/active',
   component: Layout,
