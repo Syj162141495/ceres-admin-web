@@ -24,11 +24,10 @@ export function deleteServiceRecommendation(data) {
   })
 }
 
-export function recommendationBuyerList(data) {
+export function recommendationBuyerList() {
   return request({
-    url: '/buyer/getAll',
-    method: 'post',
-    data
+    url: '/serviceRecommendation/getAllBuyer',
+    method: 'get'
   })
 }
 

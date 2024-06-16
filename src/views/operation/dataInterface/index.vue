@@ -1,7 +1,7 @@
 <template>
   <div style="margin-left: 1%; margin-right: 1%">
-    <el-input v-model="search" placeholder="search" style="width: 300px; margin-bottom: 10px;" />
-    <el-button type="primary" class="green-button" @click="showAddDialogForm">新增</el-button>
+    <!--    <el-input v-model="search" placeholder="search" style="width: 300px; margin-bottom: 10px;" />-->
+    <el-button type="primary" class="green-button" style="margin-bottom: 10px; margin-left: 0" @click="showAddDialogForm">新增</el-button>
     <!--新增或编辑弹窗-->
     <el-dialog :title="dialogFormName" :visible.sync="dialogFormVisible">
       <div slot="footer" class="dialog-footer scrollable-container">
