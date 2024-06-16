@@ -43,6 +43,20 @@ export const constantRoutes = [{
 {
   path: '/',
   component: Layout,
+  redirect: '/indexboard',
+  children: [{
+    path: 'indexboard',
+    name: 'Indexboard',
+    component: () => import('@/views/indexboard/index'),
+    meta: {
+      title: '首页',
+      icon: 'dashboard'
+    }
+  }]
+},
+{
+  path: '/',
+  component: Layout,
   redirect: '/businessList',
   meta: {
     title: '服务商管理',
