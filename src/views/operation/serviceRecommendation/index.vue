@@ -1,107 +1,158 @@
 <template>
-  <div style="margin-left: 1%; margin-right: 1%">
-    <!--    <el-input v-model="search" placeholder="search" style="width: 300px; margin-bottom: 10px;" />-->
-    <el-button type="primary" class="green-button" style="margin-bottom: 10px; margin-left: 0" @click="showAddDialogForm">新增</el-button>
+  <div style="margin-left: 3%; margin-right: 3%">
+    <div style="margin-top: 20px;">
+      <el-form :inline="true" :v-model="searchForm">
+        <el-form-item label="服务推荐名称">
+          <el-input v-model="searchForm.searchName" placeholder="请输入服务推荐名称" />
+        </el-form-item>
+        <el-form-item label="推荐客户">
+          <el-input v-model="searchForm.searchBuyerName" placeholder="请输入客户名称" />
+        </el-form-item>
+        <el-form-item label="推荐类型">
+          <el-input v-model="searchForm.searchType" placeholder="请输入推荐类型" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" plain @click="search">查询</el-button>
+          <el-button type="success" plain @click="showAddDialogForm">新增</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <!--新增或编辑弹窗-->
     <el-dialog :title="dialogFormName" :visible.sync="dialogFormVisible">
       <div slot="footer" class="dialog-footer scrollable-container">
         <el-form ref="dynamicValidateForm" :model="dynamicValidateForm" label-width="100px">
-          <el-form-item
-            label="推荐名称"
-            style="width: 580px;"
-            :rules="{
-              required: true, message: '推荐名称不能为空', trigger: 'blur'
-            }"
-            prop="serviceRecommendationName"
-          >
-            <el-input v-model="dynamicValidateForm.serviceRecommendationName" label="推荐名称" />
-          </el-form-item>
-          <div class="item-pair">
-            <el-form-item label="推荐客户">
-              <el-select
-                v-model="dynamicValidateForm.serviceRecommendationBuyerId"
-                :placeholder="dynamicValidateForm.serviceRecommendationBuyerId === null ? '请选择客户' : ''"
+          <el-row>
+            <el-col :span="12">
+              <el-form-item
+                label="推荐名称"
+                :rules="{
+                  required: true, message: '推荐名称不能为空', trigger: 'blur'
+                }"
+                prop="serviceRecommendationName"
               >
-                <el-option
-                  v-for="(item, index) in serviceRecommendationBuyerList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.buyerUserId"
+                <el-input v-model="dynamicValidateForm.serviceRecommendationName" label="推荐名称" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="推荐客户">
+                <el-select
+                  v-model="dynamicValidateForm.serviceRecommendationBuyerId"
+                  :placeholder="dynamicValidateForm.serviceRecommendationBuyerId === null ? '请选择客户' : ''"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="(item, index) in serviceRecommendationBuyerList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.buyerUserId"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" />
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <el-form-item label="是否采纳">
+                <el-select v-model="dynamicValidateForm.serviceRecommendationAdoption" placeholder="是否采纳" style="width: 100%">
+                  <el-option label="是" value="是" />
+                  <el-option label="否" value="否" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="服务产品">
+                <el-cascader
+                  v-model="selectedProduct"
+                  placeholder="搜索服务产品"
+                  :options="serviceRecommendationProductList"
+                  filterable
+                  style="width: 140%"
                 />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="是否采纳">
-              <el-radio v-model="dynamicValidateForm.serviceRecommendationAdoption" label="是" />
-              <el-radio v-model="dynamicValidateForm.serviceRecommendationAdoption" label="否" />
-            </el-form-item>
-          </div>
-          <el-form-item label="服务产品" style="display: flex; width: 100%">
-            <div style="display: flex; width: 100%;">
-              <el-cascader
-                v-model="selectedProduct"
-                style="width: 400px; margin-left: -100px"
-                placeholder="搜索服务产品"
-                :options="serviceRecommendationProductList"
-                filterable
-              />
-              <el-button style="margin-left: 10px" type="success" @click="addRow">新增</el-button>
-            </div>
-          </el-form-item>
-          <el-form-item style="margin-left: 100px; width: 580px">
-            <el-table :data="productTableData" style="margin-left: -100px;">
-              <el-table-column prop="shopName" label="服务商" />
-              <el-table-column prop="productName" label="服务产品" />
-              <el-table-column prop="price" label="售价" />
-              <el-table-column label="操作">
-                <template slot-scope="scope">
-                  <el-button size="small" type="danger" @click="removeRow(scope.$index)">
-                    删除
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-form-item>
-          <el-form-item style="display: flex">
-            <el-button type="primary" style="margin-right: -480px" @click="submitForm('dynamicValidateForm', dynamicValidateForm)">提交</el-button>
-          </el-form-item>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item>
+                <el-button plain type="success" @click="addRow">新增</el-button>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" />
+          </el-row>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item label="产品列表">
+                <el-table :data="productTableData" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" style="width: 100%">
+                  <el-table-column prop="shopName" label="服务商" />
+                  <el-table-column prop="productName" label="服务产品" />
+                  <el-table-column prop="price" label="售价" />
+                  <el-table-column label="操作">
+                    <template slot-scope="scope">
+                      <el-button plain type="text" @click="removeRow(scope.$index)">
+                        删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" />
+          </el-row>
+          <el-row>
+            <el-col :span="22">
+              <el-form-item>
+                <el-button plain type="primary" @click="submitForm('dynamicValidateForm', dynamicValidateForm)">提交</el-button>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" />
+          </el-row>
         </el-form>
       </div>
     </el-dialog>
-    <el-table :data="serviceRecommendationList.filter(data => !search || data.serviceRecommendationName.toLowerCase().includes(search.toLowerCase()))" style="width: 100%" class="el-table">
-      <el-table-column label="序号" prop="serviceRecommendationId" />
-      <el-table-column label="推荐名称" prop="serviceRecommendationName" />
+    <el-table :data="serviceRecommendationList" style="width: 100%" class="el-table" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" border>
+      <el-table-column label="序号" prop="serviceRecommendationId" width="80%" />
+      <el-table-column label="推荐名称" prop="serviceRecommendationName" width="80%" />
       <!--      <el-table-column label="推荐客户" prop="recommendationCustomer" />-->
-      <el-table-column label="推荐客户" prop="serviceRecommendationBuyerName" />
-      <el-table-column label="推荐类型" prop="serviceRecommendationType" />
-      <el-table-column label="推荐数量" prop="serviceRecommendationServicesCount" />
-      <el-table-column label="推荐时间" prop="serviceRecommendationTime" />
-      <el-table-column label="是否采纳" prop="serviceRecommendationAdoption" />
-      <el-table-column label="操作" width="300px">
+      <el-table-column label="推荐客户" prop="serviceRecommendationBuyerName" width="80%" />
+      <el-table-column label="推荐类型" prop="serviceRecommendationType" width="80%" />
+      <el-table-column label="推荐数量" prop="serviceRecommendationServicesCount" width="80%" />
+      <el-table-column label="服务产品信息" prop="serviceRecommendationProductInfo" />
+      <el-table-column label="推荐时间" prop="serviceRecommendationTime" width="160%" />
+      <el-table-column label="是否采纳" prop="serviceRecommendationAdoption" width="80%" />
+      <el-table-column label="操作" width="120%">
         <template slot-scope="scope">
-          <el-button size="mini" @click="showView(scope.$index, scope.row)">查看客户信息</el-button>
-          <el-button size="mini" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button plain type="text" @click="showView(scope.$index, scope.row)">查看客户信息</el-button>
+          <el-button plain type="text" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
+          <el-button plain type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="客户信息" :visible.sync="userDialogFormVisible" style="width: 60%; margin-left: 20%">
+    <el-dialog title="客户信息" :visible.sync="userDialogFormVisible" style="width: 100%;">
       <el-form :model="userInfo">
-        <el-form-item label="客户名称">
-          <el-input v-model="userInfo.name" :disabled="true" style="width: fit-content" />
-        </el-form-item>
-        <el-form-item label="客户电话">
-          <el-input v-model="userInfo.phone" :disabled="true" style="width: fit-content" />
-        </el-form-item>
-        <el-form-item label="客户性别">
-          <el-input v-model="userInfo.sex" :disabled="true" style="width: fit-content" />
-        </el-form-item>
-        <el-form-item label="客户年龄">
-          <el-input v-model="userInfo.age" :disabled="true" style="width: fit-content" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="客户名称">
+              <el-input v-model="userInfo.name" :disabled="true" style="width: fit-content" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="客户电话">
+              <el-input v-model="userInfo.phone" :disabled="true" style="width: fit-content" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="客户性别">
+              <el-input v-model="userInfo.sex" :disabled="true" style="width: fit-content" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="客户年龄">
+              <el-input v-model="userInfo.age" :disabled="true" style="width: fit-content" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="userDialogFormVisible = false">确 定</el-button>
-      </div>
     </el-dialog>
     <el-pagination
       :current-page="pageInfo.pageNumber"
@@ -123,6 +174,11 @@ import { insertServiceRecommendation, updateServiceRecommendation,
 export default {
   data() {
     return {
+      searchForm: {
+        searchName: '',
+        searchBuyerName: '',
+        searchType: ''
+      },
       isAddOrEdit: 0,
       dynamicValidateForm: {
         serviceRecommendationId: 0,
@@ -140,7 +196,6 @@ export default {
       dialogFormName: '',
       dialogFormVisible: false,
       userDialogFormVisible: false,
-      search: '',
       serviceRecommendationList: [],
       serviceRecommendationBuyerList: [],
       serviceRecommendationProductList: [],
@@ -201,6 +256,7 @@ export default {
         }, [])
         this.serviceRecommendationProductList = productList
         this.productList = res.data
+        console.log('res', this.serviceRecommendationProductList)
       })
       recommendationBuyerList().then(res => {
         this.serviceRecommendationBuyerList = res.data
@@ -211,8 +267,43 @@ export default {
             this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
             this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
             this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+            this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
+            const productInfo = []
+            for (let j = 0; j < this.serviceRecommendationList[j].serviceRecommendationProductIds.length; j++) {
+              const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
+              console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
+              productInfo.push({ shopName: product.shopName, productName: product.productName })
+            }
+            // 初始化用于存放唯一值的数组
+            let uniqueShopNames = []
+            let uniqueProductNames = []
+            // 提取并去重 shopName
+            // eslint-disable-next-line no-const-assign
+            uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
+            // 提取并去重 productName
+            uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
+            this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
           }
         })
+      })
+    },
+    search() {
+      this.pageInfo.serviceRecommendationName = this.searchForm.searchName
+      const buyer = this.serviceRecommendationBuyerList.find(buyer => buyer.name === this.searchForm.searchBuyerName)
+      if (typeof buyer === 'undefined') {
+        this.pageInfo.serviceRecommendationBuyerId = 0
+      } else {
+        this.pageInfo.serviceRecommendationBuyerId = buyer.buyerUserId
+      }
+      this.pageInfo.serviceRecommendationType = this.searchForm.searchType
+      getServiceRecommendationList(this.pageInfo).then(res => {
+        this.serviceRecommendationList = res.data.list
+        this.total = res.data.total
+        for (let i = 0; i < this.serviceRecommendationList.length; i++) {
+          this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
+          this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
+          this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+        }
       })
     },
     // 展示新增表单
@@ -361,36 +452,14 @@ export default {
 .item-pair{
   display: flex;
 }
-
-.green-button {
-  background-color: #4CAF50;
-  color: white;
-  margin-top: 10px;
-  margin-left: 10px;
-}
-.el-table tr td,
-.el-table tr th {
-  padding: 12px 0;
-  vertical-align: middle;
-}
-.el-table {
-  border-top: 1px solid #dfe6ec;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-}
-.el-button--primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  border-radius: 4px;
-}
-.el-button {
-  font-weight: 500;
-  border-radius: 4px;
-}
 .el-dialog__header {
   padding: 20px 24px;
 }
 .el-dialog__body {
   padding: 20px;
+}
+.el-button {
+  border: none;
 }
 .el-pager li.active {
   background-color: #007bff;
@@ -408,5 +477,11 @@ export default {
 }
 .user-dialog {
   justify-content: center;
+}
+::v-deep .form-item .el-form-item__label {
+  width: 100%;
+  /* 设置标签的宽度 */
+  display: inline-block;
+  text-align: left;
 }
 </style>
