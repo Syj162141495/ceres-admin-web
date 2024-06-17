@@ -12,10 +12,24 @@
             <el-input v-model="formInline.chargePersonName" placeholder="请输入联系人" />
           </el-form-item>
           <el-form-item label="大类">
-            <el-input v-model="formInline.providersMajor" placeholder="请输入服务商大类" />
+            <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" :disabled="isSelectDisabled" @change="changeParentClass">
+              <el-option
+                v-for="(item,index) in parentClasses"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="小类">
-            <el-input v-model="formInline.providersSubclass" placeholder="请输入服务商小类" />
+            <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 310px;" :disabled="isSelectDisabled">
+              <el-option
+                v-for="(item,index) in classes"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="onSubmit">查询</el-button>
@@ -77,51 +91,56 @@
           : userState === 1
             ? '修改服务商'
             : '查看服务商'
-      " :visible.sync="dialogVisible" width="1200px" top="10px" center :close-on-click-modal="false" @close="handleDialogClose">
+      " :visible.sync="dialogVisible" width="900px" top="10px" center :close-on-click-modal="false" @close="handleDialogClose">
         <div>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="授权信息" name="first">
               <div class="two-column-tabs">
                 <el-form ref="ruleFormInfo" :model="ruleForm" :rules="rulesInfo" label-width="110px">
                   <div class="tab-content-column1">
-                    <el-form-item label="服务商类型：" prop="serviceClassify" class="form-item">
-                      <el-input v-model="ruleForm.serviceClassify" :disabled="disabled" />
-                    </el-form-item>
-                    <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
-                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 390px;" :disabled="isSelectDisabled">
-                        <el-option v-for="(item,index) in classes" :key="index" :label="item.categoryName"
-                          :value="item.id" />
-                      </el-select>
-                    </el-form-item>
                     <el-form-item label="服务商名称：" prop="shopName" class="form-item" :disabled="isSelectDisabled">
                       <el-input v-model="ruleForm.shopName" />
                     </el-form-item>
-                    <!-- <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
-                      <el-select v-model="ruleForm.medicalcollaboration" placeholder="请选择医疗联合类型" style="width: 390px;" :disabled="isSelectDisabled">
-                        <el-option label="无" value="无" />
-                        <el-option label="医联体" value="医联体" />
-                        <el-option label="医共体" value="医共体" />
+                    <el-form-item label="机构等级：" prop="institutionalGrade" class="form-item">
+                      <el-input v-model="ruleForm.institutionalGrade" :disabled="disabled" />
+                    </el-form-item>
+                    <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
+                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 240px;" :disabled="isSelectDisabled">
+                        <el-option
+                          v-for="(item,index) in classes"
+                          :key="index"
+                          :label="item.categoryName"
+                          :value="item.id"
+                        />
                       </el-select>
-                    </el-form-item> -->
-                    <el-form-item label="省/市/区县：" prop="area" class="form-item">
-                      <el-input v-model="ruleForm.area" :disabled="disabled" />
+                    </el-form-item>
+                    <el-form-item label="注册类型：" prop="institutionalClassify" class="form-item">
+                      <el-input v-model="ruleForm.institutionalClassify" :disabled="disabled" />
                     </el-form-item>
                     <el-form-item label="联系人：" prop="chargePersonName" class="form-item">
                       <el-input v-model="ruleForm.chargePersonName" :disabled="disabled" />
                     </el-form-item>
                   </div>
                   <div class="tab-content-column2">
-                    <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
-                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 390px;" @change="changeParentClass" :disabled="isSelectDisabled">
-                        <el-option v-for="(item,index) in parentClasses" :key="index" :label="item.categoryName"
-                          :value="item.id" />
+                    <el-form-item label="服务商类型：" prop="serviceClassify" class="form-item">
+                      <el-input v-model="ruleForm.serviceClassify" :disabled="disabled" />
+                    </el-form-item>
+                    <!-- <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
+                      <el-select v-model="ruleForm.medicalcollaboration" placeholder="请选择医疗联合类型" style="width: 240px;" :disabled="isSelectDisabled">
+                        <el-option label="无" value="无" />
+                        <el-option label="医联体" value="医联体" />
+                        <el-option label="医共体" value="医共体" />
                       </el-select>
-                    </el-form-item>
-                    <el-form-item label="注册类型：" prop="institutionalClassify" class="form-item">
-                      <el-input v-model="ruleForm.institutionalClassify" :disabled="disabled" />
-                    </el-form-item>
-                    <el-form-item label="机构等级：" prop="institutionalGrade" class="form-item">
-                      <el-input v-model="ruleForm.institutionalGrade" :disabled="disabled" />
+                    </el-form-item> -->
+                    <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
+                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 240px;" :disabled="isSelectDisabled" @change="changeParentClass">
+                        <el-option
+                          v-for="(item,index) in parentClasses"
+                          :key="index"
+                          :label="item.categoryName"
+                          :value="item.id"
+                        />
+                      </el-select>
                     </el-form-item>
                     <el-form-item label="社会信用代码：" prop="reditCode" class="form-item">
                       <el-input v-model="ruleForm.reditCode" :disabled="disabled" />
@@ -133,12 +152,16 @@
                   <div>
                     <el-form-item label="机构介绍：" prop="introduction" class="form-item">
                       <el-input v-model="ruleForm.introduction" type="textarea" class="form-item-sub" :disabled="disabled"
-                        :autosize="{ minRows: 8, maxRows: 9 }" />
+                        :autosize="{ minRows: 2, maxRows: 3 }" 
+                        style="width: 690px;"/>
                     </el-form-item>
                   </div>
                   <div>
+                    <el-form-item label="省/市/区县：" prop="area" class="form-item">
+                      <el-input v-model="ruleForm.area" :disabled="disabled" style="width: 690px;"/>
+                    </el-form-item>
                     <el-form-item label="机构位置：" prop="coordinate" class="form-item">
-                      <div>
+                      <div style="width: 690px;">
                         <baidu-map
                           style="display:flex;flex-direction: column-reverse;" 
                           id="allmap"
@@ -147,12 +170,12 @@
                           :scroll-wheel-zoom="true"
                         >
                           <div style="display:flex;justify-content:center;margin:15px">
-                            <label>纬度：<input v-model="this.ruleForm.coordinateY" :disabled="isSelectDisabled"></label>
-                            <label>经度：<input v-model="this.ruleForm.coordinateX" :disabled="isSelectDisabled"></label>
+                            <label>纬度：<input v-model="this.ruleForm.coordinateY" :disabled="isSelectDisabled" style="width: 150px;"></label>
+                            <label>经度：<input v-model="this.ruleForm.coordinateX" :disabled="isSelectDisabled" style="width: 150px;"></label>
                             <bm-auto-complete v-model="searchJingwei" :sugStyle="{zIndex: 999999}">
                               <el-input v-model="searchJingwei" style="width:300px;margin-right:15px" placeholder="输入地址" :disabled="isSelectDisabled"></el-input>
                             </bm-auto-complete>
-                            <el-button type="primary" @click="getBaiduMapPoint">搜索</el-button>
+                            <el-button type="primary" @click="getBaiduMapPoint" style="height: 40px;">搜索</el-button>
                           </div>
                           <bm-marker v-if="infoWindowShow" :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}"> 
                             <bm-label content="" :v-if="infoWindowShow" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
@@ -171,10 +194,10 @@
             <el-tab-pane label="客户信息" name="second">
               <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px">
                 <el-form-item label="账号" prop="shopPhone">
-                  <el-input v-model="ruleForm.shopPhone" :disabled="disabled" maxlength="20" />
+                  <el-input v-model="ruleForm.shopPhone" :disabled="disabled" maxlength="20" style="width: 650px;"/>
                 </el-form-item>
                 <el-form-item label="密码" prop="shopPassword">
-                  <el-input v-model="ruleForm.shopPassword" type="password" :disabled="disabled" maxlength="20" />
+                  <el-input v-model="ruleForm.shopPassword" type="password" :disabled="disabled" maxlength="20" style="width: 650px;"/>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -741,6 +764,11 @@ export default {
   text-align: left;
 }
 
+::v-deep .el-table th,
+::v-deep .el-table td {
+  padding: 0.1px 0; /* 调整这个值可以控制行高 */
+}
+
 .tableBox {
   overflow-x: auto;
 }
@@ -758,7 +786,7 @@ export default {
   display: inline-block;
   vertical-align: top;
   /* 确保垂直对齐 */
-  width: 500px;
+  width: 350px;
   /* 各占一半宽度 */
   box-sizing: border-box;
   /* 包括padding和border在内计算宽度 */
@@ -772,7 +800,7 @@ export default {
   display: inline-block;
   vertical-align: top;
   /* 确保垂直对齐 */
-  width: 500px;
+  width: 350px;
   /* 各占一半宽度 */
   box-sizing: border-box;
   /* 包括padding和border在内计算宽度 */
