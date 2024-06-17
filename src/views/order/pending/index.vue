@@ -41,13 +41,8 @@
             </el-select>
           </el-form-item> -->
           <el-form-item label="下单时间">
-            <el-date-picker
-              v-model="formInline.dates"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            />
+            <el-date-picker v-model="formInline.dates" type="daterange" range-separator="至" start-placeholder="开始日期"
+              end-placeholder="结束日期" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="search">查询</el-button>
@@ -56,25 +51,13 @@
       </div>
       <!-- 表格 -->
       <div class="tableBox">
-        <el-table
-          ref="multipleTable"
-          :data="tableData"
-          border
-          :cell-style="{'text-align':'center'}"
-          :header-cell-style="{ background: '#EEF3FF', color: '#333333','text-align':'center'}"
-          tooltip-effect="dark"
-          style="width: 100%"
-        >
-          <el-table-column label="订单id" show-overflow-tooltip>
-            <template slot-scope="scope">{{ scope.row.orderId }}</template>
-          </el-table-column>
-          <el-table-column prop="number" label="服务数量" width="100px" />
+        <el-table ref="multipleTable" :data="tableData" border :cell-style="{ 'text-align': 'center' }"
+          :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align': 'center' }" tooltip-effect="dark"
+          style="width: 100%">
+          <!-- <el-table-column label="订单id" show-overflow-tooltip><template slot-scope="scope">{{ scope.row.orderId }}</template></el-table-column>-->
           <el-table-column prop="shopName" label="服务商名称" width="200px" />
-          <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip />
-          <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip />
-          <el-table-column prop="receivePhone" label="手机号" show-overflow-tooltip />
-          <el-table-column prop="price" label="支付金额（元）" />
-          <el-table-column prop="createTime" label="下单时间" width="180px" />
+          <el-table-column prop="number" label="服务数量" width="100px" />
+          <el-table-column prop="price" label="支付金额" />
           <el-table-column label="订单状态" show-overflow-tooltip>
             <template slot-scope="scope">
               <span v-if="scope.row.state == 1">待支付</span>
@@ -84,6 +67,10 @@
               <span v-if="scope.row.state == 5">服务关闭</span>
             </template>
           </el-table-column>
+          <el-table-column prop="createTime" label="下单时间" width="180px" />
+          <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip />
+          <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip />
+          <el-table-column prop="receivePhone" label="手机号" show-overflow-tooltip />
 
           <el-table-column label="操作" show-overflow-tooltip>
             <template slot-scope="scope">
@@ -94,15 +81,9 @@
           </el-table-column>
         </el-table>
         <div class="fenye">
-          <el-pagination
-            :current-page="currentPage"
-            :page-sizes="[10, 20, 50, 100]"
-            :page-size="10"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
+          <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="10"
+            layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+            @current-change="handleCurrentChange" />
         </div>
       </div>
     </div>

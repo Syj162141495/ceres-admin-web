@@ -6,6 +6,33 @@
 
     <div class="cotent">
       <div class="left_part">
+        <div class="pay_order_info">
+          <h2>下单人信息</h2>
+          <ul>
+            <li>
+              <p>
+                <span>下单账户:</span>
+                <span>{{ order.customerName }}</span>
+              </p>
+              <p>
+                <span>订单总数:</span>
+                <span>{{ order.total }}个</span>
+              </p>
+            </li>
+            <li>
+              <p>
+                <span>下单备注:</span>
+                <span>{{ order.remark }}</span>
+              </p>
+            </li>
+          </ul>
+        </div>
+        <!-- <div class="take_goods_info">
+          <h2>收货信息</h2>
+          <p>姓名: {{ order.receiveName }}</p>
+          <p>手机号: {{ order.receivePhone }}</p>
+          <p>地址: {{ order.receiveAdress }}</p>
+        </div> -->
         <div class="order_info">
           <h2>订单信息</h2>
           <ul>
@@ -14,18 +41,10 @@
                 <span>服务商名称:</span>
                 <span>{{ order.shopName }}</span>
               </p>
-            </li>
-            <li>
               <p>
                 <span>订单ID:</span>
                 <span>{{ order.orderId }}</span>
               </p>
-              <p>
-                <span>支付单号:</span>
-                <span>{{ order.transactionId }}</span>
-              </p>
-            </li>
-            <li>
               <p>
                 <span>订单状态:</span>
                 <span v-if="order.state === 1">待支付</span>
@@ -34,20 +53,27 @@
                 <span v-if="order.state === 4">服务完成</span>
                 <span v-if="order.state === 5">已取消</span>
               </p>
-              <p>
-                <span>售后状态:</span>
-                <span>{{ order.afterStateName }}</span>
-              </p>
             </li>
             <li>
+              <p>
+                <span>支付单号:</span>
+                <span>{{ order.transactionId }}</span>
+              </p>
               <p>
                 <span>支付方式:</span>
                 <span v-if="order.paymentMode === 1">微信</span>
                 <span v-if="order.paymentMode === 2">支付宝</span>
               </p>
-              <!-- <p>
-                <span>{{ order.logisticsName }}</span>
-              </p> -->
+              <p>
+                <span>支付时间:</span>
+                <span>{{ order.paymentTime }}</span>
+              </p>
+            </li>
+            <li>
+              <p>
+                <span>售后状态:</span>
+                <span>{{ order.afterStateName }}</span>
+              </p>
               <p>
                 <span>创建时间:</span>
                 <span>{{ order.createTime }}</span>
@@ -55,10 +81,9 @@
             </li>
             <li>
               <p>
-                <span>支付时间:</span>
-                <span>{{ order.paymentTime }}</span>
+                <span>备注:</span>
+                <span>{{ order.remark }}</span>
               </p>
-              <p>备注:{{ order.remark }}</p>
             </li>
           </ul>
         </div>
@@ -85,15 +110,11 @@
                   <div class="details">
                     <p>{{ item.productName }}</p>
                     <p class="skuDetails">
-                      <span
-                        v-for="(detailsItem, detailsindex) of item.skuDetails"
-                        :key="detailsindex"
-                        class="detail_span"
-                      >
+                      <span v-for="(detailsItem, detailsindex) of item.skuDetails" :key="detailsindex"
+                        class="detail_span">
                         {{ detailsItem.skuName }}: {{ detailsItem.skuValue }}
                       </span>
                     </p>
-                    <p>SKU: {{ item.skuId }}</p>
                   </div>
                 </li>
                 <li class="cen">
@@ -125,20 +146,6 @@
               <span>运单号: {{ order.logisticsNum }}</span>
             </p>
           </div>
-        </div> -->
-      </div>
-      <div class="right_part">
-        <div class="pay_order_info">
-          <h2>下单人信息</h2>
-          <p>下单账户: {{ order.customerName }}</p>
-          <p>订单总数: {{ order.total }}个</p>
-          <p>下单备注: {{ order.remark }}</p>
-        </div>
-        <!-- <div class="take_goods_info">
-          <h2>收货信息</h2>
-          <p>姓名: {{ order.receiveName }}</p>
-          <p>手机号: {{ order.receivePhone }}</p>
-          <p>地址: {{ order.receiveAdress }}</p>
         </div> -->
       </div>
     </div>
@@ -202,7 +209,10 @@ export default {
   },
   methods: {
     async getProductList() {
-      const res = await orderGetById({ orderId: this.orderId, queryType: this.$route.params.queryType })
+      const res = await orderGetById({
+        orderId: this.orderId,
+        queryType: this.$route.params.queryType
+      })
       this.order = res.data
     },
     close() {
@@ -304,7 +314,7 @@ ul {
       width: calc(70% - 10px);
       margin-right: 10px;
 
-      .order_info {
+      .pay_order_info {
         box-sizing: border-box;
 
         ul {
@@ -321,6 +331,35 @@ ul {
 
               span {
                 &:nth-child(2) {
+                  margin-left: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .order_info {
+        box-sizing: border-box;
+
+        ul {
+          padding: 10px 30px;
+
+          li {
+            overflow: hidden;
+
+            p {
+              width: 33%;
+              float: left;
+              font-size: 14px;
+              line-height: 30px;
+
+              span {
+                &:nth-child(2) {
+                  margin-left: 10px;
+                }
+
+                &:nth-child(3) {
                   margin-left: 10px;
                 }
               }
