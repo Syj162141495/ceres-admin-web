@@ -43,6 +43,20 @@ export const constantRoutes = [{
 {
   path: '/',
   component: Layout,
+  redirect: '/indexboard',
+  children: [{
+    path: 'indexboard',
+    name: 'Indexboard',
+    component: () => import('@/views/indexboard/index'),
+    meta: {
+      title: '首页',
+      icon: 'dashboard'
+    }
+  }]
+},
+{
+  path: '/',
+  component: Layout,
   redirect: '/businessList',
   meta: {
     title: '服务商管理',
@@ -197,6 +211,32 @@ export const constantRoutes = [{
     }
   }
   ]
+},
+// 运营管理
+{
+  path: '/operation',
+  component: Layout,
+  meta: {
+    title: '运营管理',
+    icon: 'el-icon-s-help'
+  },
+  children: [{
+    path: 'serviceRecommendation',
+    name: 'serviceRecommendation',
+    component: () => import('@/views/operation/serviceRecommendation/index'),
+    meta: {
+      title: '服务推荐',
+      icon: 'tree'
+    }
+  }, {
+    path: 'dataInterface',
+    name: 'dataInterface',
+    component: () => import('@/views/operation/dataInterface/index'),
+    meta: {
+      title: '数据接口',
+      icon: 'tree'
+    }
+  }]
 },
 {
   path: '/active',
