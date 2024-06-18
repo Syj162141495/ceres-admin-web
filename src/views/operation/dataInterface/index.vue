@@ -25,12 +25,13 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" plain @click="search">查询</el-button>
+          <el-button plain @click="reset">重置</el-button>
           <el-button type="success" plain @click="showAddDialogForm">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!--新增或编辑弹窗-->
-    <el-dialog :title="dialogFormName" :visible.sync="dialogFormVisible">
+    <el-dialog :title="dialogFormName" :visible.sync="dialogFormVisible" @close="load">
       <div slot="footer" class="dialog-footer scrollable-container">
         <el-form ref="dynamicValidateForm" :model="dynamicValidateForm" label-width="100px">
           <el-row>
@@ -251,6 +252,13 @@ export default {
     this.load()
   },
   methods: {
+    reset() {
+      this.searchForm = {
+        searchSystemModuleName: '',
+        searchInterfaceName: '',
+        searchHttpMethod: ''
+      }
+    },
     search() {
       const dataInterfaceParam = {
         dataInterfaceId: 0,
@@ -273,9 +281,9 @@ export default {
     load() {
       const dataInterfaceParam = {
         dataInterfaceId: 0,
-        systemModuleName: '',
-        dataInterfaceName: '',
-        dataInterfaceHttpMethod: '',
+        systemModuleName: this.searchForm.searchSystemModuleName,
+        dataInterfaceName: this.searchForm.searchInterfaceName,
+        dataInterfaceHttpMethod: this.searchForm.searchHttpMethod,
         dataInterfaceUrl: '',
         dataInterfaceReturnType: '',
         dataInterfaceReturnTypeExample: '',

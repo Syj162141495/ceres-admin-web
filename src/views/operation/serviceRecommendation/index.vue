@@ -18,7 +18,7 @@
       </el-form>
     </div>
     <!--新增或编辑弹窗-->
-    <el-dialog :title="dialogFormName" :visible.sync="dialogFormVisible">
+    <el-dialog :title="dialogFormName" :visible.sync="dialogFormVisible" width="60%" class="addOrEditDialog">
       <div slot="footer" class="dialog-footer scrollable-container">
         <el-form ref="dynamicValidateForm" :model="dynamicValidateForm" label-width="100px">
           <el-row>
@@ -81,7 +81,7 @@
           <el-row>
             <el-col :span="22">
               <el-form-item label="产品列表">
-                <el-table :data="productTableData" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" border style="width: 100%">
+                <el-table :data="productTableData" :header-cell-style="{ background: '#EEF3FF', color: '#333333', height: '5px' }" border style="width: 100%" :row-style="{ height: '10px' }">
                   <el-table-column prop="shopName" label="服务商" />
                   <el-table-column prop="productName" label="服务产品" />
                   <el-table-column prop="price" label="售价" />
@@ -115,7 +115,8 @@
       <el-table-column label="推荐客户" prop="serviceRecommendationBuyerName" width="80%" />
       <el-table-column label="推荐类型" prop="serviceRecommendationType" width="80%" />
       <el-table-column label="推荐数量" prop="serviceRecommendationServicesCount" width="80%" />
-      <el-table-column label="服务产品信息" prop="serviceRecommendationProductInfo" />
+      <el-table-column label="服务商" prop="serviceRecommendationShopInfo" />
+      <el-table-column label="服务产品" prop="serviceRecommendationProductInfo" />
       <el-table-column label="推荐时间" prop="serviceRecommendationTime" width="160%" />
       <el-table-column label="是否采纳" prop="serviceRecommendationAdoption" width="80%" />
       <el-table-column label="操作" width="120%">
@@ -219,7 +220,8 @@ export default {
         sex: '',
         age: ''
       },
-      productTableData: []
+      productTableData: [],
+      productIdList: []
     }
   },
   created() {
@@ -267,11 +269,11 @@ export default {
             this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
             this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
             this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+            this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
             this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
             const productInfo = []
             for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
               const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
-              console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
               productInfo.push({ shopName: product.shopName, productName: product.productName })
             }
             // 初始化用于存放唯一值的数组
@@ -282,7 +284,8 @@ export default {
             uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
             // 提取并去重 productName
             uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-            this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
+            this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
+            this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
           }
         })
       })
@@ -303,11 +306,11 @@ export default {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
           this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
           this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
           const productInfo = []
           for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
             const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
-            console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
             productInfo.push({ shopName: product.shopName, productName: product.productName })
           }
           // 初始化用于存放唯一值的数组
@@ -318,7 +321,8 @@ export default {
           uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
           // 提取并去重 productName
           uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
         }
       })
     },
@@ -338,6 +342,8 @@ export default {
         serviceRecommendationAdoption: ''
       }
       this.productTableData = []
+      this.selectedProduct = []
+      this.productIdList = []
     },
     showView(index, row) {
       this.userDialogFormVisible = true
@@ -351,11 +357,13 @@ export default {
     },
     // 展示修改表单
     showEditDialogForm(index, row) {
+      this.productIdList = []
       this.dialogFormVisible = true
       this.dialogFormName = '编辑'
       this.isAddOrEdit = 1
       this.dynamicValidateForm = row
       this.productTableData = []
+      this.selectedProduct = []
       for (let i = 0; i < row.serviceRecommendationProductIds.length; i++) {
         const product = this.productList.find(product => product.productId === row.serviceRecommendationProductIds[i])
         this.productTableData.push({ shopName: product.shopName, productName: product.productName, price: product.price })
@@ -387,11 +395,17 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.isAddOrEdit === 0) {
+            for (let i = 0; i < this.productIdList.length; i++) {
+              dynamicValidateForm.serviceRecommendationProductIds.push(this.productIdList[i])
+            }
             insertServiceRecommendation(dynamicValidateForm).then(res => {
               this.dialogFormVisible = false
               this.load()
             })
           } else {
+            for (let i = 0; i < this.productIdList.length; i++) {
+              dynamicValidateForm.serviceRecommendationProductIds.push(this.productIdList[i])
+            }
             updateServiceRecommendation(dynamicValidateForm).then(res => {
               this.dialogFormVisible = false
               this.load()
@@ -415,7 +429,7 @@ export default {
     addRow() {
       if (this.selectedProduct) {
         if (!this.dynamicValidateForm.serviceRecommendationProductIds.includes(this.selectedProduct[2])) {
-          this.dynamicValidateForm.serviceRecommendationProductIds.push(this.selectedProduct[2])
+          this.productIdList.push(this.selectedProduct[2])
           const product = this.productList.find(product => product.productId === this.selectedProduct[2])
           this.productTableData.push({
             shopName: product.shopName,
@@ -428,7 +442,7 @@ export default {
     removeRow(index) {
       console.log(index)
       this.productTableData.splice(index, 1)
-      this.dynamicValidateForm.serviceRecommendationProductIds.splice(index, 1)
+      this.productIdList.splice(index, 1)
     },
     addProductIds(index) {
       console.log('new', this.dynamicValidateForm.serviceRecommendationProductIds[index])
@@ -442,11 +456,11 @@ export default {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
           this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
           this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
           const productInfo = []
           for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
             const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
-            console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
             productInfo.push({ shopName: product.shopName, productName: product.productName })
           }
           // 初始化用于存放唯一值的数组
@@ -457,7 +471,8 @@ export default {
           uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
           // 提取并去重 productName
           uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
         }
       })
     },
@@ -470,11 +485,11 @@ export default {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
           this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
           this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
           const productInfo = []
           for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
             const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
-            console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
             productInfo.push({ shopName: product.shopName, productName: product.productName })
           }
           // 初始化用于存放唯一值的数组
@@ -485,7 +500,8 @@ export default {
           uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
           // 提取并去重 productName
           uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
         }
       })
     }
@@ -493,7 +509,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 /**{*/
 /*  border: black 1px solid;*/
 /*}*/
@@ -517,7 +533,7 @@ export default {
   border-radius: 4px;
 }
 .scrollable-container {
-  max-height: 400px; /* 限制容器的最大高度 */
+  max-height: 500px; /* 限制容器的最大高度 */
   overflow-y: auto; /* 当内容溢出时，垂直方向显示滚动条 */
   /* 可选：自定义滚动条样式，这里提供一个基本的例子 */
   scrollbar-width: thin; /* Firefox */
@@ -531,5 +547,8 @@ export default {
   /* 设置标签的宽度 */
   display: inline-block;
   text-align: left;
+}
+.addOrEditDialog {
+  margin-top: -50px;
 }
 </style>
