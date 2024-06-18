@@ -1,16 +1,25 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <el-card class="box-card" body-style="height: 50px; padding-top: 2px; padding-bottom: 2px;">
       <span class="addTitle">服务详情</span>
       <el-button type="success" class="btnList" @click="back">关闭</el-button>
     </el-card>
+    <!-- <div class="box-card">
+      <div></div>
+    </div> -->
     <el-card class="box-card">
       <label>服务详情</label>
       <div class="GoodBox">
         <el-row class="detail-box">
           <el-col :span="12">
-            <div>服务名称：{{ productItem.productName }}</div>
-            <div>服务简介：{{ productItem.productBrief }}</div>
+            <div class="row">
+              <div class="label">服务名称：</div>
+              {{ productItem.productName }}
+            </div>
+            <div class="row">
+              <div class="label">服务简介：</div>
+              {{ productItem.productBrief }}
+            </div>
             <!-- <div >
               商品标签：
               <el-tag
@@ -35,9 +44,18 @@
                 />
               </div>
             </div> -->
-            <div>服务类型：{{ productItem.productType }}</div>
-            <div>服务大类：{{ productItem.classifyParent }}</div>
-            <div>服务小类：{{ productItem.classify }}</div>
+            <div class="row">
+              <div class="label">服务类型：</div>
+              {{ productItem.productType }}
+            </div>
+            <div class="row">
+              <div class="label">服务大类：</div>
+              {{ productItem.classifyParent }}
+            </div>
+            <div class="row">
+              <div class="label">服务小类：</div>
+              {{ productItem.classify }}
+            </div>
             <!-- <el-form-item label="服务大类">
               <el-select v-model="productItem.classifyParentId" placeholder="请选择服务大类">
                 <el-option
@@ -62,27 +80,33 @@
           </el-col>
           <el-col :span="12">
             <!-- <div>商家分组：{{ productItem.shopGroupName }}</div> -->
-            <div>服务提供商：{{ productItem.shopName }}</div>
-            <div>是否推荐：
+            <div class="row">
+              <div class="label">服务提供商：</div>
+              {{ productItem.shopName }}
+            </div>
+            <div class="row">
+              <div class="label">是否推荐：</div>
               <el-radio-group v-model="productItem.isRecommended" :disabled="true">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
             </div>
-            <div>物流：
+            <div class="row">
+              <div class="label">物流：</div>
               <el-radio-group v-model="productItem.ifLogistics" :disabled="true">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
             </div>
-            <div>
-              服务状态：
+            <div class="row">
+              <div class="label">服务状态：</div>
               <span v-if="productItem.shelveState == 0">已下架 </span>
               <span v-if="productItem.shelveState == 1">已上架</span>
               <span v-if="productItem.shelveState == 2">待审核</span>
               <span v-if="productItem.shelveState == 3">审核失败</span>
             </div>
-            <div>超卖：
+            <div class="row">
+              <div class="label">超卖：</div>
               <el-radio-group v-model="productItem.ifOversold" :disabled="true">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
@@ -93,33 +117,39 @@
         <el-row class="detail-box">
           <el-row v-show="productItem.additionalInfoFlag">
             <el-col :span="12">
-              <div>机构星级：{{ productItem.starRating }}</div>
+              <div class="row">
+                <div class="label">机构星级：</div>
+                {{ productItem.starRating }}
+              </div>
             </el-col>
             <el-col :span="12">
-              <div>机构面积：{{ productItem.area }}</div>
+              <div class="row">
+                <div class="label">机构面积：</div>
+                {{ productItem.area }}
+              </div>
             </el-col>
           </el-row>
           <el-row>
             <div style="overflow-wrap: break-word;">
-              服务介绍：
+              <div class="label">服务介绍：</div>
               <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
             </div>
             <div v-show="productItem.images.length !== 0">
-              服务图片：
+              <div class="label">服务图片：</div>
               <div>
                 <img
-                  class="proImage"
                   v-for="(item, index) in productItem.images"
                   :key="index"
+                  class="proImage"
                   :src="item.imgPath"
                   alt=""
                   @click="handlePictureCardPreview(item)"
-                />
+                >
               </div>
             </div>
           </el-row>
           <el-col :span="24">
-            <div>服务规格：</div>
+            <div class="label">服务规格：</div>
             <el-table
               :data="productItem.skuList"
               style="width: 100%"
@@ -238,39 +268,21 @@
 
 <script>
 
-import Tinymce from "@/components/Tinymce";
+import Tinymce from '@/components/Tinymce'
 import {
   getClassify,
   getProductById
-} from "@/api/commodity";
-import { uploadUrl } from "@/utils/request";
-import StyleInformation from "./addComponent";
-import { selectCanvasCustomList } from "@/api/renovation";
+} from '@/api/commodity'
+// import { uploadUrl } from '@/utils/request'
+import StyleInformation from './addComponent'
+// import { selectCanvasCustomList } from '@/api/renovation'
 export default {
-  name: "",
+  name: '',
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     Tinymce,
-    StyleInformation,
-  },
-  data() {
-    return {
-      dialogVisible: false,
-      dialogImageUrl: "",
-      productItem: {},
-      colorList: [
-        "#F6C600",
-        "#EF7F00",
-        "#F29596",
-        "#EC453C",
-        "#8A43E1",
-        "#87CB4C",
-        "#43A79E",
-        "#73B8EE",
-        "#3C80E8",
-        "#21317B"
-      ],
-      classifyList: []
-    };
+    // eslint-disable-next-line vue/no-unused-components
+    StyleInformation
   },
   filters: {
     attrValueFilter(map, list) {
@@ -278,36 +290,56 @@ export default {
         list &&
         list.filter((skuAttr) => {
           const hasChild = skuAttr.values.some((attr) => {
-            return attr.skuValue;
-          });
-          return skuAttr.skuName && hasChild;
-        });
+            return attr.skuValue
+          })
+          return skuAttr.skuName && hasChild
+        })
       if (!map) {
-        return "";
+        return ''
       }
-      const { code, valueCode } = map;
-      let codeStr = "";
+      const { code, valueCode } = map
+      let codeStr = ''
       hasChilds.map((item) => {
-        const { values } = item;
+        const { values } = item
         values &&
           values.some((attr) => {
-            const isSome = item.code === code && attr.valueCode === valueCode;
+            const isSome = item.code === code && attr.valueCode === valueCode
             if (isSome) {
-              codeStr = attr.skuValue;
+              codeStr = attr.skuValue
             }
-            return isSome;
-          });
-      });
-      return codeStr;
-    },
+            return isSome
+          })
+      })
+      return codeStr
+    }
+  },
+  data() {
+    return {
+      dialogVisible: false,
+      dialogImageUrl: '',
+      productItem: {},
+      colorList: [
+        '#F6C600',
+        '#EF7F00',
+        '#F29596',
+        '#EC453C',
+        '#8A43E1',
+        '#87CB4C',
+        '#43A79E',
+        '#73B8EE',
+        '#3C80E8',
+        '#21317B'
+      ],
+      classifyList: []
+    }
   },
   computed: {
     productId() {
-      return this.$route.params.productId;
+      return this.$route.params.productId
     },
     skuAttrName() {
-      console.log("skuAttrList", this.productItem.skuAttrList)
-      return this.productItem.skuAttrList;
+      console.log('skuAttrList', this.productItem.skuAttrList)
+      return this.productItem.skuAttrList
       // return (
       //   this.productItem.skuAttrList &&
       //   this.productItem.skuAttrList.filter((skuAttr) => {
@@ -317,62 +349,62 @@ export default {
       //     return skuAttr.skuName && hasChilds;
       //   })
       // );
-    },
+    }
   },
   mounted() {
     this.selectList().then(() => {
       if (this.productId) {
-        this.details();
+        this.details()
       }
     })
   },
   methods: {
     handlePictureCardPreview(item) {
-      this.dialogImageUrl = item.imgPath;
-      this.dialogVisible = true;
+      this.dialogImageUrl = item.imgPath
+      this.dialogVisible = true
     },
 
     // 返回
     back() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     // 获取详情
     async details() {
-      const res = await getProductById({ productId: this.productId });
-      console.log(res);
-      this.productItem = res.data;
-      this.productItem.images = this.productItem.images.filter(item => item.imgPath !== "").map(item => {
-        item.imgPath = item.imgPath.replace("http://58.59.92.190:17190", process.env.VUE_APP_DOMAIN_PREFIX).replace("local", "file");
+      const res = await getProductById({ productId: this.productId })
+      console.log(res)
+      this.productItem = res.data
+      this.productItem.images = this.productItem.images.filter(item => item.imgPath !== '').map(item => {
+        item.imgPath = item.imgPath.replace('http://58.59.92.190:17190', process.env.VUE_APP_DOMAIN_PREFIX).replace('local', 'file')
         return item
-      });
+      })
       console.log(this.productItem)
-      this.productItem.skuAttrList = res.data.names;
+      this.productItem.skuAttrList = res.data.names
       this.productItem.skuAttrList.forEach((item) => {
-        var data = {};
-        var arr = Object.keys(data);
+        var data = {}
+        var arr = Object.keys(data)
         if (arr.length === 0) {
-          item.needImg = false;
+          item.needImg = false
         }
-      });
-      console.log(this.productItem.skuAttrList, "skuAttrList");
-      this.productItem.skuList = this.productItem.skus;
+      })
+      console.log(this.productItem.skuAttrList, 'skuAttrList')
+      this.productItem.skuList = this.productItem.skus
       for (let i = 0; i < this.productItem.skuList.length; i++) {
         this.productItem.skuList[i]['skuValue'] = this.productItem.skuAttrList[0]['values'][i]['skuValue']
       }
-      this.productItem.skuAttrList[0]['skuName'] = "服务规格"
+      this.productItem.skuAttrList[0]['skuName'] = '服务规格'
       this.productItem.labels = this.productItem.productBrief === '' ? [] : this.productItem.productBrief.split(',').map(item => ({
         label: item,
         color: ''
-      }));
-      this.productItem.additionalInfoFlag = false;
+      }))
+      this.productItem.additionalInfoFlag = false
       for (const parentCatefory of this.classifyList) {
         for (const category of parentCatefory['childs']) {
-          for (const subCategory of category["childs"]) {
-            if (subCategory["id"] === this.productItem.classifyId) {
-              this.productItem.classifyParent = category["categoryName"];
-              this.productItem.classify = subCategory["categoryName"];
-              if (category["categoryName"] === "机构服务" || category["categoryName"] === "居家上门") {
-                this.productItem.additionalInfoFlag = true;
+          for (const subCategory of category['childs']) {
+            if (subCategory['id'] === this.productItem.classifyId) {
+              this.productItem.classifyParent = category['categoryName']
+              this.productItem.classify = subCategory['categoryName']
+              if (category['categoryName'] === '机构服务' || category['categoryName'] === '居家上门') {
+                this.productItem.additionalInfoFlag = true
               }
             }
           }
@@ -386,43 +418,45 @@ export default {
       //   }
       // }
       // 标签上色
-      let index = Math.floor(Math.random() * this.colorList.length);
+      let index = Math.floor(Math.random() * this.colorList.length)
       for (const item of this.productItem.labels) {
         if (index === this.colorList.length) {
-          index = 0;
+          index = 0
         }
-        item.color = this.colorList[index++];
+        item.color = this.colorList[index++]
       }
     },
     async selectList() {
       const res = await getClassify()
       this.classifyList = res.data
     }
-  },
-};
+  }
+}
 </script>
 
 <style scoped lang='scss'>
 @import url("../../../styles/elDialog.scss");
 .box-card {
-  margin: 20px;
+  margin: 18px;
 }
 .btnList {
   float: right;
   padding: 3px 0;
   width: 100px;
-  height: 48px;
+  height: 36px;
   border-radius: 4px;
   margin-right: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .addTitle {
-  font-size: 24px;
+  font-size: 20px;
   color: #333333;
   line-height: 50px;
 }
 
 .GoodBox {
-  padding: 40px;
+  padding: 20px;
   .detail-box {
     div {
       line-height: 60px;
@@ -443,5 +477,43 @@ export default {
   .img {
     text-align: center;
   }
+}
+::v-deep .el-table .el-table__header-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr > th {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > colgroup > col {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+.row {
+  display: flex;
+}
+
+.label {
+  width: 100px;
+  text-align: right;
 }
 </style>
