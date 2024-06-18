@@ -108,13 +108,13 @@
               服务图片：
               <div>
                 <img
-                  class="proImage"
                   v-for="(item, index) in productItem.images"
                   :key="index"
+                  class="proImage"
                   :src="item.imgPath"
                   alt=""
                   @click="handlePictureCardPreview(item)"
-                />
+                >
               </div>
             </div>
           </el-row>
@@ -238,39 +238,19 @@
 
 <script>
 
-import Tinymce from "@/components/Tinymce";
+import Tinymce from '@/components/Tinymce'
 import {
   getClassify,
   getProductById
-} from "@/api/commodity";
-import { uploadUrl } from "@/utils/request";
-import StyleInformation from "./addComponent";
-import { selectCanvasCustomList } from "@/api/renovation";
+} from '@/api/commodity'
+import { uploadUrl } from '@/utils/request'
+import StyleInformation from './addComponent'
+import { selectCanvasCustomList } from '@/api/renovation'
 export default {
-  name: "",
+  name: '',
   components: {
     Tinymce,
-    StyleInformation,
-  },
-  data() {
-    return {
-      dialogVisible: false,
-      dialogImageUrl: "",
-      productItem: {},
-      colorList: [
-        "#F6C600",
-        "#EF7F00",
-        "#F29596",
-        "#EC453C",
-        "#8A43E1",
-        "#87CB4C",
-        "#43A79E",
-        "#73B8EE",
-        "#3C80E8",
-        "#21317B"
-      ],
-      classifyList: []
-    };
+    StyleInformation
   },
   filters: {
     attrValueFilter(map, list) {
@@ -278,36 +258,56 @@ export default {
         list &&
         list.filter((skuAttr) => {
           const hasChild = skuAttr.values.some((attr) => {
-            return attr.skuValue;
-          });
-          return skuAttr.skuName && hasChild;
-        });
+            return attr.skuValue
+          })
+          return skuAttr.skuName && hasChild
+        })
       if (!map) {
-        return "";
+        return ''
       }
-      const { code, valueCode } = map;
-      let codeStr = "";
+      const { code, valueCode } = map
+      let codeStr = ''
       hasChilds.map((item) => {
-        const { values } = item;
+        const { values } = item
         values &&
           values.some((attr) => {
-            const isSome = item.code === code && attr.valueCode === valueCode;
+            const isSome = item.code === code && attr.valueCode === valueCode
             if (isSome) {
-              codeStr = attr.skuValue;
+              codeStr = attr.skuValue
             }
-            return isSome;
-          });
-      });
-      return codeStr;
-    },
+            return isSome
+          })
+      })
+      return codeStr
+    }
+  },
+  data() {
+    return {
+      dialogVisible: false,
+      dialogImageUrl: '',
+      productItem: {},
+      colorList: [
+        '#F6C600',
+        '#EF7F00',
+        '#F29596',
+        '#EC453C',
+        '#8A43E1',
+        '#87CB4C',
+        '#43A79E',
+        '#73B8EE',
+        '#3C80E8',
+        '#21317B'
+      ],
+      classifyList: []
+    }
   },
   computed: {
     productId() {
-      return this.$route.params.productId;
+      return this.$route.params.productId
     },
     skuAttrName() {
-      console.log("skuAttrList", this.productItem.skuAttrList)
-      return this.productItem.skuAttrList;
+      console.log('skuAttrList', this.productItem.skuAttrList)
+      return this.productItem.skuAttrList
       // return (
       //   this.productItem.skuAttrList &&
       //   this.productItem.skuAttrList.filter((skuAttr) => {
@@ -317,62 +317,62 @@ export default {
       //     return skuAttr.skuName && hasChilds;
       //   })
       // );
-    },
+    }
   },
   mounted() {
     this.selectList().then(() => {
       if (this.productId) {
-        this.details();
+        this.details()
       }
     })
   },
   methods: {
     handlePictureCardPreview(item) {
-      this.dialogImageUrl = item.imgPath;
-      this.dialogVisible = true;
+      this.dialogImageUrl = item.imgPath
+      this.dialogVisible = true
     },
 
     // 返回
     back() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     // 获取详情
     async details() {
-      const res = await getProductById({ productId: this.productId });
-      console.log(res);
-      this.productItem = res.data;
-      this.productItem.images = this.productItem.images.filter(item => item.imgPath !== "").map(item => {
-        item.imgPath = item.imgPath.replace("http://58.59.92.190:17190", process.env.VUE_APP_DOMAIN_PREFIX).replace("local", "file");
+      const res = await getProductById({ productId: this.productId })
+      console.log(res)
+      this.productItem = res.data
+      this.productItem.images = this.productItem.images.filter(item => item.imgPath !== '').map(item => {
+        item.imgPath = item.imgPath.replace('http://58.59.92.190:17190', process.env.VUE_APP_DOMAIN_PREFIX).replace('local', 'file')
         return item
-      });
+      })
       console.log(this.productItem)
-      this.productItem.skuAttrList = res.data.names;
+      this.productItem.skuAttrList = res.data.names
       this.productItem.skuAttrList.forEach((item) => {
-        var data = {};
-        var arr = Object.keys(data);
+        var data = {}
+        var arr = Object.keys(data)
         if (arr.length === 0) {
-          item.needImg = false;
+          item.needImg = false
         }
-      });
-      console.log(this.productItem.skuAttrList, "skuAttrList");
-      this.productItem.skuList = this.productItem.skus;
+      })
+      console.log(this.productItem.skuAttrList, 'skuAttrList')
+      this.productItem.skuList = this.productItem.skus
       for (let i = 0; i < this.productItem.skuList.length; i++) {
         this.productItem.skuList[i]['skuValue'] = this.productItem.skuAttrList[0]['values'][i]['skuValue']
       }
-      this.productItem.skuAttrList[0]['skuName'] = "服务规格"
+      this.productItem.skuAttrList[0]['skuName'] = '服务规格'
       this.productItem.labels = this.productItem.productBrief === '' ? [] : this.productItem.productBrief.split(',').map(item => ({
         label: item,
         color: ''
-      }));
-      this.productItem.additionalInfoFlag = false;
+      }))
+      this.productItem.additionalInfoFlag = false
       for (const parentCatefory of this.classifyList) {
         for (const category of parentCatefory['childs']) {
-          for (const subCategory of category["childs"]) {
-            if (subCategory["id"] === this.productItem.classifyId) {
-              this.productItem.classifyParent = category["categoryName"];
-              this.productItem.classify = subCategory["categoryName"];
-              if (category["categoryName"] === "机构服务" || category["categoryName"] === "居家上门") {
-                this.productItem.additionalInfoFlag = true;
+          for (const subCategory of category['childs']) {
+            if (subCategory['id'] === this.productItem.classifyId) {
+              this.productItem.classifyParent = category['categoryName']
+              this.productItem.classify = subCategory['categoryName']
+              if (category['categoryName'] === '机构服务' || category['categoryName'] === '居家上门') {
+                this.productItem.additionalInfoFlag = true
               }
             }
           }
@@ -386,20 +386,20 @@ export default {
       //   }
       // }
       // 标签上色
-      let index = Math.floor(Math.random() * this.colorList.length);
+      let index = Math.floor(Math.random() * this.colorList.length)
       for (const item of this.productItem.labels) {
         if (index === this.colorList.length) {
-          index = 0;
+          index = 0
         }
-        item.color = this.colorList[index++];
+        item.color = this.colorList[index++]
       }
     },
     async selectList() {
       const res = await getClassify()
       this.classifyList = res.data
     }
-  },
-};
+  }
+}
 </script>
 
 <style scoped lang='scss'>
