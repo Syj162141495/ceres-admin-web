@@ -36,6 +36,33 @@
               placeholder="请输入服务商名称"
             />
           </el-form-item>
+          <el-form-item label="服务大类">
+            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务大类" @change="changeParentClass" style="width: 150px;" clearable @clear="changeParentClass" >
+              <el-option
+                v-for="(item,index) in parentClasses"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="服务小类">
+            <el-select v-model="formInline.classifyId" placeholder="请选择服务小类" :disabled="!formInline.classifyParentId || formInline.classifyParentId === ''" style="width: 150px;" clearable >
+              <el-option
+                v-for="(item,index) in classes"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否推荐">
+            <el-select v-model="formInline.isRecommended" placeholder="请选择是否推荐" style="width: 80px;" >
+              <el-option label="全部" value="" />
+              <el-option label="是" value="1" />
+              <el-option label="否" value="0" />
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="search">查询</el-button>
             <el-button plain @click="clear">重置</el-button>
@@ -61,6 +88,7 @@
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
           tooltip-effect="dark"
           style="width: 100%"
+          size="mini"
         >
           <el-table-column
             type="index"
@@ -74,16 +102,41 @@
               <img height="80" width="80" :src="scope.row.image" alt srcset />
             </template>
           </el-table-column> -->
-          <el-table-column prop="productType" label="类型" width="180" />
-          <el-table-column prop="productCategory" label="大类" width="180" />
-          <el-table-column prop="productSubCategory" label="小类" width="180" />
-          <el-table-column prop="productName" label="服务名称" width="180" />
-          <el-table-column prop="shopName" label="服务商名称" width="180" />
+          <el-table-column prop="productName" label="服务名称" width="280" show-overflow-tooltip />
+          <el-table-column prop="productType" label="类型" width="120" />
+          <el-table-column prop="productCategory" label="大类" width="120" />
+          <el-table-column prop="productSubCategory" label="小类" width="120" />
+          <el-table-column
+            prop="isRecommended"
+            label="是否推荐"
+            show-overflow-tooltip
+            width="100"
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.isRecommended==0">否</span>
+              <span v-if="scope.row.isRecommended==1">是</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="shelveState"
+            label="服务状态"
+            show-overflow-tooltip
+            width="100"
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.shelveState == 0">已下架</span>
+              <span v-if="scope.row.shelveState == 1">已上架</span>
+              <span v-if="scope.row.shelveState == 2">待审核</span>
+              <span v-if="scope.row.shelveState == 3">审核失败</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="sectionPrice"
             label="价格区间"
             show-overflow-tooltip
+            width="120"
           />
+          <el-table-column prop="shopName" label="服务商名称" width="260" show-overflow-tooltip />
           <!-- <el-table-column
             prop="memberSection"
             label="会员价"
@@ -93,6 +146,7 @@
             prop="shopLocation"
             label="区域"
             show-overflow-tooltip
+            width="200"
           />
           <!-- <el-table-column
             prop="stockNumber"
@@ -109,30 +163,8 @@
             label="虚拟销售"
             show-overflow-tooltip
           /> -->
-          <el-table-column
-            prop="isRecommended"
-            label="是否推荐"
-            show-overflow-tooltip
-          >
-            <template slot-scope="scope">
-              <span v-if="scope.row.isRecommended==0">否</span>
-              <span v-if="scope.row.isRecommended==1">是</span>
-            </template>
-          </el-table-column>
           <!-- <el-table-column prop="createTime" label="创建时间" width="180" /> -->
-          <el-table-column
-            prop="shelveState"
-            label="服务状态"
-            show-overflow-tooltip
-          >
-            <template slot-scope="scope">
-              <span v-if="scope.row.shelveState == 0">已下架</span>
-              <span v-if="scope.row.shelveState == 1">已上架</span>
-              <span v-if="scope.row.shelveState == 2">待审核</span>
-              <span v-if="scope.row.shelveState == 3">审核失败</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作" width="200" fixed="right">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button
@@ -248,6 +280,9 @@ export default {
         productName: "", // 服务名称
         productId: "", //服务ID
         shopName: "", //服务商名称
+        isRecommended: "", // 是否推荐
+        classifyParentId: "", // 服务大类
+        classifyId: "", // 服务小类
         page: 1, // 当前页
         pageSize: 5,
       },
@@ -264,7 +299,9 @@ export default {
         shelveState: 1,
       },
       examineVisible: false,
-      classifyList: []
+      classifyList: [],
+      parentClasses: [],
+      classes: []
     };
   },
   // 监听属性 类似于data概念
@@ -365,14 +402,15 @@ export default {
     },
     // 重置
     clear() {
-      this.formInline = {
-        shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
-        productName: "", // 服务名称
-        productId: "", //服务ID
-        shopName: "", //服务商名称
-        page: 1, // 当前页
-        pageSize: 5,
-      };
+      this.formInline.shelveState = "";
+      this.formInline.productName = "";
+      this.formInline.productId = "";
+      this.formInline.shopName = "";
+      this.formInline.page = 1;
+      this.formInline.pageSize = 5;
+      this.formInline.isRecommended = "";
+      this.formInline.classifyParentId = "";
+      this.formInline.classifyId = "";
       this.getAll(this.formInline);
     },
 
@@ -403,7 +441,19 @@ export default {
     async queryAllCategory() {
       const res = await getClassify()
       this.categoryList = res.data
+      console.log(this.categoryList)
+      this.parentClasses = this.categoryList.find(item => item.categoryName === this.$route.meta.title.substring(0, 4))['childs'];
+      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs'];
     },
+    changeParentClass() {
+      if (!this.formInline.classifyParentId) {
+        this.classes = [];
+        this.formInline.classifyId = undefined;
+        return;
+      }
+      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs'];
+      this.formInline.classifyId = this.classes[0].id;
+    }
   },
 };
 </script>

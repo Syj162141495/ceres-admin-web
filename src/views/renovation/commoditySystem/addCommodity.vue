@@ -1,16 +1,25 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <el-card class="box-card" body-style="height: 50px; padding-top: 2px; padding-bottom: 2px;">
       <span class="addTitle">服务详情</span>
       <el-button type="success" class="btnList" @click="back">关闭</el-button>
     </el-card>
+    <!-- <div class="box-card">
+      <div></div>
+    </div> -->
     <el-card class="box-card">
       <label>服务详情</label>
       <div class="GoodBox">
         <el-row class="detail-box">
           <el-col :span="12">
-            <div>服务名称：{{ productItem.productName }}</div>
-            <div>服务简介：{{ productItem.productBrief }}</div>
+            <div class="row">
+              <div class="label">服务名称：</div>
+              {{ productItem.productName }}
+            </div>
+            <div class="row">
+              <div class="label">服务简介：</div>
+              {{ productItem.productBrief }}
+            </div>
             <!-- <div >
               商品标签：
               <el-tag
@@ -35,9 +44,18 @@
                 />
               </div>
             </div> -->
-            <div>服务类型：{{ productItem.productType }}</div>
-            <div>服务大类：{{ productItem.classifyParent }}</div>
-            <div>服务小类：{{ productItem.classify }}</div>
+            <div class="row">
+              <div class="label">服务类型：</div>
+              {{ productItem.productType }}
+            </div>
+            <div class="row">
+              <div class="label">服务大类：</div>
+              {{ productItem.classifyParent }}
+            </div>
+            <div class="row">
+              <div class="label">服务小类：</div>
+              {{ productItem.classify }}
+            </div>
             <!-- <el-form-item label="服务大类">
               <el-select v-model="productItem.classifyParentId" placeholder="请选择服务大类">
                 <el-option
@@ -62,27 +80,33 @@
           </el-col>
           <el-col :span="12">
             <!-- <div>商家分组：{{ productItem.shopGroupName }}</div> -->
-            <div>服务提供商：{{ productItem.shopName }}</div>
-            <div>是否推荐：
+            <div class="row">
+              <div class="label">服务提供商：</div>
+              {{ productItem.shopName }}
+            </div>
+            <div class="row">
+              <div class="label">是否推荐：</div>
               <el-radio-group v-model="productItem.isRecommended" :disabled="true">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
             </div>
-            <div>物流：
+            <div class="row">
+              <div class="label">物流：</div>
               <el-radio-group v-model="productItem.ifLogistics" :disabled="true">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
             </div>
-            <div>
-              服务状态：
+            <div class="row">
+              <div class="label">服务状态：</div>
               <span v-if="productItem.shelveState == 0">已下架 </span>
               <span v-if="productItem.shelveState == 1">已上架</span>
               <span v-if="productItem.shelveState == 2">待审核</span>
               <span v-if="productItem.shelveState == 3">审核失败</span>
             </div>
-            <div>超卖：
+            <div class="row">
+              <div class="label">超卖：</div>
               <el-radio-group v-model="productItem.ifOversold" :disabled="true">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
@@ -93,19 +117,25 @@
         <el-row class="detail-box">
           <el-row v-show="productItem.additionalInfoFlag">
             <el-col :span="12">
-              <div>机构星级：{{ productItem.starRating }}</div>
+              <div class="row">
+                <div class="label">机构星级：</div>
+                {{ productItem.starRating }}
+              </div>
             </el-col>
             <el-col :span="12">
-              <div>机构面积：{{ productItem.area }}</div>
+              <div class="row">
+                <div class="label">机构面积：</div>
+                {{ productItem.area }}
+              </div>
             </el-col>
           </el-row>
           <el-row>
             <div style="overflow-wrap: break-word;">
-              服务介绍：
+              <div class="label">服务介绍：</div>
               <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
             </div>
             <div v-show="productItem.images.length !== 0">
-              服务图片：
+              <div class="label">服务图片：</div>
               <div>
                 <img
                   v-for="(item, index) in productItem.images"
@@ -119,7 +149,7 @@
             </div>
           </el-row>
           <el-col :span="24">
-            <div>服务规格：</div>
+            <div class="label">服务规格：</div>
             <el-table
               :data="productItem.skuList"
               style="width: 100%"
@@ -243,13 +273,15 @@ import {
   getClassify,
   getProductById
 } from '@/api/commodity'
-import { uploadUrl } from '@/utils/request'
+// import { uploadUrl } from '@/utils/request'
 import StyleInformation from './addComponent'
-import { selectCanvasCustomList } from '@/api/renovation'
+// import { selectCanvasCustomList } from '@/api/renovation'
 export default {
   name: '',
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     Tinymce,
+    // eslint-disable-next-line vue/no-unused-components
     StyleInformation
   },
   filters: {
@@ -405,24 +437,26 @@ export default {
 <style scoped lang='scss'>
 @import url("../../../styles/elDialog.scss");
 .box-card {
-  margin: 20px;
+  margin: 18px;
 }
 .btnList {
   float: right;
   padding: 3px 0;
   width: 100px;
-  height: 48px;
+  height: 36px;
   border-radius: 4px;
   margin-right: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .addTitle {
-  font-size: 24px;
+  font-size: 20px;
   color: #333333;
   line-height: 50px;
 }
 
 .GoodBox {
-  padding: 40px;
+  padding: 20px;
   .detail-box {
     div {
       line-height: 60px;
@@ -443,5 +477,43 @@ export default {
   .img {
     text-align: center;
   }
+}
+::v-deep .el-table .el-table__header-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr > th {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > colgroup > col {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 60px;
+}
+
+.row {
+  display: flex;
+}
+
+.label {
+  width: 100px;
+  text-align: right;
 }
 </style>
