@@ -7,8 +7,8 @@
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="服务状态">
             <el-radio-group
-              @change="changeState"
               v-model="formInline.shelveState"
+              @change="changeState"
             >
               <el-radio-button label="">全部</el-radio-button>
               <el-radio-button label="0">已下架</el-radio-button>
@@ -17,13 +17,7 @@
               <el-radio-button label="3">审核失败</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <br />
-          <el-form-item label="服务ID">
-            <el-input
-              v-model="formInline.productId"
-              placeholder="请输入服务ID"
-            />
-          </el-form-item>
+          <br>
           <el-form-item label="服务名称">
             <el-input
               v-model="formInline.productName"
@@ -37,7 +31,7 @@
             />
           </el-form-item>
           <el-form-item label="服务大类">
-            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务大类" @change="changeParentClass" style="width: 150px;" clearable @clear="changeParentClass" >
+            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务大类" style="width: 150px;" clearable @change="changeParentClass" @clear="changeParentClass">
               <el-option
                 v-for="(item,index) in parentClasses"
                 :key="index"
@@ -47,7 +41,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="服务小类">
-            <el-select v-model="formInline.classifyId" placeholder="请选择服务小类" :disabled="!formInline.classifyParentId || formInline.classifyParentId === ''" style="width: 150px;" clearable >
+            <el-select v-model="formInline.classifyId" placeholder="请选择服务小类" :disabled="!formInline.classifyParentId || formInline.classifyParentId === ''" style="width: 150px;" clearable>
               <el-option
                 v-for="(item,index) in classes"
                 :key="index"
@@ -57,7 +51,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="是否推荐">
-            <el-select v-model="formInline.isRecommended" placeholder="请选择是否推荐" style="width: 80px;" >
+            <el-select v-model="formInline.isRecommended" placeholder="请选择是否推荐" style="width: 80px;">
               <el-option label="全部" value="" />
               <el-option label="是" value="1" />
               <el-option label="否" value="0" />
@@ -82,8 +76,8 @@
       <div class="tableBox">
         <el-table
           ref="multipleTable"
-          :data="tableData"
           v-loading="loading"
+          :data="tableData"
           border
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
           tooltip-effect="dark"
@@ -169,27 +163,25 @@
               <div class="btnList">
                 <el-button
                   v-if="scope.row.shelveState == 1"
-                  @click="OutForced(scope.row)"
-                  style="margin-right: 10px"
                   slot="reference"
+                  style="margin-right: 10px"
                   type="text"
-                  >强制下架</el-button
-                >
+                  @click="OutForced(scope.row)"
+                >强制下架</el-button>
                 <el-button
                   v-if="scope.row.shelveState == 1"
                   type="text"
                   @click="setFictitious(scope.row)"
-                  >虚拟销量</el-button
-                >
+                >虚拟销量</el-button>
                 <el-button
                   v-if="scope.row.shelveState == 2"
                   type="text"
                   @click="examineShow(scope.row)"
-                  >审核</el-button
-                >
-                <el-button type="text" @click="Godetails(scope.row)"
-                  >查看详情</el-button
-                >
+                >审核</el-button>
+                <el-button
+                  type="text"
+                  @click="Godetails(scope.row)"
+                >查看详情</el-button>
               </div>
             </template>
           </el-table-column>
@@ -222,10 +214,10 @@
           label-width="120px"
         >
           <el-input
-            type="textarea"
             v-model="ForcedForm.reject"
+            type="textarea"
             autocomplete="off"
-          ></el-input>
+          />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -247,7 +239,7 @@
             :min="1"
             :max="999999999"
             label="请输入整数"
-          ></el-input-number>
+          />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -264,27 +256,27 @@ import {
   getClassifyGetAll,
   Forced,
   setFictitious,
-  examine,
-} from "@/api/commodity";
+  examine
+} from '@/api/commodity'
 export default {
   components: {},
   data() {
     // 这里存放数据
     return {
       loading: true,
-      btnList: "",
-      activeName: "first",
+      btnList: '',
+      activeName: 'first',
       formInline: {
         productType: this.$route.meta.title.substring(0, 4), // 服务类型
-        shelveState: "", // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
-        productName: "", // 服务名称
-        productId: "", //服务ID
-        shopName: "", //服务商名称
-        isRecommended: "", // 是否推荐
-        classifyParentId: "", // 服务大类
-        classifyId: "", // 服务小类
+        shelveState: '', // 服务状态 0-已下架 1-已上架 2-待审核 3-审核失败
+        productName: '', // 服务名称
+        productId: '', // 服务ID
+        shopName: '', // 服务商名称
+        isRecommended: '', // 是否推荐
+        classifyParentId: '', // 服务大类
+        classifyId: '', // 服务小类
         page: 1, // 当前页
-        pageSize: 5,
+        pageSize: 5
       },
       batchAdd: false,
       batchFileList: [],
@@ -294,15 +286,15 @@ export default {
       FictitiousVisible: false,
       ForcedForm: {
         fictitiousNumber: 0,
-        productId: "",
-        reject: "",
-        shelveState: 1,
+        productId: '',
+        reject: '',
+        shelveState: 1
       },
       examineVisible: false,
       classifyList: [],
       parentClasses: [],
       classes: []
-    };
+    }
   },
   // 监听属性 类似于data概念
   computed: {},
@@ -312,150 +304,149 @@ export default {
   created() {},
   // 生命周期 - 挂载完成（可以访问DOM元素）
   async mounted() {
-    await this.queryAllCategory();
-    await this.getAll(this.formInline);
+    await this.queryAllCategory()
+    await this.getAll(this.formInline)
   },
   // 方法集合
   methods: {
     // 查看详情
     Godetails(row) {
       this.$router.push({
-        name: "addCommodity",
-        params: { productId: row.productId },
-      });
+        name: 'addCommodity',
+        params: { productId: row.productId }
+      })
     },
     // 设置虚拟销量
     setFictitious(row) {
-      this.FictitiousVisible = true;
-      this.ForcedForm.productId = row.productId;
-      this.ForcedForm.fictitiousNumber = row.fictitiousNumber;
+      this.FictitiousVisible = true
+      this.ForcedForm.productId = row.productId
+      this.ForcedForm.fictitiousNumber = row.fictitiousNumber
     },
     async FicSubmintUs() {
-      const res = await setFictitious(this.ForcedForm);
-      if (res.code === "") {
-        this.FictitiousVisible = false;
+      const res = await setFictitious(this.ForcedForm)
+      if (res.code === '') {
+        this.FictitiousVisible = false
         this.$message.success(
-          "虚拟销量已设置：" + this.ForcedForm.fictitiousNumber
-        );
-        this.search();
+          '虚拟销量已设置：' + this.ForcedForm.fictitiousNumber
+        )
+        this.search()
       }
     },
     // 强制下架
     OutForced(row) {
-      this.$alert("确定下架此服务吗？", "提示", {
-        confirmButtonText: "确定",
+      this.$alert('确定下架此服务吗？', '提示', {
+        confirmButtonText: '确定',
         callback: (action) => {
-          console.log(action);
-          if (action == "confirm") {
-            this.ForcedForm.productId = row.productId;
+          console.log(action)
+          if (action === 'confirm') {
+            this.ForcedForm.productId = row.productId
             Forced(this.ForcedForm).then((res) => {
-              if (res.code === "") {
-                this.$message.success("下架成功");
-                this.search();
+              if (res.code === '') {
+                this.$message.success('下架成功')
+                this.search()
               }
-            });
+            })
           }
-        },
-      });
+        }
+      })
     },
     // 审核弹窗
     examineShow(row) {
-      this.ForcedForm.productId = row.productId;
-      this.ForcedForm.reject = "";
-      this.examineVisible = true;
+      this.ForcedForm.productId = row.productId
+      this.ForcedForm.reject = ''
+      this.examineVisible = true
     },
     async submintUs() {
-      if (this.ForcedForm.shelveState == 3 && this.ForcedForm.reject == "")
-        return this.$message.warning("请输入驳回原因");
-      const res = await examine(this.ForcedForm);
-      if (res.code === "") {
-        this.examineVisible = false;
-        this.search();
-        if (this.ForcedForm.shelveState == 1) {
-          this.$message.success("审核成功");
+      if (this.ForcedForm.shelveState === 3 && this.ForcedForm.reject === '') { return this.$message.warning('请输入驳回原因') }
+      const res = await examine(this.ForcedForm)
+      if (res.code === '') {
+        this.examineVisible = false
+        this.search()
+        if (this.ForcedForm.shelveState === 1) {
+          this.$message.success('审核成功')
         } else {
-          this.$message.success("已驳回");
+          this.$message.success('已驳回')
         }
       }
     },
     handleSizeChange(val) {
-      console.log(val);
-      this.formInline.pageSize = val;
-      this.getAll(this.formInline);
+      console.log(val)
+      this.formInline.pageSize = val
+      this.getAll(this.formInline)
     },
     handleCurrentChange(val) {
-      console.log(val);
-      this.formInline.page = val;
-      this.getAll(this.formInline);
+      console.log(val)
+      this.formInline.page = val
+      this.getAll(this.formInline)
     },
     //  查询
     search() {
-      this.total = 1;
-      this.formInline.page = 1;
-      this.getAll(this.formInline);
+      this.total = 1
+      this.formInline.page = 1
+      this.getAll(this.formInline)
     },
-    //服务状态查询
+    // 服务状态查询
     changeState(e) {
-      console.log(e);
-      this.formInline.shelveState = e;
-      this.getAll(this.formInline);
+      console.log(e)
+      this.formInline.shelveState = e
+      this.getAll(this.formInline)
     },
     // 重置
     clear() {
-      this.formInline.shelveState = "";
-      this.formInline.productName = "";
-      this.formInline.productId = "";
-      this.formInline.shopName = "";
-      this.formInline.page = 1;
-      this.formInline.pageSize = 5;
-      this.formInline.isRecommended = "";
-      this.formInline.classifyParentId = "";
-      this.formInline.classifyId = "";
-      this.getAll(this.formInline);
+      this.formInline.shelveState = ''
+      this.formInline.productName = ''
+      this.formInline.productId = ''
+      this.formInline.shopName = ''
+      this.formInline.page = 1
+      this.formInline.pageSize = 5
+      this.formInline.isRecommended = ''
+      this.formInline.classifyParentId = ''
+      this.formInline.classifyId = ''
+      this.getAll(this.formInline)
     },
 
     // 初始化查询所有数据
     async getAll(formInline) {
-      const res = await getClassifyGetAll(formInline);
+      const res = await getClassifyGetAll(formInline)
       for (const item of res.data.list) {
-        let productCategory = "";
-        let productSubCategory = "";
+        let productCategory = ''
+        let productSubCategory = ''
         for (const parentCatefory of this.categoryList) {
           for (const category of parentCatefory['childs']) {
-            for (const subCategory of category["childs"]) {
-              if (subCategory["id"].toString() === item.classifyId) {
-                productCategory = category["categoryName"];
-                productSubCategory = subCategory["categoryName"];
+            for (const subCategory of category['childs']) {
+              if (subCategory['id'].toString() === item.classifyId) {
+                productCategory = category['categoryName']
+                productSubCategory = subCategory['categoryName']
               }
             }
           }
         }
-        item.productCategory = productCategory;
-        item.productSubCategory = productSubCategory;
+        item.productCategory = productCategory
+        item.productSubCategory = productSubCategory
       }
-      this.loading = false;
-      this.total = res.data.total;
-      this.tableData = res.data.list;
+      this.loading = false
+      this.total = res.data.total
+      this.tableData = res.data.list
     },
     // 初始化查询所有分类
     async queryAllCategory() {
       const res = await getClassify()
       this.categoryList = res.data
       console.log(this.categoryList)
-      this.parentClasses = this.categoryList.find(item => item.categoryName === this.$route.meta.title.substring(0, 4))['childs'];
-      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs'];
+      this.parentClasses = this.categoryList.find(item => item.categoryName === this.$route.meta.title.substring(0, 4))['childs']
+      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
     },
     changeParentClass() {
       if (!this.formInline.classifyParentId) {
-        this.classes = [];
-        this.formInline.classifyId = undefined;
-        return;
+        this.classes = []
+        this.formInline.classifyId = undefined
+        return
       }
-      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs'];
-      this.formInline.classifyId = this.classes[0].id;
+      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
+      this.formInline.classifyId = this.classes[0].id
     }
-  },
-};
+  }
+}
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
