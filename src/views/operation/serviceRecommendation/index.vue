@@ -54,7 +54,7 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label="是否采纳">
-                <el-select v-model="dynamicValidateForm.serviceRecommendationAdoption" placeholder="是否采纳" style="width: 100%">
+                <el-select v-model="dynamicValidateForm.serviceRecommendationAdoption" placeholder="选项" style="width: 100%">
                   <el-option label="是" value="是" />
                   <el-option label="否" value="否" />
                 </el-select>
@@ -81,7 +81,7 @@
           <el-row>
             <el-col :span="22">
               <el-form-item label="产品列表">
-                <el-table :data="productTableData" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" style="width: 100%">
+                <el-table :data="productTableData" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" border style="width: 100%">
                   <el-table-column prop="shopName" label="服务商" />
                   <el-table-column prop="productName" label="服务产品" />
                   <el-table-column prop="price" label="售价" />
@@ -110,7 +110,7 @@
     </el-dialog>
     <el-table :data="serviceRecommendationList" style="width: 100%" class="el-table" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" border>
       <el-table-column label="序号" prop="serviceRecommendationId" width="80%" />
-      <el-table-column label="推荐名称" prop="serviceRecommendationName" width="80%" />
+      <el-table-column label="推荐名称" prop="serviceRecommendationName" width="100%" />
       <!--      <el-table-column label="推荐客户" prop="recommendationCustomer" />-->
       <el-table-column label="推荐客户" prop="serviceRecommendationBuyerName" width="80%" />
       <el-table-column label="推荐类型" prop="serviceRecommendationType" width="80%" />
@@ -126,7 +126,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="客户信息" :visible.sync="userDialogFormVisible" style="width: 100%;">
+    <el-dialog title="客户信息" :visible.sync="userDialogFormVisible" style="width: 80%; margin-left: 10%">
       <el-form :model="userInfo">
         <el-row>
           <el-col :span="12">
@@ -269,7 +269,7 @@ export default {
             this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
             this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
             const productInfo = []
-            for (let j = 0; j < this.serviceRecommendationList[j].serviceRecommendationProductIds.length; j++) {
+            for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
               const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
               console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
               productInfo.push({ shopName: product.shopName, productName: product.productName })
@@ -303,6 +303,22 @@ export default {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
           this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
+          const productInfo = []
+          for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
+            const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
+            console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
+            productInfo.push({ shopName: product.shopName, productName: product.productName })
+          }
+          // 初始化用于存放唯一值的数组
+          let uniqueShopNames = []
+          let uniqueProductNames = []
+          // 提取并去重 shopName
+          // eslint-disable-next-line no-const-assign
+          uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
+          // 提取并去重 productName
+          uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
         }
       })
     },
@@ -426,6 +442,22 @@ export default {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
           this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
+          const productInfo = []
+          for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
+            const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
+            console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
+            productInfo.push({ shopName: product.shopName, productName: product.productName })
+          }
+          // 初始化用于存放唯一值的数组
+          let uniqueShopNames = []
+          let uniqueProductNames = []
+          // 提取并去重 shopName
+          // eslint-disable-next-line no-const-assign
+          uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
+          // 提取并去重 productName
+          uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
         }
       })
     },
@@ -438,6 +470,22 @@ export default {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
           this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
+          const productInfo = []
+          for (let j = 0; j < this.serviceRecommendationList[i].serviceRecommendationProductIds.length; j++) {
+            const product = this.productList.find(product => product.productId === this.serviceRecommendationList[i].serviceRecommendationProductIds[j])
+            console.log('info', { shopName: product.shopName, productName: product.productName, price: product.price })
+            productInfo.push({ shopName: product.shopName, productName: product.productName })
+          }
+          // 初始化用于存放唯一值的数组
+          let uniqueShopNames = []
+          let uniqueProductNames = []
+          // 提取并去重 shopName
+          // eslint-disable-next-line no-const-assign
+          uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
+          // 提取并去重 productName
+          uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务商: ' + uniqueShopNames.join(' ') + '; 服务: ' + uniqueProductNames.join(' ')
         }
       })
     }
