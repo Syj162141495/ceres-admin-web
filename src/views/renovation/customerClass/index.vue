@@ -215,21 +215,26 @@ export default {
   }
 }
 </script>
-  <style lang="scss" scoped>
-  @import url("../../../styles/elDialog.scss");
+<style lang="scss" scoped>
+@import url("../../../styles/elDialog.scss");
 
-  .classification-page {
-    padding: 15px 20px;
-    .infobar{
-    padding: 12px 20px;
-    text-align: left;
-    span{
-      font-weight: bold;
-    }
+.classification-page {
+  padding: 15px 20px;
+  .infobar{
+  padding: 12px 20px;
+  text-align: left;
+  span{
+    font-weight: bold;
   }
-    .toolbar {
-      margin-bottom: 15px;
-      text-align: right;
-    }
+}
+  .toolbar {
+    margin-bottom: 15px;
+    text-align: right;
   }
-  </style>
+}
+</style>
+<style>
+.el-tooltip__popper{
+  max-width:20%
+}
+</style>

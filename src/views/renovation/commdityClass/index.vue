@@ -230,3 +230,8 @@ export default {
   }
 }
 </style>
+<style>
+.el-tooltip__popper{
+  max-width:20%
+}
+</style>
