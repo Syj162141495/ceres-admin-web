@@ -1,10 +1,15 @@
 <template>
   <div class="classification-page">
-    <div class="toolbar">
-      <el-button
-        type="success"
-        @click="addFirstClassifyLevel"
-      >添加一级类别</el-button>
+    <div style="display: flex; justify-content: space-between;">
+      <div class="infobar">
+        共含有<span>{{ firstClassNum }}</span>个一级类别，<span>{{ secondClassNum }}</span>个二级类别, <span>{{ thirdClassNum }}</span>个三级类别
+      </div>
+      <div class="toolbar">
+        <el-button
+          type="success"
+          @click="addFirstClassifyLevel"
+        >添加一级类别</el-button>
+      </div>
     </div>
     <el-table
       :data="tableData"
@@ -17,15 +22,11 @@
         'text-align': 'center',
       }"
     >
-      <el-table-column prop="classifyName" label="服务商分类" width="300px" />
-      <el-table-column
-        prop="previousClassifyName"
-        label="上级分类"
-        align="center"
-      />
-      <el-table-column prop="sortID" label="编码" align="center" />
-      <el-table-column prop="sort" label="排序号" align="center" />
-      <el-table-column prop="description" label="介绍" width="300px" />
+      <el-table-column prop="classifyName" label="服务商分类" width="250px" />
+      <el-table-column prop="previousClassifyName" label="上级分类" align="center" width="150px" />
+      <el-table-column prop="sortID" label="编码" align="center" width="100px" />
+      <el-table-column prop="sort" label="排序号" align="center" width="100px" />
+      <el-table-column prop="description" label="介绍" show-overflow-tooltip />
       <el-table-column prop="status" label="操作" align="center" width="200px">
         <template slot-scope="scope">
           <el-button
@@ -89,6 +90,9 @@ export default {
       currentPage: 1,
       // 表单数据
       tableData: [],
+      firstClassNum: 0,
+      secondClassNum: 0,
+      thirdClassNum: 0,
       // 控制Edit组件的变量
       dialogVisible: false,
       dialog: {
@@ -169,7 +173,6 @@ export default {
           })
         })
     },
-
     /* 获取数据填充tableData */
     async init() {
       const res = await getProviderClassByPid({ classifyId: 0 })
@@ -179,10 +182,11 @@ export default {
         item.sortID = 'O' + sortID.toString()
         sortID++
         item.children = []
-        this.setChildern(item, 2)
+        await this.setChildern(item, 2)
       }
       items.sort((a, b) => a.sort - b.sort)
       this.tableData = items
+      this.calculate()
     },
     async setChildern(pitem) {
       const res = await getProviderClassByPid({ classifyId: pitem.classifyId })
@@ -197,6 +201,20 @@ export default {
         this.setChildern(item)
       }
       pitem['children'].sort((a, b) => a.sort - b.sort)
+    },
+    // 计算类别种类
+    calculate() {
+      let secondTemp = 0
+      let thirdTemp = 0
+      for (const i of this.tableData) {
+        secondTemp += i.children.length
+        for (const j of i.children) {
+          thirdTemp += j.children.length
+        }
+      }
+      this.firstClassNum = this.tableData.length
+      this.secondClassNum = secondTemp
+      this.thirdClassNum = thirdTemp
     },
     // 退出（右上角x)
     editClose() {
@@ -217,6 +235,13 @@ export default {
 
 .classification-page {
   padding: 15px 20px;
+  .infobar{
+    padding: 12px 20px;
+    text-align: left;
+    span{
+      font-weight: bold;
+    }
+  }
   .toolbar {
     margin-bottom: 15px;
     text-align: right;
