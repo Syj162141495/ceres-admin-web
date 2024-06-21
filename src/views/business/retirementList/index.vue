@@ -11,6 +11,13 @@
           <el-form-item label="联系人">
             <el-input v-model="formInline.chargePersonName" placeholder="请输入联系人" />
           </el-form-item>
+          <el-form-item label="医疗联合">
+            <el-select v-model="formInline.medicalcollaboration" placeholder="请选择医疗联合类型" :disabled="isSelectDisabled">
+              <el-option label="无" value="无" />
+              <el-option label="医联体" value="医联体" />
+              <el-option label="医共体" value="医共体" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="大类">
             <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" :disabled="isSelectDisabled" @change="changeParentClass">
               <el-option
@@ -40,33 +47,41 @@
       </div>
       <!-- 表格 -->
       <div class="tableBox">
-        <el-table ref="multipleTable" v-fit-columns :data="tableData" border
-          :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" tooltip-effect="dark" style="width: 100%">
-          <el-table-column prop="shopId" label="序号">
+        <el-table
+          ref="multipleTable"
+          v-fit-columns
+          :data="tableData"
+          border
+          :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+          tooltip-effect="dark"
+          style="width: 100%"
+          size="mini"
+        >
+          <el-table-column prop="shopId" label="序号" show-overflow-tooltip width="60">
             <template slot-scope="scope">
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="serviceClassify" label="类型" />
-          <el-table-column prop="providersMajor" label="大类" />
-          <el-table-column prop="providersSubclass" label="小类" />
-          <el-table-column label="名称">
+          <el-table-column prop="serviceClassify" label="类型" show-overflow-tooltip width="100"/>
+          <el-table-column prop="providersMajor" label="大类"  show-overflow-tooltip width="100"/>
+          <el-table-column prop="providersSubclass" label="小类" show-overflow-tooltip width="100"/>
+          <el-table-column label="名称" show-overflow-tooltip width="250">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
           <!-- <el-table-column prop="city" label="城市" /> -->
           <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
-          <el-table-column prop="institutionalClassify" label="注册类型" />
-          <el-table-column prop="institutionalGrade" label="机构等级" />
-          <!-- <el-table-column prop="medicalcollaboration" label="医疗联合" /> -->
-          <el-table-column prop="area" label="省/市/区县" />
+          <el-table-column prop="institutionalClassify" label="注册类型" show-overflow-tooltip width="100"/>
+          <el-table-column prop="institutionalGrade" label="机构等级" show-overflow-tooltip width="100"/>
+          <el-table-column prop="medicalcollaboration" label="医疗联合" show-overflow-tooltip width="100"/>
+          <el-table-column prop="area" label="省/市/区县" show-overflow-tooltip width="100"/>
           <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
-          <el-table-column prop="reditCode" label="社会信用码" />
-          <el-table-column prop="chargePersonName" label="联系人" />
-          <el-table-column prop="chargePersonPhone" label="联系电话" />
-        <!-- <el-table-column prop="coordinateX" label="经度" />
+          <el-table-column prop="reditCode" label="社会信用码" show-overflow-tooltip width="100"/>
+          <el-table-column prop="chargePersonName" label="联系人" show-overflow-tooltip width="100"/>
+          <el-table-column prop="chargePersonPhone" label="联系电话" show-overflow-tooltip width="100"/>
+          <!-- <el-table-column prop="coordinateX" label="经度" />
                 <el-table-column prop="coordinateY" label="纬度" /> -->
           <!-- <el-table-column prop="introduction" label="机构简介" /> -->
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作" width="165" fixed="right">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button type="text" @click="seeMore(scope.row)">详情</el-button>
@@ -78,20 +93,34 @@
           </el-table-column>
         </el-table>
         <div class="fenye">
-          <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="10"
-            layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
-            @current-change="handleCurrentChange" />
+          <el-pagination
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="10"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
         </div>
       </div>
       <!-- ******************************************************弹框开始****************************************************** -->
       <!-- 新建服务商弹框 -->
-      <el-dialog :title="
-        userState === 0
-          ? '新增服务商'
-          : userState === 1
-            ? '修改服务商'
-            : '查看服务商'
-      " :visible.sync="dialogVisible" width="900px" top="10px" center :close-on-click-modal="false" @close="handleDialogClose">
+      <el-dialog
+        :title="
+          userState === 0
+            ? '新增服务商'
+            : userState === 1
+              ? '修改服务商'
+              : '查看服务商'
+        "
+        :visible.sync="dialogVisible"
+        width="900px"
+        top="10px"
+        center
+        :close-on-click-modal="false"
+        @close="handleDialogClose"
+      >
         <div>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="授权信息" name="first">
@@ -104,10 +133,10 @@
                     <el-form-item label="机构等级：" prop="institutionalGrade" class="form-item">
                       <el-input v-model="ruleForm.institutionalGrade" :disabled="disabled" />
                     </el-form-item>
-                    <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
-                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 240px;" :disabled="isSelectDisabled">
+                    <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
+                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 240px;" :disabled="isSelectDisabled" @change="changeParentClass">
                         <el-option
-                          v-for="(item,index) in classes"
+                          v-for="(item,index) in parentClasses"
                           :key="index"
                           :label="item.categoryName"
                           :value="item.id"
@@ -125,17 +154,17 @@
                     <el-form-item label="服务商类型：" prop="serviceClassify" class="form-item">
                       <el-input v-model="ruleForm.serviceClassify" :disabled="disabled" />
                     </el-form-item>
-                    <!-- <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
+                    <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
                       <el-select v-model="ruleForm.medicalcollaboration" placeholder="请选择医疗联合类型" style="width: 240px;" :disabled="isSelectDisabled">
                         <el-option label="无" value="无" />
                         <el-option label="医联体" value="医联体" />
                         <el-option label="医共体" value="医共体" />
                       </el-select>
-                    </el-form-item> -->
-                    <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
-                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 240px;" :disabled="isSelectDisabled" @change="changeParentClass">
+                    </el-form-item>
+                    <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
+                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 240px;" :disabled="isSelectDisabled">
                         <el-option
-                          v-for="(item,index) in parentClasses"
+                          v-for="(item,index) in classes"
                           :key="index"
                           :label="item.categoryName"
                           :value="item.id"
@@ -151,9 +180,14 @@
                   </div>
                   <div>
                     <el-form-item label="机构介绍：" prop="introduction" class="form-item">
-                      <el-input v-model="ruleForm.introduction" type="textarea" class="form-item-sub" :disabled="disabled"
-                        :autosize="{ minRows: 2, maxRows: 3 }" 
-                        style="width: 690px;"/>
+                      <el-input
+                        v-model="ruleForm.introduction"
+                        type="textarea"
+                        class="form-item-sub"
+                        :disabled="disabled"
+                        :autosize="{ minRows: 2, maxRows: 3 }"
+                        style="width: 690px;"
+                      />
                     </el-form-item>
                   </div>
                   <div>
@@ -163,26 +197,26 @@
                     <el-form-item label="机构位置：" prop="coordinate" class="form-item">
                       <div style="width: 690px;">
                         <baidu-map
-                          style="display:flex;flex-direction: column-reverse;" 
                           id="allmap"
+                          style="display:flex;flex-direction: column-reverse;"
+                          :scroll-wheel-zoom="true"
                           @ready="mapReady"
                           @click="getLocation"
-                          :scroll-wheel-zoom="true"
                         >
                           <div style="display:flex;justify-content:center;margin:15px">
                             <label>纬度：<input v-model="this.ruleForm.coordinateY" :disabled="isSelectDisabled" style="width: 150px;"></label>
                             <label>经度：<input v-model="this.ruleForm.coordinateX" :disabled="isSelectDisabled" style="width: 150px;"></label>
-                            <bm-auto-complete v-model="searchJingwei" :sugStyle="{zIndex: 999999}">
-                              <el-input v-model="searchJingwei" style="width:300px;margin-right:15px" placeholder="输入地址" :disabled="isSelectDisabled"></el-input>
+                            <bm-auto-complete v-model="searchJingwei" :sug-style="{zIndex: 999999}">
+                              <el-input v-model="searchJingwei" style="width:300px;margin-right:15px" placeholder="输入地址" :disabled="isSelectDisabled" />
                             </bm-auto-complete>
                             <el-button type="primary" @click="getBaiduMapPoint" style="height: 40px;">搜索</el-button>
                           </div>
-                          <bm-marker v-if="infoWindowShow" :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}"> 
-                            <bm-label content="" :v-if="infoWindowShow" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/>
+                          <bm-marker v-if="infoWindowShow" :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}">
+                            <bm-label content="" :v-if="infoWindowShow" :label-style="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}" />
                           </bm-marker>
                           <bm-info-window :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}" :show="infoWindowShow" @clickclose="infoWindowClose">
-                            <p>纬度:{{this.ruleForm.coordinateY}}</p>
-                            <p>经度:{{this.ruleForm.coordinateX}}</p>
+                            <p>纬度:{{ this.ruleForm.coordinateY }}</p>
+                            <p>经度:{{ this.ruleForm.coordinateX }}</p>
                           </bm-info-window>
                         </baidu-map>
                       </div>
@@ -271,8 +305,8 @@ export default {
         chargePersonPhone: '', // 负责人电话
         // location: '北京',
         // keyword: '百度',
-        coordinateX:'',
-        coordinateY:'',
+        coordinateX: '',
+        coordinateY: '',
         introduction: '',
         shopPhone: '', // 账号
         shopPassword: '', // 密码
@@ -322,14 +356,14 @@ export default {
       },
       rules: {
         shopPhone: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
+          { required: true, message: '请输入账号', trigger: 'blur' }
           // {
           //   pattern: /^1[34578]\d{9}$/,
           //   message: '目前只支持中国大陆的手机号码'
           // }
         ],
         shopPassword: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: true, message: '请输入密码', trigger: 'blur' }
 
           // {
           //   pattern: /^[~!@#$%^&*\-+=_.0-9a-zA-Z]{8,16}$/,
@@ -343,9 +377,9 @@ export default {
       currentPage: 1,
       userState: 1,
       shopId: 0,
-      searchJingwei:'',
-      infoWindowShow:true,
-      point:'',
+      searchJingwei: '',
+      infoWindowShow: true,
+      point: '',
       classifyList: [],
       parentClasses: [],
       classes: []
@@ -371,8 +405,8 @@ export default {
     await this.selectList()
     this.getAll(this.formInline)
     // await this.mapReady({ BMap, map })
-    this.parentClasses = this.classifyList.find(item => item.categoryName === '养老服务')['childs'];
-    this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs'];
+    this.parentClasses = this.classifyList.find(item => item.categoryName === '养老服务')['childs']
+    this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs']
     await this.mapReady({ BMap, map })
   },
   // 方法集合
@@ -394,52 +428,51 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event)
     },
-    handleDialogClose(){
+    handleDialogClose() {
       // this.infoWindowShow = false; // 隐藏信息窗口
-      this.map.centerAndZoom(this.point, 12); // 将地图视图恢复到初始状态
-      this.ruleForm.coordinateX = ''; // 清空坐标信息
-      this.ruleForm.coordinateY = '';
+      this.map.centerAndZoom(this.point, 12) // 将地图视图恢复到初始状态
+      this.ruleForm.coordinateX = '' // 清空坐标信息
+      this.ruleForm.coordinateY = ''
       this.searchJingwei = ''
     },
     onSubmit() {
       this.getAll(this.formInline)
     },
-    //地图初始化
+    // 地图初始化
     mapReady({ BMap, map }) {
       // 选择一个经纬度作为中心点
       if (this.userState === 0) {
-        this.point = new BMap.Point(116.3925, 39.9075);
-        map.centerAndZoom(this.point, 12);
+        this.point = new BMap.Point(116.3925, 39.9075)
+        map.centerAndZoom(this.point, 12)
       } else {
-        map.centerAndZoom(new BMap.Point(this.ruleForm.coordinateX, this.ruleForm.coordinateY), 12);
+        map.centerAndZoom(new BMap.Point(this.ruleForm.coordinateX, this.ruleForm.coordinateY), 12)
       }
-      this.BMap=BMap
-      this.map=map
+      this.BMap = BMap
+      this.map = map
     },
-    //点击获取经纬度
-    getLocation(e){
-      this.ruleForm.coordinateX=e.point.lng
-      this.ruleForm.coordinateY=e.point.lat
-      this.infoWindowShow=true
+    // 点击获取经纬度
+    getLocation(e) {
+      this.ruleForm.coordinateX = e.point.lng
+      this.ruleForm.coordinateY = e.point.lat
+      this.infoWindowShow = true
     },
-    getBaiduMapPoint(){
-      let that=this
-      let myGeo = new this.BMap.Geocoder()
-      myGeo.getPoint(this.searchJingwei,function(point){
-        if(point){
-          that.map.centerAndZoom(point,15)
-          that.ruleForm.coordinateY=point.lat
-          that.ruleForm.coordinateX=point.lng
-          that.infoWindowShow=true
+    getBaiduMapPoint() {
+      const that = this
+      const myGeo = new this.BMap.Geocoder()
+      myGeo.getPoint(this.searchJingwei, function(point) {
+        if (point) {
+          that.map.centerAndZoom(point, 15)
+          that.ruleForm.coordinateY = point.lat
+          that.ruleForm.coordinateX = point.lng
+          that.infoWindowShow = true
         }
-
       })
     },
-    //信息窗口关闭
-    infoWindowClose(){
-      this.ruleForm.coordinateY=''
-      this.ruleForm.coordinateX=''
-      this.infoWindowShow=false
+    // 信息窗口关闭
+    infoWindowClose() {
+      this.ruleForm.coordinateY = ''
+      this.ruleForm.coordinateX = ''
+      this.infoWindowShow = false
     },
     // 新建服务商
     addbuss() {
@@ -506,12 +539,12 @@ export default {
           }
           if (!this.userState) {
             this.ruleForm.serviceClassify = '养老服务'
-            if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+            if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
               for (const category of this.classifyList.find(item => item.categoryName === '养老服务')['childs']) {
-                for (const subCategory of category["childs"]) {
-                  if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
-                    this.ruleForm.providersMajor = category["categoryName"]
-                    this.ruleForm.providersSubclass = subCategory["categoryName"]
+                for (const subCategory of category['childs']) {
+                  if (parseInt(subCategory['id']) === parseInt(this.ruleForm.classifyId)) {
+                    this.ruleForm.providersMajor = category['categoryName']
+                    this.ruleForm.providersSubclass = subCategory['categoryName']
                   }
                 }
               }
@@ -528,13 +561,13 @@ export default {
               this.$refs.ruleForm.clearValidate()
             })
           } else {
-            if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+            if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
               for (const category of this.classifyList.find(item => item.categoryName === '养老服务')['childs']) {
-                for (const subCategory of category["childs"]) {
-                  if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
-                    this.ruleForm.providersMajor = subCategory["categoryName"]
-                    this.ruleForm.providersSubclass = category["categoryName"]
-                    this.ruleForm.classifyId = subCategory["id"]
+                for (const subCategory of category['childs']) {
+                  if (parseInt(subCategory['id']) === parseInt(this.ruleForm.classifyId)) {
+                    this.ruleForm.providersMajor = subCategory['categoryName']
+                    this.ruleForm.providersSubclass = category['categoryName']
+                    this.ruleForm.classifyId = subCategory['id']
                   }
                 }
               }
@@ -604,17 +637,17 @@ export default {
         this.disabled = true
         this.ruleForm = res.data
         this.infoWindowShow = true
-        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
           for (const category of this.classifyList.find(item => item.categoryName === '养老服务')['childs']) {
-            for (const subCategory of category["childs"]) {
-              if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
-                this.ruleForm.classifyId = subCategory["categoryName"]
-                this.ruleForm.classifyParentId = category["categoryName"];
+            for (const subCategory of category['childs']) {
+              if (parseInt(subCategory['id']) === parseInt(this.ruleForm.classifyId)) {
+                this.ruleForm.classifyId = subCategory['categoryName']
+                this.ruleForm.classifyParentId = category['categoryName']
               }
             }
           }
         }
-        this.mapReady({BMap: this.BMap, map: this.map})
+        this.mapReady({ BMap: this.BMap, map: this.map })
       }
     },
     // 编辑
@@ -649,12 +682,12 @@ export default {
       if (res.code === '') {
         this.ruleForm = res.data
         this.infoWindowShow = true
-        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
           for (const category of this.classifyList.find(item => item.categoryName === '养老服务')['childs']) {
-            for (const subCategory of category["childs"]) {
-              if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
-                this.ruleForm.classifyId = subCategory["categoryName"]
-                this.ruleForm.classifyParentId = category["categoryName"];
+            for (const subCategory of category['childs']) {
+              if (parseInt(subCategory['id']) === parseInt(this.ruleForm.classifyId)) {
+                this.ruleForm.classifyId = subCategory['categoryName']
+                this.ruleForm.classifyParentId = category['categoryName']
               }
             }
           }
@@ -696,21 +729,21 @@ export default {
     // businessListGetAll
     // 初始化查询所有数据
     async getAll(formInline) {
-      console.log(this.ruleForm.serviceClassify)
       this.formInline.serviceClassify = '养老服务'
       const res = await businessListGetAll(formInline)
       this.total = res.data.total
       this.tableData = res.data.list
+      this.$refs.multipleTable.doLayout();
       if (res.code === '') {
         this.ruleForm = res.data
-        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== "") {
+        if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
           for (const category of this.classifyList.find(item => item.categoryName === '养老服务')['childs']) {
-            for (const subCategory of category["childs"]) {
-              if (parseInt(subCategory["id"]) === parseInt(this.ruleForm.classifyId)) {
-                this.ruleForm.classifyId = subCategory["categoryName"]
-                this.ruleForm.classifyParentId = category["categoryName"];
-                this.tableData.providersMajor = category["categoryName"];
-                this.tableData.providersSubclass = subCategory["categoryName"];
+            for (const subCategory of category['childs']) {
+              if (parseInt(subCategory['id']) === parseInt(this.ruleForm.classifyId)) {
+                this.ruleForm.classifyId = subCategory['categoryName']
+                this.ruleForm.classifyParentId = category['categoryName']
+                this.tableData.providersMajor = category['categoryName']
+                this.tableData.providersSubclass = subCategory['categoryName']
               }
             }
           }
@@ -729,7 +762,7 @@ export default {
       this.classifyList = res.data
     },
     changeParentClass() {
-      this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs'];
+      this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs']
       this.ruleForm.classifyId = this.classes[0].id
       console.log(this.classes)
       console.log(this.ruleForm.classifyId)
@@ -748,6 +781,12 @@ export default {
   height: 300px;
 }
 
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 36px;
+}
+
 ::v-deep .location .el-input__inner {
   height: 200px !important;
 }
@@ -764,10 +803,10 @@ export default {
   text-align: left;
 }
 
-::v-deep .el-table th,
-::v-deep .el-table td {
-  padding: 0.1px 0; /* 调整这个值可以控制行高 */
-}
+// ::v-deep .el-table th,
+// ::v-deep .el-table td {
+//   padding: 0.1px 0; /* 调整这个值可以控制行高 */
+// }
 
 .tableBox {
   overflow-x: auto;
@@ -847,4 +886,5 @@ export default {
 .elspan {
   margin-left: 10px;
 }
+
 </style>

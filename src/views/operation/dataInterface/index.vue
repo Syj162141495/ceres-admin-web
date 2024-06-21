@@ -92,7 +92,13 @@
         </el-form>
       </div>
     </el-dialog>
-    <el-table :data="dataInterfaceList" style="width: 100%" class="el-table">
+    <el-table 
+      :data="dataInterfaceList" 
+      style="width: 100%" 
+      class="el-table"
+      border
+      :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
+    >
       <el-table-column label="序号" prop="dataInterfaceId" width="50px" />
       <el-table-column label="业务系统" prop="systemModuleName" />
       <el-table-column label="接口名称" prop="dataInterfaceName" />
@@ -102,9 +108,9 @@
       <el-table-column label="接口返回参数示例" prop="dataInterfaceReturnTypeExample" />
       <el-table-column label="操作" width="300px">
         <template slot-scope="scope">
-          <el-button size="mini" @click="showView(scope.row)">查看接口参数</el-button>
-          <el-button size="mini" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" size="mini" @click="showView(scope.row)">查看接口参数</el-button>
+          <el-button type="text" size="mini" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -332,7 +338,7 @@ export default {
   border-top: 1px solid #dfe6ec;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 }
-.el-button--primary {
+/* .el-button--primary {
   background-color: #007bff;
   border-color: #007bff;
   border-radius: 4px;
@@ -340,7 +346,7 @@ export default {
 .el-button {
   font-weight: 500;
   border-radius: 4px;
-}
+} */
 .el-dialog__header {
   padding: 20px 24px;
 }

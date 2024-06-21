@@ -55,32 +55,33 @@
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
           tooltip-effect="dark"
           style="width: 100%"
+          size="mini"
         >
-          <el-table-column prop="shopId" label="序号">
+          <el-table-column prop="shopId" label="序号" width="60">
             <template slot-scope="scope">
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="serviceClassify" label="类型" />
-          <el-table-column prop="providersMajor" label="大类" />
-          <el-table-column prop="providersSubclass" label="小类" />
-          <el-table-column label="名称">
+          <el-table-column prop="serviceClassify" label="类型" show-overflow-tooltip width="100"/>
+          <el-table-column prop="providersMajor" label="大类"  width="150"/>
+          <el-table-column prop="providersSubclass" label="小类"  width="150"/>
+          <el-table-column label="名称" width="250">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
           <!-- <el-table-column prop="city" label="城市" /> -->
           <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
-          <el-table-column prop="institutionalClassify" label="注册类型" />
-          <el-table-column prop="institutionalGrade" label="机构等级" />
-          <el-table-column prop="medicalcollaboration" label="医疗联合" />
-          <el-table-column prop="area" label="省/市/区县" />
+          <el-table-column prop="institutionalClassify" label="注册类型" width="100"/>
+          <el-table-column prop="institutionalGrade" label="机构等级" width="100"/>
+          <el-table-column prop="medicalcollaboration" label="医疗联合" width="100"/>
+          <el-table-column prop="area" label="省/市/区县" width="150"/>
           <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
-          <el-table-column prop="reditCode" label="社会信用码" />
-          <el-table-column prop="chargePersonName" label="联系人" />
-          <el-table-column prop="chargePersonPhone" label="联系电话" />
+          <el-table-column prop="reditCode" label="社会信用码" width="200"/>
+          <el-table-column prop="chargePersonName" label="联系人" width="100"/>
+          <el-table-column prop="chargePersonPhone" label="联系电话" width="100"/>
           <!-- <el-table-column prop="coordinateX" label="经度" />
                 <el-table-column prop="coordinateY" label="纬度" /> -->
           <!-- <el-table-column prop="introduction" label="机构简介" /> -->
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作" width="150" fixed="right">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button type="text" @click="seeMore(scope.row)">详情</el-button>
@@ -779,6 +780,12 @@ export default {
   height: 300px;
 }
 
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 36px;
+}
+
 ::v-deep .location .el-input__inner {
   height: 200px !important;
 }
@@ -795,10 +802,10 @@ export default {
   text-align: left;
 }
 
-::v-deep .el-table th,
-::v-deep .el-table td {
-  padding: 0.1px 0; /* 调整这个值可以控制行高 */
-}
+// ::v-deep .el-table th,
+// ::v-deep .el-table td {
+//   padding: 0.1px 0; /* 调整这个值可以控制行高 */
+// }
 
 .tableBox {
   overflow-x: auto;
@@ -878,4 +885,5 @@ export default {
 .elspan {
   margin-left: 10px;
 }
+
 </style>
