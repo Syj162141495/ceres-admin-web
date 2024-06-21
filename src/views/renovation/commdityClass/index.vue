@@ -17,6 +17,7 @@
       row-key="classifyId"
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
+      :cell-style="{'box-sizing': 'border-box', padding: 0, margin: 0, height: '48px'}"
     >
       <el-table-column prop="classifyName" label="服务分类" width="250px" />
       <el-table-column prop="previousClassifyName" label="上级分类" align="center" width="150px" />
@@ -228,10 +229,5 @@ export default {
     margin-bottom: 15px;
     text-align: right;
   }
-}
-</style>
-<style>
-.el-tooltip__popper{
-  max-width:20%
 }
 </style>
