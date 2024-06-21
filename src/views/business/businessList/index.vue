@@ -52,7 +52,7 @@
           v-fit-columns
           :data="tableData"
           border
-          :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+          :header-cell-style="{ background: '#EEF3FF', color: '#333333'}"
           tooltip-effect="dark"
           style="width: 100%"
         >
@@ -61,26 +61,26 @@
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="serviceClassify" label="类型" />
-          <el-table-column prop="providersMajor" label="大类" />
-          <el-table-column prop="providersSubclass" label="小类" />
-          <el-table-column label="名称">
+          <el-table-column label="医疗服务商名称">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
-          <!-- <el-table-column prop="city" label="城市" /> -->
-          <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
-          <el-table-column prop="institutionalClassify" label="注册类型" />
+          <el-table-column prop="serviceClassify" label="类型" />
           <el-table-column prop="institutionalGrade" label="机构等级" />
           <el-table-column prop="medicalcollaboration" label="医疗联合" />
-          <el-table-column prop="area" label="省/市/区县" />
-          <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
-          <el-table-column prop="reditCode" label="社会信用码" />
+          <el-table-column prop="providersMajor" label="大类" />
+          <el-table-column prop="providersSubclass" label="小类" />
+          <el-table-column prop="institutionalClassify" label="注册" />
           <el-table-column prop="chargePersonName" label="联系人" />
-          <el-table-column prop="chargePersonPhone" label="联系电话" />
+          <el-table-column prop="chargePersonPhone" label="电话" />
+          <el-table-column prop="area" label="地址" />
+          <!-- <el-table-column prop="city" label="城市" /> -->
+          <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->、
+          <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
+          <!-- <el-table-column prop="reditCode" label="社会信用码" /> -->
           <!-- <el-table-column prop="coordinateX" label="经度" />
                 <el-table-column prop="coordinateY" label="纬度" /> -->
           <!-- <el-table-column prop="introduction" label="机构简介" /> -->
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作" fixed="right" width="150px" align="center">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button type="text" @click="seeMore(scope.row)">详情</el-button>
@@ -191,7 +191,7 @@
                   </div>
                   <div>
                     <el-form-item label="省/市/区县：" prop="area" class="form-item">
-                      <el-input v-model="ruleForm.area" :disabled="disabled" style="width: 690px;"/>
+                      <el-input v-model="ruleForm.area" :disabled="disabled" style="width: 690px;" />
                     </el-form-item>
                     <el-form-item label="机构位置：" prop="coordinate" class="form-item">
                       <div style="width: 690px;">
@@ -208,7 +208,7 @@
                             <bm-auto-complete v-model="searchJingwei" :sug-style="{zIndex: 999999}">
                               <el-input v-model="searchJingwei" style="width:300px;margin-right:15px" placeholder="输入地址" :disabled="isSelectDisabled" />
                             </bm-auto-complete>
-                            <el-button type="primary" @click="getBaiduMapPoint" style="height: 40px;">搜索</el-button>
+                            <el-button type="primary" style="height: 40px;" @click="getBaiduMapPoint">搜索</el-button>
                           </div>
                           <bm-marker v-if="infoWindowShow" :position="{lng: this.ruleForm.coordinateX, lat: this.ruleForm.coordinateY}">
                             <bm-label content="" :v-if="infoWindowShow" :label-style="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}" />
@@ -227,10 +227,10 @@
             <el-tab-pane label="客户信息" name="second">
               <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px">
                 <el-form-item label="账号" prop="shopPhone">
-                  <el-input v-model="ruleForm.shopPhone" :disabled="disabled" maxlength="20" style="width: 650px;"/>
+                  <el-input v-model="ruleForm.shopPhone" :disabled="disabled" maxlength="20" style="width: 650px;" />
                 </el-form-item>
                 <el-form-item label="密码" prop="shopPassword">
-                  <el-input v-model="ruleForm.shopPassword" type="password" :disabled="disabled" maxlength="20" style="width: 650px;"/>
+                  <el-input v-model="ruleForm.shopPassword" type="password" :disabled="disabled" maxlength="20" style="width: 650px;" />
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -253,10 +253,7 @@ import Vue from 'vue'
 import Plugin from 'v-fit-columns'
 import {
   getGroupSelect,
-  getserverClassify,
-  getClassifyAdd,
-  getClassifyGetById,
-  getClassifyUpdate
+  getserverClassify
 } from '@/api/commodity'
 Vue.use(Plugin)
 import {
