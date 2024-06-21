@@ -1,7 +1,15 @@
 <template>
   <div class="classification-page">
-    <div class="toolbar">
-      <el-button type="success" @click="addFirstClassifyLevel">添加一级类别</el-button>
+    <div style="display: flex; justify-content: space-between;">
+      <div class="infobar">
+        共含有<span>{{ firstClassNum }}</span>个一级类别，<span>{{ secondClassNum }}</span>个二级类别, <span>{{ thirdClassNum }}</span>个三级类别
+      </div>
+      <div class="toolbar">
+        <el-button
+          type="success"
+          @click="addFirstClassifyLevel"
+        >添加一级类别</el-button>
+      </div>
     </div>
     <el-table
       :data="tableData"
@@ -10,12 +18,12 @@
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
-      <el-table-column prop="classifyName" label="客户分类" />
-      <el-table-column prop="previousClassifyName" label="上级分类" align="center" />
-      <el-table-column prop="sortID" label="编码" align="center" />
-      <el-table-column prop="sort" label="排序号" align="center" />
-      <el-table-column prop="description" label="介绍" />
-      <el-table-column prop="status" label="操作" align="center">
+      <el-table-column prop="classifyName" label="客户分类" width="250px" />
+      <el-table-column prop="previousClassifyName" label="上级分类" align="center" width="150px" />
+      <el-table-column prop="sortID" label="编码" align="center" width="100px" />
+      <el-table-column prop="sort" label="排序号" align="center" width="100px" />
+      <el-table-column prop="description" label="介绍" show-overflow-tooltip />
+      <el-table-column prop="status" label="操作" align="center" width="200px">
         <template slot-scope="scope">
           <el-button type="text" @click.native.prevent="checkRow(scope.row)">查看</el-button>
           <el-button type="text" @click.native.prevent="updateRow(scope.row)">编辑</el-button>
@@ -68,6 +76,9 @@ export default {
       currentPage: 1,
       // 表单数据
       tableData: [],
+      firstClassNum: 0,
+      secondClassNum: 0,
+      thirdClassNum: 0,
       // 控制Edit组件的变量
       dialogVisible: false,
       dialog: {
@@ -97,7 +108,6 @@ export default {
       this.formParams.pageSize = limit || 10
       // this.getProductCategory()
     },
-
     /* 增删改查操作，唤醒Edit组件 */
     // 查看
     checkRow(row) {
@@ -148,7 +158,6 @@ export default {
           })
         })
     },
-
     /* 获取数据填充tableData */
     async init() {
       const res = await getCustomerClassByPid({ 'classifyId': 0 })
@@ -158,10 +167,11 @@ export default {
         item.sortID = 'O' + sortID.toString()
         sortID++
         item.children = []
-        this.setChildern(item, 2)
+        await this.setChildern(item, 2)
       }
       items.sort((a, b) => a.sort - b.sort)
       this.tableData = items
+      this.calculate()
     },
     async setChildern(pitem) {
       const res = await getCustomerClassByPid({ 'classifyId': pitem.classifyId })
@@ -177,6 +187,20 @@ export default {
       }
       pitem['children'].sort((a, b) => a.sort - b.sort)
     },
+    // 计算类别种类
+    calculate() {
+      let secondTemp = 0
+      let thirdTemp = 0
+      for (const i of this.tableData) {
+        secondTemp += i.children.length
+        for (const j of i.children) {
+          thirdTemp += j.children.length
+        }
+      }
+      this.firstClassNum = this.tableData.length
+      this.secondClassNum = secondTemp
+      this.thirdClassNum = thirdTemp
+    },
     // 退出（右上角x)
     editClose() {
       this.dialog.isVisible = false
@@ -191,14 +215,26 @@ export default {
   }
 }
 </script>
-  <style lang="scss" scoped>
-  @import url("../../../styles/elDialog.scss");
+<style lang="scss" scoped>
+@import url("../../../styles/elDialog.scss");
 
-  .classification-page {
-    padding: 15px 20px;
-    .toolbar {
-      margin-bottom: 15px;
-      text-align: right;
-    }
+.classification-page {
+  padding: 15px 20px;
+  .infobar{
+  padding: 12px 20px;
+  text-align: left;
+  span{
+    font-weight: bold;
   }
-  </style>
+}
+  .toolbar {
+    margin-bottom: 15px;
+    text-align: right;
+  }
+}
+</style>
+<style>
+.el-tooltip__popper{
+  max-width:20%
+}
+</style>

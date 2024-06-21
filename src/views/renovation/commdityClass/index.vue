@@ -1,7 +1,15 @@
 <template>
   <div class="classification-page">
-    <div class="toolbar">
-      <el-button type="success" @click="addFirstClassifyLevel">添加一级类别</el-button>
+    <div style="display: flex; justify-content: space-between;">
+      <div class="infobar">
+        共含有<span>{{ firstClassNum }}</span>个一级类别，<span>{{ secondClassNum }}</span>个二级类别, <span>{{ thirdClassNum }}</span>个三级类别
+      </div>
+      <div class="toolbar">
+        <el-button
+          type="success"
+          @click="addFirstClassifyLevel"
+        >添加一级类别</el-button>
+      </div>
     </div>
     <el-table
       :data="tableData"
@@ -10,11 +18,11 @@
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
-      <el-table-column prop="classifyName" label="服务分类" width="300px" />
-      <el-table-column prop="previousClassifyName" label="上级分类" align="center" />
-      <el-table-column prop="sortID" label="编码" align="center" />
-      <el-table-column prop="sort" label="排序号" align="center" />
-      <el-table-column prop="description" label="介绍" width="300px" />
+      <el-table-column prop="classifyName" label="服务分类" width="250px" />
+      <el-table-column prop="previousClassifyName" label="上级分类" align="center" width="150px" />
+      <el-table-column prop="sortID" label="编码" align="center" width="100px" />
+      <el-table-column prop="sort" label="排序号" align="center" width="100px" />
+      <el-table-column prop="description" label="介绍" show-overflow-tooltip />
       <el-table-column prop="status" label="操作" align="center" width="200px">
         <template slot-scope="scope">
           <el-button type="text" @click.native.prevent="checkRow(scope.row)">查看</el-button>
@@ -64,6 +72,9 @@ export default {
       },
       total: 1,
       tableData: [],
+      firstClassNum: 0,
+      secondClassNum: 0,
+      thirdClassNum: 0,
       currentPage: 1,
       dialog: {
         type: 'add',
@@ -75,6 +86,7 @@ export default {
     this.init()
   },
   methods: {
+    /* 处理页面变化的函数 */
     handleSizeChange(val) {
       this.formParams.pageSize = val
       this.getAll(this.formParams)
@@ -83,22 +95,24 @@ export default {
       this.formParams.page = val
       this.getAll(this.formParams)
     },
+    async getAll(formParams) {
+      const res = await commdityClassGetAll(formParams)
+      this.tableData = res.data.list
+      this.total = res.data.total
+    },
     fetch(config) {
       const { limit, page } = config
       this.formParams.pageIndex = page || 1
       this.formParams.pageSize = limit || 10
-      this.getProductCategory()
     },
-    // 添加一级类别
-    addFirstClassifyLevel() {
+    /* 增删改查操作，唤醒Edit组件 */
+    // 查看
+    checkRow(row) {
       this.dialog = {
-        type: 'addFirst',
+        type: 'check',
         isVisible: true
       }
-      this.$refs.edit.setParams({ treeData: [], classifyLevel: 1 })
-    },
-    editClose() {
-      this.dialog.isVisible = false
+      this.$refs.edit.setParams({ id: row.classifyId })
     },
     // 编辑
     updateRow(row) {
@@ -106,23 +120,15 @@ export default {
         type: 'edit',
         isVisible: true
       }
-      this.$refs.edit.setParams({ id: row.classifyId, classifyLevel: row.level })
+      this.$refs.edit.setParams({ id: row.classifyId })
     },
-    // 查看
-    checkRow(row) {
-      this.dialog = {
-        type: 'check',
-        isVisible: true
-      }
-      this.$refs.edit.setParams({ id: row.classifyId, classifyLevel: row.level })
-    },
-    // 在指定行添加下一级的对象
+    // 添加
     async addRow(row) {
       this.dialog = {
         type: 'add',
         isVisible: true
       }
-      this.$refs.edit.setParams({ id: row.classifyId, classifyLevel: row.level })
+      this.$refs.edit.setParams({ id: row.classifyId })
     },
     // 删除
     async deleteRow(row) {
@@ -149,17 +155,6 @@ export default {
           })
         })
     },
-
-    async getProductCategory() {
-      this.init()
-    },
-
-    async getAll(formParams) {
-      const res = await commdityClassGetAll(formParams)
-      this.tableData = res.data.list
-      this.total = res.data.total
-    },
-
     /* 获取数据填充tableData */
     async init() {
       const res = await getCommdityClassByPid({ oneClassifyId: 0 })
@@ -169,10 +164,11 @@ export default {
         item.sortID = 'O' + sortID.toString()
         sortID++
         item.children = []
-        this.setChildern(item, 2)
+        await this.setChildern(item, 2)
       }
       items.sort((a, b) => a.sort - b.sort)
       this.tableData = items
+      this.calculate()
     },
     async setChildern(pitem) {
       const res = await getCommdityClassByPid({ oneClassifyId: pitem.classifyId })
@@ -187,6 +183,31 @@ export default {
         this.setChildern(item)
       }
       pitem['children'].sort((a, b) => a.sort - b.sort)
+    },
+    // 计算类别种类
+    calculate() {
+      let secondTemp = 0
+      let thirdTemp = 0
+      for (const i of this.tableData) {
+        secondTemp += i.children.length
+        for (const j of i.children) {
+          thirdTemp += j.children.length
+        }
+      }
+      this.firstClassNum = this.tableData.length
+      this.secondClassNum = secondTemp
+      this.thirdClassNum = thirdTemp
+    },
+    // 退出（右上角x)
+    editClose() {
+      this.dialog.isVisible = false
+    },
+    // 添加一级类别
+    addFirstClassifyLevel() {
+      this.dialog = {
+        type: 'addFirst',
+        isVisible: true
+      }
     }
   }
 }
@@ -196,9 +217,21 @@ export default {
 
 .classification-page {
   padding: 15px 20px;
+  .infobar{
+    padding: 12px 20px;
+    text-align: left;
+    span{
+      font-weight: bold;
+    }
+  }
   .toolbar {
     margin-bottom: 15px;
     text-align: right;
   }
+}
+</style>
+<style>
+.el-tooltip__popper{
+  max-width:20%
 }
 </style>

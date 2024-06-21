@@ -189,8 +189,7 @@ export default {
         folderId: 1
       },
       deleteArr: [],
-      dictList: [],
-      dialogLevel: 1
+      dictList: []
     }
   },
   computed: {
@@ -436,8 +435,7 @@ export default {
       }
     },
     //
-    setParams({ id, classifyLevel }) {
-      this.dialogLevel = classifyLevel
+    setParams({ id }) {
       this.queryOneCategory(id)
     }
   }
