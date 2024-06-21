@@ -45,7 +45,7 @@
           v-fit-columns
           :data="tableData"
           border
-          :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+          :header-cell-style="{ background: '#EEF3FF', color: '#333333'}"
           tooltip-effect="dark"
           style="width: 100%"
         >
@@ -54,7 +54,7 @@
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column label="其他服务商名称">
+          <el-table-column label="其他服务商名称" min-width="250px">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
           <el-table-column prop="serviceClassify" label="类型" />
@@ -246,10 +246,7 @@ import Vue from 'vue'
 import Plugin from 'v-fit-columns'
 import {
   getGroupSelect,
-  getserverClassify,
-  getClassifyAdd,
-  getClassifyGetById,
-  getClassifyUpdate
+  getserverClassify
 } from '@/api/commodity'
 Vue.use(Plugin)
 import {
@@ -789,9 +786,16 @@ export default {
   text-align: left;
 }
 
-::v-deep .el-table th,
-::v-deep .el-table td {
-  padding: 0.1px 0; /* 调整这个值可以控制行高 */
+// ::v-deep .el-table th,
+// ::v-deep .el-table td {
+//   padding: 0.1px 0; /* 调整这个值可以控制行高 */
+// }
+
+::v-deep .el-input__inner{
+  height: 30px;
+}
+::v-deep .el-form-item{
+    margin-bottom: 5px;
 }
 
 .tableBox {

@@ -54,7 +54,7 @@
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column label="养老服务商名称">
+          <el-table-column label="养老服务商名称" min-width="250px">
             <template slot-scope="scope">{{ scope.row.shopName }}</template>
           </el-table-column>
           <el-table-column prop="serviceClassify" label="类型" />
@@ -792,6 +792,13 @@ export default {
 ::v-deep .el-table th,
 ::v-deep .el-table td {
   padding: 0.1px 0; /* 调整这个值可以控制行高 */
+}
+
+::v-deep .el-input__inner{
+  height: 30px;
+}
+::v-deep .el-form-item{
+    margin-bottom: 5px;
 }
 
 .tableBox {
