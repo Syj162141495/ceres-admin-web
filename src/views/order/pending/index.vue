@@ -66,8 +66,10 @@
           style="width: 100%"
         >
           <!-- <el-table-column label="订单id" show-overflow-tooltip><template slot-scope="scope">{{ scope.row.orderId }}</template></el-table-column>-->
+          <!-- <el-table-column prop="number" label="服务数量" width="100px" /> -->
+          <!-- <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip /> -->
+          <!-- <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip /> -->
           <el-table-column prop="shopName" label="服务商名称" width="200px" />
-          <el-table-column prop="number" label="服务数量" width="100px" />
           <el-table-column prop="price" label="支付金额" />
           <el-table-column label="订单状态" show-overflow-tooltip>
             <template slot-scope="scope">
@@ -79,10 +81,8 @@
             </template>
           </el-table-column>
           <el-table-column prop="createTime" label="下单时间" width="180px" />
-          <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip />
-          <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip />
+          <el-table-column prop="customerName" label="客户ID" width="180px" />
           <el-table-column prop="receivePhone" label="手机号" show-overflow-tooltip />
-
           <el-table-column label="操作" show-overflow-tooltip>
             <template slot-scope="scope">
               <div class="btnList">
