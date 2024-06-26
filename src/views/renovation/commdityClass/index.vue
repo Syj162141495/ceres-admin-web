@@ -2,7 +2,7 @@
   <div class="classification-page">
     <div style="display: flex; justify-content: space-between;">
       <div class="infobar">
-        共含有<span>{{ firstClassNum }}</span>个一级类别，<span>{{ secondClassNum }}</span>个二级类别, <span>{{ thirdClassNum }}</span>个三级类别
+        共含有 <span>{{ firstClassNum }}</span> 个一级类别，<span>{{ secondClassNum }}</span> 个二级类别, <span>{{ thirdClassNum }}</span> 个三级类别
       </div>
       <div class="toolbar">
         <el-button
@@ -219,9 +219,12 @@ export default {
 .classification-page {
   padding: 15px 20px;
   .infobar{
+    margin-bottom: 10px;
     padding: 12px 20px;
+    background-color: white;
     text-align: left;
     span{
+      font-size: 20px;
       font-weight: bold;
     }
   }
