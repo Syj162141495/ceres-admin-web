@@ -786,10 +786,10 @@ export default {
   text-align: left;
 }
 
-// ::v-deep .el-table th,
-// ::v-deep .el-table td {
-//   padding: 0.1px 0; /* 调整这个值可以控制行高 */
-// }
+::v-deep .el-table th,
+::v-deep .el-table td {
+  padding: 0.1px 0; /* 调整这个值可以控制行高 */
+}
 
 ::v-deep .el-input__inner{
   height: 30px;

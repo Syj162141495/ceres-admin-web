@@ -74,7 +74,7 @@
           <el-table-column prop="chargePersonPhone" label="电话" />
           <el-table-column prop="area" label="地址" />
           <!-- <el-table-column prop="city" label="城市" /> -->
-          <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->、
+          <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
           <!-- <el-table-column prop="address" label="机构地址" width="200" /> -->
           <!-- <el-table-column prop="reditCode" label="社会信用码" /> -->
           <!-- <el-table-column prop="coordinateX" label="经度" />
