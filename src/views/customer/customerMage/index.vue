@@ -62,6 +62,7 @@
             border
             :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
             style="width: 100%"
+            size="mini"
           >
             <!-- <el-table-column prop="name" label="客户昵称" />
             <el-table-column prop="phone" label="手机号" />
@@ -69,22 +70,22 @@
             <el-table-column prop="buyers" label="购买次数" />
             <el-table-column prop="time" label="最近消费时间" />
             <el-table-column prop="createTime" label="注册时间" /> -->
-            <el-table-column prop="name" label="客户昵称" />
-            <el-table-column prop="sex" label="性别" />
-            <el-table-column prop="phone" label="手机号" /> <!--中间四位-->
-            <el-table-column prop="age" label="年龄" />
-            <el-table-column prop="cid" label="身份证" /> <!--中间6位-->
-            <el-table-column prop="address" label="地址" />
             <!--<el-table-column prop="memberLevelName" label="客户等级" />-->
-            <el-table-column prop="total" label="消费总额" />
-            <el-table-column prop="buyers" label="服务次数" />
-            <el-table-column prop="time" label="最近消费时间" />
-            <el-table-column prop="createTime" label="注册时间" />
-            <el-table-column label="操作">
+            <el-table-column prop="name" label="客户昵称" min-width="100" />
+            <el-table-column prop="sex" label="性别" min-width="80" align="center" />
+            <el-table-column prop="phone" label="手机号" min-width="100" align="center" /> <!--中间四位-->
+            <el-table-column prop="age" label="年龄" min-width="80" align="center" />
+            <el-table-column prop="cid" label="身份证" min-width="200" align="center" /> <!--中间6位-->
+            <el-table-column prop="address" label="地址" min-width="100" />
+            <el-table-column prop="total" label="消费总额" min-width="80" align="center" />
+            <el-table-column prop="buyers" label="服务次数" min-width="80" align="center" />
+            <el-table-column prop="time" label="最近消费时间" min-width="150" />
+            <el-table-column prop="createTime" label="注册时间" min-width="150" />
+            <el-table-column label="操作" fixed="right" width="220px" align="center">
               <template slot-scope="scope">
                 <el-button type="text" @click.native.prevent="details(scope.row)">详情</el-button>
                 <el-button type="text" @click.native.prevent="makeTag(scope.row.buyerUserId)">打标签</el-button>
-                <el-button type="text" size="small" @click.native.prevent="addBlackList(scope.row)">
+                <el-button type="text" @click.native.prevent="addBlackList(scope.row)">
                   {{
                     scope.row.ifBlack ? "取消黑名单" : "加入黑名单"
                   }}
