@@ -48,6 +48,7 @@
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
           tooltip-effect="dark"
           style="width: 100%"
+          size="mini"
         >
           <el-table-column prop="shopId" label="序号">
             <template slot-scope="scope">
@@ -796,11 +797,6 @@ export default {
   text-align: left;
 }
 
-::v-deep .el-table th,
-::v-deep .el-table td {
-  padding: 0.1px 0; /* 调整这个值可以控制行高 */
-}
-
 ::v-deep .el-input__inner{
   height: 30px;
 }
@@ -810,6 +806,9 @@ export default {
 
 .tableBox {
   overflow-x: auto;
+  overflow-y: hidden;
+  box-sizing:border-box;
+  margin-top: 10px;
 }
 
 .two-column-tabs {
