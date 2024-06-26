@@ -130,7 +130,7 @@
             show-overflow-tooltip
             width="120"
           />
-          <el-table-column prop="shopName" label="服务商名称" width="260" show-overflow-tooltip />
+          <el-table-column prop="shopName" label="服务商名称" min-width="260" show-overflow-tooltip />
           <!-- <el-table-column
             prop="memberSection"
             label="会员价"
@@ -158,21 +158,21 @@
             show-overflow-tooltip
           /> -->
           <!-- <el-table-column prop="createTime" label="创建时间" width="180" /> -->
-          <el-table-column label="操作" width="200" fixed="right">
+          <el-table-column label="操作" width="200px" fixed="right" align="center">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button
                   v-if="scope.row.shelveState == 1"
                   slot="reference"
-                  style="margin-right: 10px"
                   type="text"
                   @click="OutForced(scope.row)"
-                >强制下架</el-button>
+                >下架</el-button>
+                <!-- 虚拟销量 -->
                 <el-button
                   v-if="scope.row.shelveState == 1"
                   type="text"
                   @click="setFictitious(scope.row)"
-                >虚拟销量</el-button>
+                >销量</el-button>
                 <el-button
                   v-if="scope.row.shelveState == 2"
                   type="text"
@@ -181,7 +181,7 @@
                 <el-button
                   type="text"
                   @click="Godetails(scope.row)"
-                >查看详情</el-button>
+                >查看</el-button>
               </div>
             </template>
           </el-table-column>
@@ -190,7 +190,7 @@
           <el-pagination
             :current-page="currentPage"
             :page-sizes="[5, 10, 20, 50, 100]"
-            :page-size="5"
+            :page-size="10"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
             @size-change="handleSizeChange"
@@ -276,7 +276,7 @@ export default {
         classifyParentId: '', // 服务大类
         classifyId: '', // 服务小类
         page: 1, // 当前页
-        pageSize: 5
+        pageSize: 10
       },
       batchAdd: false,
       batchFileList: [],
@@ -398,7 +398,7 @@ export default {
       this.formInline.productId = ''
       this.formInline.shopName = ''
       this.formInline.page = 1
-      this.formInline.pageSize = 5
+      this.formInline.pageSize = 10
       this.formInline.isRecommended = ''
       this.formInline.classifyParentId = ''
       this.formInline.classifyId = ''
