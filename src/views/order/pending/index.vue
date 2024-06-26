@@ -60,7 +60,7 @@
           ref="multipleTable"
           :data="tableData"
           border
-          :cell-style="{ 'text-align': 'center' }"
+          :cell-style="{'text-align': 'center','box-sizing': 'border-box', padding: 0, margin: 0, height: '48px'}"
           :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align': 'center' }"
           tooltip-effect="dark"
           style="width: 100%"
@@ -177,7 +177,7 @@ export default {
     async getAll(formInline) {
       console.log(formInline, 'formInline')
       const res = await orderGetAll(formInline)
-      console.log(res, '初始化')
+      console.log(res, '初始化订单')
       this.total = res.data.total
       this.tableData = res.data.list
     }
