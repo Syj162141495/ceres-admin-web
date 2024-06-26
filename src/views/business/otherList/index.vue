@@ -12,7 +12,7 @@
             <el-input v-model="formInline.chargePersonName" placeholder="请输入联系人" />
           </el-form-item>
           <el-form-item label="大类">
-            <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" :disabled="isSelectDisabled" @change="changeParentClass">
+            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务商大类" @change="changeParentClassadd">
               <el-option
                 v-for="(item,index) in parentClasses"
                 :key="index"
@@ -22,7 +22,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="小类">
-            <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 310px;" :disabled="isSelectDisabled">
+            <el-select v-model="formInline.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 310px;">
               <el-option
                 v-for="(item,index) in classes"
                 :key="index"
@@ -271,7 +271,8 @@ export default {
         providersMajor: '',
         providersSubclass: '',
         serviceClassify: '',
-        classifyId: 0,
+        classifyParentId: '',
+        classifyId: '', // 分类id
         // contractState: '', // 合同状态 1-有效 0-无效
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
@@ -755,6 +756,12 @@ export default {
       this.ruleForm.classifyId = this.classes[0].id
       console.log(this.classes)
       console.log(this.ruleForm.classifyId)
+    },
+    changeParentClassadd() {
+      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
+      this.formInline.classifyId = this.classes[0].id
+      console.log('this.classes', this.classes)
+      console.log('this.formInline.classifyId',this.formInline.classifyId)
     }
   }
 }
@@ -786,10 +793,10 @@ export default {
   text-align: left;
 }
 
-// ::v-deep .el-table th,
-// ::v-deep .el-table td {
-//   padding: 0.1px 0; /* 调整这个值可以控制行高 */
-// }
+::v-deep .el-table th,
+::v-deep .el-table td {
+  padding: 0.1px 0; /* 调整这个值可以控制行高 */
+}
 
 ::v-deep .el-input__inner{
   height: 30px;

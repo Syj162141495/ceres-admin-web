@@ -12,14 +12,14 @@
             <el-input v-model="formInline.chargePersonName" placeholder="请输入联系人" />
           </el-form-item>
           <el-form-item label="医疗联合">
-            <el-select v-model="formInline.medicalcollaboration" placeholder="请选择医疗联合类型" :disabled="isSelectDisabled">
+            <el-select v-model="formInline.medicalcollaboration" placeholder="请选择医疗联合类型">
               <el-option label="无" value="无" />
               <el-option label="医联体" value="医联体" />
               <el-option label="医共体" value="医共体" />
             </el-select>
           </el-form-item>
           <el-form-item label="大类">
-            <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" :disabled="isSelectDisabled" @change="changeParentClass">
+            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务商大类" @change="changeParentClassadd">
               <el-option
                 v-for="(item,index) in parentClasses"
                 :key="index"
@@ -29,7 +29,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="小类">
-            <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 310px;" :disabled="isSelectDisabled">
+            <el-select v-model="formInline.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 310px;">
               <el-option
                 v-for="(item,index) in classes"
                 :key="index"
@@ -278,7 +278,9 @@ export default {
         providersMajor: '',
         providersSubclass: '',
         serviceClassify: '',
-        classifyId: 0,
+        // classifyId: 0,
+        classifyParentId: '',
+        classifyId: '', // 分类id
         // contractState: '', // 合同状态 1-有效 0-无效
         page: '1', // 当前页
         pageSize: '10' // 每页记录数
@@ -299,8 +301,6 @@ export default {
         reditCode: '',
         chargePersonName: '', // 服务商负责人
         chargePersonPhone: '', // 负责人电话
-        // location: '北京',
-        // keyword: '百度',
         coordinateX: '',
         coordinateY: '',
         introduction: '',
@@ -313,42 +313,9 @@ export default {
         shopName: [
           { required: true, message: '请输入服务商名称', trigger: 'blur' }
         ],
-        // city: [
-        //   { required: true, message: '请输入城市', trigger: 'blur' }
-        // ],
-        // area: [
-        //   { required: true, message: '请输入地区', trigger: 'blur' }
-        // ],
-        // serviceClassify: [
-        //   { required: true, message: '请选择服务类型', trigger: 'blur' }
-        // ],
-        // institutionalClassify: [
-        //   { required: true, message: '请输入机构类型', trigger: 'blur' }
-        // ],
-        // institutionalGrade: [
-        //   { required: true, message: '请输入机构等级', trigger: 'blur' }
-        // ],
-        // address: [
-        //   { required: true, message: '请输入机构地址', trigger: 'blur' }
-        // ],
-        // reditCode: [
-        //   { required: true, message: '请输入信用代码', trigger: 'blur' }
-        // ],
-        // chargePersonName: [
-        //   { required: true, message: '请输入联系人', trigger: 'blur' }
-        // ],
         chargePersonPhone: [
           { required: true, message: '请输入联系人电话', trigger: 'blur' }
         ]
-        // coordinateX: [
-        //   { required: true, message: '请输入经度', trigger: 'blur' }
-        // ],
-        // coordinateY: [
-        //   { required: true, message: '请输入纬度', trigger: 'blur' }
-        // ],
-        // introduction: [
-        //   { required: true, message: '请输入机构简介', trigger: 'blur' }
-        // ]
       },
       rules: {
         shopPhone: [
@@ -759,8 +726,12 @@ export default {
     changeParentClass() {
       this.classes = this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId) && this.parentClasses.find(item => item.id === this.ruleForm.classifyParentId)['childs']
       this.ruleForm.classifyId = this.classes[0].id
-      console.log(this.classes)
-      console.log(this.ruleForm.classifyId)
+    },
+    changeParentClassadd() {
+      this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
+      this.formInline.classifyId = this.classes[0].id
+      console.log('this.classes', this.classes)
+      console.log('this.formInline.classifyId',this.formInline.classifyId)
     }
   }
 }
