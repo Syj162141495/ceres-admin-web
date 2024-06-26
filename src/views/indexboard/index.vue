@@ -1,10 +1,46 @@
 <template>
   <div class="home-page">
-    <div class="total-data">
+    <!-- <div class="total-data">
       <ul>
         <li v-for="(item, index) in dataList" :key="index">
-          <p>{{ item.value }}</p>
           <p>{{ item.name }}</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">{{ item.value }}</p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">本月新增 <span style="color:blue">{{ }}</span> 家，待审核 <span style="color:blue">{{ }}</span> 家</p>
+        </li>
+      </ul>
+    </div> -->
+    <div class="total-data">
+      <ul>
+        <li>
+          <p>医康养服务商</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">{{ info.shopNum }} <span>家</span></p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">本月新增 <span style="color:blue">{{ info.newShopNum }}</span> 家，待审核 <span style="color:blue">{{ info.unCheckShopNum }}</span> 家</p>
+        </li>
+        <li>
+          <p>医康养服务项目</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">{{ info.productNum }} <span>项</span></p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">已发布 <span style="color:blue">{{ info.publishProductNum }}</span> 项，未发布 <span style="color:blue">{{ info.unPublishProductNum }}</span> 项</p>
+        </li>
+        <li>
+          <p>医康养服务订单</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">{{ info.orderNum }} <span>笔</span></p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">本月新增订单 <span style="color:blue">{{ info.newOrderNum }}</span> 笔</p>
+        </li>
+        <li>
+          <p>客户总数</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">{{ info.personNum }} <span>人</span></p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">本月新增 <span style="color:blue">{{ info.newPersonNum }}</span> 人，活跃 <span style="color:blue">{{ info.activityPersonNum }}</span> 人</p>
+        </li>
+        <li>
+          <p>开放接口</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">178 <span>个</span></p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">对接平台 <span style="color:blue">6</span> 家</p>
         </li>
       </ul>
     </div>
@@ -30,6 +66,21 @@
             <p class="title">过去半年成交额{{ info.moneyNum }} 元</p>
             <div ref="myEcharts" class="full-size" />
           </div>
+          <div class="echart_item">
+            <p class="title">热点页面</p>
+            <div class="hotPage">
+              <p>1</p>
+              <p>2</p>
+              <p>3</p>
+              <p>4</p>
+              <p>5</p>
+              <p>6</p>
+              <p>7</p>
+              <p>8</p>
+              <p>9</p>
+              <p>10</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +103,7 @@
           </template>
         </el-table-column>
         <!-- 横向表头和数据列 -->
-        <el-table-column prop="value1" label="入驻服务商" />
+        <el-table-column prop="value1" label="医康养服务商" />
         <el-table-column prop="value2" label="服务分类" />
         <el-table-column prop="value3" label="服务项目" />
         <el-table-column prop="value4" label="客户数量" />
@@ -75,7 +126,7 @@ export default {
       },
       orderTable: [],
       dataList: [
-        { name: '入驻服务商(个)', value: '', field: 'shopNum' },
+        { name: '医康养服务商(家)', value: '', field: 'shopNum' },
         { name: '服务分类(种)', value: '', field: 'classifyNum' },
         { name: '服务项数(项)', value: '', field: 'productNum' },
         { name: '客户数量(人)', value: '', field: 'personNum' },
@@ -240,24 +291,30 @@ ul {
         height: 140px;
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(224, 229, 235, 1);
-        border-radius: 4px;
+        border-radius: 10px;
         margin: 20px;
         p {
           margin: 0;
-          height: 70px;
-          line-height: 70px;
+          // height: 70px;
+          // line-height: 70px;
           text-align: center;
           &:nth-child(1) {
-            font-size: 48px;
+            font-size: 20px;
             font-weight: 600;
+            text-align: left;
+            padding-left: 20px;
+            line-height: 45px
           }
           &:nth-child(2) {
             font-size: 18px;
           }
+          &:nth-child(3) {
+            font-size: 20px
+          }
         }
         &:nth-child(1) {
           p:nth-child(1) {
-            color: #1acda1;
+            color: green;
           }
         }
         &:nth-child(2) {
@@ -321,7 +378,7 @@ ul {
         padding-left: 20px;
         box-sizing: border-box;
         height: calc(100% - 30px);
-        width: calc((100% - 40px) / 2);
+        width: calc((100% - 40px) / 3);
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(224, 229, 235, 1);
         box-shadow: 0px 5px 10px 0px rgba(51, 51, 51, 0.15);
@@ -417,4 +474,13 @@ ul {
   white-space: nowrap;
   width: 80px;
 }
+
+.hotPage {
+  p{
+    line-height: 31px;
+    font-size: 16px;
+    padding: 12px 0;
+  }
+}
+
 </style>

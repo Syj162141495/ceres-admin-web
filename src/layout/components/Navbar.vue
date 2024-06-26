@@ -14,7 +14,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper" style="margin-left: 20px">
           <img
-            src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2433701892,1843961230&fm=15&gp=0.jpg"
+            src="@/assets/images/icon.png"
             class="user-avatar"
           >
           <span class="user-name">{{ name }}</span>
