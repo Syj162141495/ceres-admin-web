@@ -106,12 +106,14 @@
             <div class="good_details">
               <ul>
                 <li>
-                  <img :src="item.image">
                   <div class="details">
                     <p>{{ item.productName }}</p>
                     <p class="skuDetails">
-                      <span v-for="(detailsItem, detailsindex) of item.skuDetails" :key="detailsindex"
-                        class="detail_span">
+                      <span
+                        v-for="(detailsItem, detailsindex) of item.skuDetails"
+                        :key="detailsindex"
+                        class="detail_span"
+                      >
                         {{ detailsItem.skuName }}: {{ detailsItem.skuValue }}
                       </span>
                     </p>
@@ -282,6 +284,7 @@ ul {
     margin: 20px;
     overflow: hidden;
     font-size: 14px;
+    background:#FFFFFF;
 
     .goods_info,
     .order_info,
@@ -403,11 +406,10 @@ ul {
               li {
                 flex: 3;
                 display: flex;
-                justify-content: space-around;
                 align-items: center;
 
                 .details {
-                  margin: 0 30px;
+                  margin: 0;
                   width: 180px;
                   line-height: 20px;
 
@@ -422,11 +424,6 @@ ul {
                       margin-right: 8px;
                     }
                   }
-                }
-
-                img {
-                  width: 50px;
-                  height: 50px;
                 }
               }
             }

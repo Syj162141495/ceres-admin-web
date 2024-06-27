@@ -513,7 +513,9 @@ export default {
 }
 
 .label {
-  width: 100px;
-  text-align: right;
+  margin-left: 20px;
+  box-sizing: border-box;
+  display: inline-block;
+  text-align: left;
 }
 </style>

@@ -39,7 +39,7 @@
               <el-input
                 v-model="data.description"
                 class="input"
-                style="width: 300px"
+                style="width: calc(100%- 150 - 100)"
                 :disabled="isCheck || isAdd(data)"
                 maxlength="200"
                 :autosize="{ minRows: 1, maxRows: 2 }"
