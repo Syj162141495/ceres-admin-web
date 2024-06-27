@@ -3,12 +3,6 @@
     <el-card class="box-card" body-style="height: 50px; padding-top: 2px; padding-bottom: 2px;">
       <span class="addTitle">服务详情</span>
       <el-button type="success" class="btnList" @click="back">关闭</el-button>
-    </el-card>
-    <!-- <div class="box-card">
-      <div></div>
-    </div> -->
-    <el-card class="box-card">
-      <label>服务详情</label>
       <div class="GoodBox">
         <el-row class="detail-box">
           <el-col :span="12">
@@ -132,7 +126,7 @@
           <el-row>
             <div style="overflow-wrap: break-word;">
               <div class="label">服务介绍：</div>
-              <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px;" v-html="productItem.productText" />
+              <div style="background-color: whitesmoke; border-radius: 4px; margin-right: 20px; padding-left: 10px; padding-right: 10px; display: inline-block ;" v-html="productItem.productText" />
             </div>
             <div v-show="productItem.images.length !== 0">
               <div class="label">服务图片：</div>
@@ -152,7 +146,7 @@
             <div class="label">服务规格：</div>
             <el-table
               :data="productItem.skuList"
-              style="width: 100%"
+              style="width: 100%;margin-bottom: 20px;"
               :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
             >
               <el-table-column
