@@ -314,7 +314,7 @@ ul {
 
     .left_part {
       float: left;
-      width: calc(70% - 10px);
+      width: calc(100% - 10px);
       margin-right: 10px;
 
       .pay_order_info {
