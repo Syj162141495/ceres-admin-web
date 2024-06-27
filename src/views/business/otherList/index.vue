@@ -55,7 +55,7 @@
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="shopName" label="其他服务商名称" />
+          <el-table-column prop="shopName" label="其他服务商名称" width="200" show-overflow-tooltip />
           <el-table-column prop="serviceClassify" label="类型" />
           <el-table-column prop="institutionalGrade" label="机构等级" />
           <el-table-column prop="medicalcollaboration" label="医疗联合" />
