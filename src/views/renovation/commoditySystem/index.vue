@@ -76,6 +76,7 @@
       <div class="tableBox">
         <el-table
           ref="multipleTable"
+          v-fit-columns
           v-loading="loading"
           :data="tableData"
           border
@@ -84,28 +85,17 @@
           style="width: 100%"
           size="mini"
         >
-          <el-table-column
-            type="index"
-            prop="productId"
-            label="序号"
-            show-overflow-tooltip
-            width="80"
-          />
           <!-- <el-table-column label="服务主图" width="150" align="center">
             <template slot-scope="scope">
               <img height="80" width="80" :src="scope.row.image" alt srcset />
             </template>
           </el-table-column> -->
-          <el-table-column prop="productName" label="服务名称" width="280" show-overflow-tooltip />
-          <el-table-column prop="productType" label="类型" width="120" />
-          <el-table-column prop="productCategory" label="大类" width="120" />
-          <el-table-column prop="productSubCategory" label="小类" width="120" />
-          <el-table-column
-            prop="isRecommended"
-            label="是否推荐"
-            show-overflow-tooltip
-            width="100"
-          >
+          <el-table-column type="index" prop="productId" label="序号" min-width="80" />
+          <el-table-column prop="productName" label="服务名称" show-overflow-tooltip />
+          <el-table-column prop="productType" label="类型" />
+          <el-table-column prop="productCategory" label="大类" min-width="120" />
+          <el-table-column prop="productSubCategory" label="小类" min-width="120" />
+          <el-table-column prop="isRecommended" label="是否推荐" show-overflow-tooltip>
             <template slot-scope="scope">
               <span v-if="scope.row.isRecommended==0">否</span>
               <span v-if="scope.row.isRecommended==1">是</span>

@@ -55,15 +55,15 @@
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="shopName" label="养老服务商名称" min-width="250px" />
-          <el-table-column prop="serviceClassify" label="类型" min-width="100" />
-          <el-table-column prop="institutionalGrade" label="机构等级" min-width="100" />
-          <el-table-column prop="medicalcollaboration" label="医疗联合" min-width="100" />
-          <el-table-column prop="providersMajor" label="大类" min-width="150" />
-          <el-table-column prop="providersSubclass" label="小类" min-width="150" />
-          <el-table-column prop="institutionalClassify" label="注册" min-width="100" />
-          <el-table-column prop="chargePersonName" label="联系人" min-width="100" />
-          <el-table-column prop="chargePersonPhone" label="电话" min-width="120" />
+          <el-table-column prop="shopName" label="养老服务商名称" />
+          <el-table-column prop="serviceClassify" label="类型" />
+          <el-table-column prop="institutionalGrade" label="机构等级" />
+          <el-table-column prop="medicalcollaboration" label="医疗联合" />
+          <el-table-column prop="providersMajor" label="大类" />
+          <el-table-column prop="providersSubclass" label="小类" />
+          <el-table-column prop="institutionalClassify" label="注册" />
+          <el-table-column prop="chargePersonName" label="联系人" />
+          <el-table-column prop="chargePersonPhone" label="电话" />
           <!-- <el-table-column prop="area" label="地址" /> -->
           <!-- <el-table-column prop="city" label="城市" /> -->
           <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
