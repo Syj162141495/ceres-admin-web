@@ -91,7 +91,7 @@
             </template>
           </el-table-column> -->
           <el-table-column type="index" prop="productId" label="序号" min-width="80" />
-          <el-table-column prop="productName" label="服务名称" show-overflow-tooltip />
+          <el-table-column prop="productName" label="服务名称" width="120" show-overflow-tooltip />
           <el-table-column prop="productType" label="类型" />
           <el-table-column prop="productCategory" label="大类" min-width="120" />
           <el-table-column prop="productSubCategory" label="小类" min-width="120" />
