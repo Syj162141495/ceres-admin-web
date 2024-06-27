@@ -152,7 +152,13 @@
         </el-form>
       </div>
     </el-dialog>
-    <el-table :data="dataInterfaceList" style="width: 100%" class="el-table" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" border>
+    <el-table 
+      :data="dataInterfaceList" 
+      style="width: 100%" 
+      class="el-table"
+      border
+      :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
+    >
       <el-table-column label="序号" prop="dataInterfaceId" width="50px" />
       <el-table-column label="业务系统" prop="systemModuleName" />
       <el-table-column label="接口名称" prop="dataInterfaceName" />
@@ -447,6 +453,15 @@ export default {
   border-top: 1px solid #dfe6ec;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 }
+/* .el-button--primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 4px;
+}
+.el-button {
+  font-weight: 500;
+  border-radius: 4px;
+} */
 .el-dialog__header {
   padding: 20px 24px;
 }

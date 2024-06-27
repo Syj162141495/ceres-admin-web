@@ -57,7 +57,7 @@
           style="width: 100%"
           size="mini"
         >
-          <el-table-column prop="shopId" label="序号">
+          <el-table-column prop="shopId" label="序号" width="60">
             <template slot-scope="scope">
               {{ indexMethod(scope.$index) }}
             </template>
@@ -746,6 +746,12 @@ export default {
   height: 300px;
 }
 
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 36px;
+}
+
 ::v-deep .location .el-input__inner {
   height: 200px !important;
 }
@@ -850,4 +856,5 @@ export default {
 .elspan {
   margin-left: 10px;
 }
+
 </style>

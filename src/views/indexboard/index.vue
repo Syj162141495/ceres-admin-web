@@ -1,24 +1,51 @@
 <template>
   <div class="home-page">
-    <div class="total-data">
+    <!-- <div class="total-data">
       <ul>
         <li v-for="(item, index) in dataList" :key="index">
-          <p>{{ item.value }}</p>
           <p>{{ item.name }}</p>
+          <p style="color:blue;font-size: 30px; text-align: left; margin-left:40px;line-height: 50px;">{{ item.value }}</p>
+          <hr style="margin-top: 10px">
+          <p style="text-align:left;margin-left:20px">本月新增 <span style="color:blue">{{ }}</span> 家，待审核 <span style="color:blue">{{ }}</span> 家</p>
+        </li>
+      </ul>
+    </div> -->
+    <div class="total-data">
+      <ul>
+        <li>
+          <p style="color:#111;text-align: center;padding:0">医康养服务商</p>
+          <p style="color:green;font-size: 30px; text-align: center;line-height: 50px;font-size: 30px;font-weight: 600;">{{ info.shopNum }} <span style="font-size: 20px;color:#111;font-weight:normal;">家</span></p>
+          <hr style="margin-top: 5px">
+          <p style="text-align:center;font-size:15px">本月新增 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.newShopNum }}</span> 家，待审核 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.unCheckShopNum }}</span> 家</p>
+        </li>
+        <li>
+          <p style="color:#111;text-align: center;padding:0">医康养服务项目</p>
+          <p style="color:green;font-size: 30px; text-align: center;line-height: 50px;font-size: 30px;font-weight: 600;">{{ info.productNum }} <span style="font-size: 20px;color:#111;font-weight:normal;">项</span></p>
+          <hr style="margin-top: 5px">
+          <p style="text-align:center;font-size:15px">已发布 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.publishProductNum }}</span> 项，未发布 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.unPublishProductNum }}</span> 项</p>
+        </li>
+        <li>
+          <p style="color:#111;text-align: center;padding:0">医康养服务订单</p>
+          <p style="color:green;font-size: 30px; text-align: center;line-height: 50px;font-size: 30px;font-weight: 600;">{{ info.orderNum }} <span style="font-size: 20px;color:#111;font-weight:normal;">笔</span></p>
+          <hr style="margin-top: 5px">
+          <p style="text-align:center;font-size:15px">本月新增订单 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.newOrderNum }}</span> 笔</p>
+        </li>
+        <li>
+          <p style="color:#111;text-align: center;padding:0">客户总数</p>
+          <p style="color:green;font-size: 30px; text-align: center;line-height: 50px;font-size: 30px;font-weight: 600;">{{ info.personNum }} <span style="font-size: 20px;color:#111;font-weight:normal;">人</span></p>
+          <hr style="margin-top: 5px">
+          <p style="text-align:center;font-size:15px">本月新增 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.newPersonNum }}</span> 人，活跃 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.activityPersonNum }}</span> 人</p>
+        </li>
+        <li>
+          <p style="color:#111;text-align: center;padding:0">开放接口</p>
+          <p style="color:green;font-size: 30px; text-align: center;line-height: 50px;font-size: 30px;font-weight: 600;">178 <span style="font-size: 20px;color:#111;font-weight:normal;">个</span></p>
+          <hr style="margin-top: 5px">
+          <p style="text-align:center;font-size:15px">对接平台 <span style="color:green;font-size:18px;font-weight: 600;">6</span> 家</p>
         </li>
       </ul>
     </div>
     <div class="sketch_map">
       <div class="tab_list">
-        <!-- <ul> -->
-        <!-- <li -->
-        <!-- v-for="(item,index) in tabList" -->
-        <!-- :key="index" -->
-        <!-- :class="[{'active':item.show}]" -->
-        <!-- @click="changeTab(item)" -->
-        <!-- >{{ item.name }}</li> -->
-        <!-- </ul> -->
-        <!-- </div> -->
         <div class="echart_list">
           <div class="echart_item">
             <p class="title">用户增长</p>
@@ -29,6 +56,21 @@
             <p class="title">成交额</p>
             <p class="title">过去半年成交额{{ info.moneyNum }} 元</p>
             <div ref="myEcharts" class="full-size" />
+          </div>
+          <div class="echart_item" style="height:400px">
+            <p class="title">热点页面</p>
+            <div class="hotPage">
+              <p>1</p>
+              <p>2</p>
+              <p>3</p>
+              <p>4</p>
+              <p>5</p>
+              <p>6</p>
+              <p>7</p>
+              <p>8</p>
+              <p>9</p>
+              <p>10</p>
+            </div>
           </div>
         </div>
       </div>
@@ -52,7 +94,7 @@
           </template>
         </el-table-column>
         <!-- 横向表头和数据列 -->
-        <el-table-column prop="value1" label="入驻服务商" />
+        <el-table-column prop="value1" label="医康养服务商" />
         <el-table-column prop="value2" label="服务分类" />
         <el-table-column prop="value3" label="服务项目" />
         <el-table-column prop="value4" label="客户数量" />
@@ -75,7 +117,7 @@ export default {
       },
       orderTable: [],
       dataList: [
-        { name: '入驻服务商(个)', value: '', field: 'shopNum' },
+        { name: '医康养服务商(家)', value: '', field: 'shopNum' },
         { name: '服务分类(种)', value: '', field: 'classifyNum' },
         { name: '服务项数(项)', value: '', field: 'productNum' },
         { name: '客户数量(人)', value: '', field: 'personNum' },
@@ -222,7 +264,6 @@ ul {
     .p-title {
       padding-left: 20px;
       font-size: 24px;
-      font-weight: 400;
       color: rgba(51, 51, 51, 1);
       line-height: 50px;
       height: 50px;
@@ -238,26 +279,31 @@ ul {
         flex: 4;
         width: 400px;
         height: 140px;
-        background: rgba(255, 255, 255, 1);
+        // background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(224, 229, 235, 1);
-        border-radius: 4px;
+        border-radius: 10px;
         margin: 20px;
         p {
           margin: 0;
-          height: 70px;
-          line-height: 70px;
+          // height: 70px;
+          // line-height: 70px;
           text-align: center;
           &:nth-child(1) {
-            font-size: 48px;
-            font-weight: 600;
+            font-size: 20px;
+            text-align: left;
+            padding-left: 20px;
+            line-height: 45px
           }
           &:nth-child(2) {
             font-size: 18px;
           }
+          &:nth-child(3) {
+            font-size: 20px
+          }
         }
         &:nth-child(1) {
           p:nth-child(1) {
-            color: #1acda1;
+            color: green;
           }
         }
         &:nth-child(2) {
@@ -280,14 +326,11 @@ ul {
   }
 
   .sketch_map {
-    height: calc(100% - 260px);
+    height: calc(100% - 360px);
     box-sizing: border-box;
-    background: #fff;
     padding: 0 20px;
     .tab_list {
-      border-bottom: 1px solid #e0e5eb;
       overflow: hidden;
-      margin-bottom: 20px;
       ul {
         overflow: hidden;
         float: right;
@@ -316,19 +359,19 @@ ul {
       }
     }
     .echart_list {
-      height: calc(100% - 200px);
+      height: calc(100% - 400px);
       .echart_item {
         padding-left: 20px;
         box-sizing: border-box;
-        height: calc(100% - 30px);
-        width: calc((100% - 40px) / 2);
+        height: calc(100% - 200px);
+        width: calc((100% - 40px) / 3);
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(224, 229, 235, 1);
-        box-shadow: 0px 5px 10px 0px rgba(51, 51, 51, 0.15);
+        // box-shadow: 0px 5px 10px 0px rgba(51, 51, 51, 0.15);
         border-radius: 4px;
         float: left;
         .echart {
-          height: calc(100% - 100px);
+          height: calc(100% - 300px);
         }
         &:nth-child(-n + 2) {
           margin-right: 20px;
@@ -336,7 +379,7 @@ ul {
         .title {
           margin: 0;
           height: 50px;
-          line-height: 50px;
+          line-height: 40px;
           font-size: 18px;
           color: #333333;
           &:nth-child(2) {
@@ -394,7 +437,7 @@ ul {
   }
 }
 .full-size {
-  height: 500px;
+  height: 300px;
 }
 /* 自定义样式，使纵向表头固定在左侧 */
 .el-table th.el-table-column--selection,
@@ -417,4 +460,13 @@ ul {
   white-space: nowrap;
   width: 80px;
 }
+
+.hotPage {
+  p{
+    line-height: 20px;
+    font-size: 16px;
+    padding: 7px 0;
+  }
+}
+
 </style>

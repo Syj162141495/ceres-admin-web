@@ -11,6 +11,13 @@
           <el-form-item label="联系人">
             <el-input v-model="formInline.chargePersonName" placeholder="请输入联系人" />
           </el-form-item>
+          <el-form-item label="医疗联合">
+            <el-select v-model="formInline.medicalcollaboration" placeholder="请选择医疗联合类型" :disabled="isSelectDisabled">
+              <el-option label="无" value="无" />
+              <el-option label="医联体" value="医联体" />
+              <el-option label="医共体" value="医共体" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="大类">
             <el-select v-model="formInline.classifyParentId" placeholder="请选择服务商大类" @change="changeParentClassadd">
               <el-option
@@ -85,32 +92,46 @@
         </el-table>
         <div class="fenye">
           <el-pagination
+           
             :current-page="currentPage"
+           
             :page-sizes="[10, 20, 50, 100]"
+           
             :page-size="10"
             layout="total, sizes, prev, pager, next, jumper"
+           
             :total="total"
+           
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
+         
           />
         </div>
       </div>
       <!-- ******************************************************弹框开始****************************************************** -->
       <!-- 新建服务商弹框 -->
       <el-dialog
+       
         :title="
-          userState === 0
-            ? '新增服务商'
-            : userState === 1
-              ? '修改服务商'
-              : '查看服务商'
-        "
+            userState === 0
+              ? '新增服务商'
+              : userState === 1
+                ? '修改服务商'
+                : '查看服务商'
+          "
+       
         :visible.sync="dialogVisible"
+       
         width="900px"
+       
         top="10px"
+       
         center
+       
         :close-on-click-modal="false"
+       
         @close="handleDialogClose"
+      
       >
         <div>
           <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -124,10 +145,10 @@
                     <el-form-item label="机构等级：" prop="institutionalGrade" class="form-item">
                       <el-input v-model="ruleForm.institutionalGrade" :disabled="disabled" />
                     </el-form-item>
-                    <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
-                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 240px;" :disabled="isSelectDisabled">
+                    <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
+                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 240px;" :disabled="isSelectDisabled" @change="changeParentClass">
                         <el-option
-                          v-for="(item,index) in classes"
+                          v-for="(item,index) in parentClasses"
                           :key="index"
                           :label="item.categoryName"
                           :value="item.id"
@@ -145,17 +166,17 @@
                     <el-form-item label="服务商类型：" prop="serviceClassify" class="form-item">
                       <el-input v-model="ruleForm.serviceClassify" :disabled="disabled" />
                     </el-form-item>
-                    <!-- <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
+                    <el-form-item label="医疗联合：" prop="medicalcollaboration" class="form-item">
                       <el-select v-model="ruleForm.medicalcollaboration" placeholder="请选择医疗联合类型" style="width: 240px;" :disabled="isSelectDisabled">
                         <el-option label="无" value="无" />
                         <el-option label="医联体" value="医联体" />
                         <el-option label="医共体" value="医共体" />
                       </el-select>
-                    </el-form-item> -->
-                    <el-form-item label="服务商大类：" prop="providersMajor" class="form-item">
-                      <el-select v-model="ruleForm.classifyParentId" placeholder="请选择服务商大类" style="width: 240px;" :disabled="isSelectDisabled" @change="changeParentClass">
+                    </el-form-item>
+                    <el-form-item label="服务商小类：" prop="providersSubclass" class="form-item">
+                      <el-select v-model="ruleForm.classifyId" placeholder="请先选择服务商大类后再选择服务商小类" style="width: 240px;" :disabled="isSelectDisabled">
                         <el-option
-                          v-for="(item,index) in parentClasses"
+                          v-for="(item,index) in classes"
                           :key="index"
                           :label="item.categoryName"
                           :value="item.id"
@@ -718,11 +739,11 @@ export default {
     // businessListGetAll
     // 初始化查询所有数据
     async getAll(formInline) {
-      console.log(this.ruleForm.serviceClassify)
       this.formInline.serviceClassify = '其他服务'
       const res = await businessListGetAll(formInline)
       this.total = res.data.total
       this.tableData = res.data.list
+      this.$refs.multipleTable.doLayout();
       if (res.code === '') {
         this.ruleForm = res.data
         if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
@@ -774,6 +795,12 @@ export default {
 .map {
   width: 100%;
   height: 300px;
+}
+
+::v-deep .el-table .el-table__header-wrapper > table > thead > tr {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 36px;
 }
 
 ::v-deep .location .el-input__inner {
@@ -880,4 +907,5 @@ export default {
 .elspan {
   margin-left: 10px;
 }
+
 </style>
