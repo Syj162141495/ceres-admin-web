@@ -1,8 +1,10 @@
 <template>
   <div>
     <el-card class="box-card" body-style="height: 50px; padding-top: 2px; padding-bottom: 2px;">
-      <span class="addTitle">服务详情</span>
-      <el-button type="success" class="btnList" @click="back">关闭</el-button>
+      <div style="margin-top: 20px;">
+        <span class="addTitle">服务详情</span>
+        <el-button type="success" class="btnList" @click="back">关闭</el-button>
+      </div>
       <div class="GoodBox">
         <el-row class="detail-box">
           <el-col :span="12">
@@ -440,13 +442,14 @@ export default {
   height: 36px;
   border-radius: 4px;
   margin-right: 30px;
-  margin-top: 5px;
   margin-bottom: 5px;
 }
 .addTitle {
   font-size: 20px;
   color: #333333;
   line-height: 50px;
+  margin-top: 5px;
+  margin-left: 15px;
 }
 
 .GoodBox {
