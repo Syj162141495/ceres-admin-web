@@ -58,7 +58,6 @@
       <div class="tableBox">
         <el-table
           ref="multipleTable"
-          v-fit-columns
           :data="tableData"
           border
           :cell-style="{'text-align': 'center'}"
@@ -72,8 +71,8 @@
           <!-- <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip /> -->
           <!-- <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip /> -->
           <el-table-column prop="shopName" label="服务商名称" min-width="200" />
-          <el-table-column prop="price" label="支付金额" />
-          <el-table-column label="订单状态" width="80" show-overflow-tooltip>
+          <el-table-column prop="price" width="100" label="支付金额" />
+          <el-table-column label="订单状态" width="100" show-overflow-tooltip>
             <template slot-scope="scope">
               <span v-if="scope.row.state == 1">待支付</span>
               <span v-if="scope.row.state == 2">待接单</span>
@@ -84,7 +83,7 @@
           </el-table-column>
           <el-table-column prop="createTime" label="下单时间" width="180" />
           <el-table-column prop="buyerUserId" label="客户ID" width="180" />
-          <el-table-column prop="receivePhone" label="手机号" min-width="180" show-overflow-tooltip />
+          <el-table-column prop="receivePhone" label="手机号" width="180" show-overflow-tooltip />
           <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <div class="btnList">

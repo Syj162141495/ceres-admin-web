@@ -93,8 +93,10 @@
             <div class="good_price">
               <ul>
                 <li>
-                  <p>服务总价: ¥{{ order.orderPrice }}</p>
-                  <p>支付金额: ¥{{ order.price }}</p>
+                  <!-- <p>服务总价: ¥{{ order.orderPrice }}</p>
+                  <p>支付金额: ¥{{ order.price }}</p> -->
+                  <p>服务总价: ¥{{ item.productPrice*item.number }}</p>
+                  <p>支付金额: ¥{{ item.productPrice*item.number }}</p>
                 </li>
                 <!-- <li>
                   <p>物流费用: ￥{{ order.logisticsPrice }}</p>
@@ -123,7 +125,8 @@
                   ¥{{ `${item.productPrice} * ${item.number}` }}
                 </li>
                 <li>
-                  {{ order.orderPrice }}
+                  <!-- {{ order.orderPrice }} -->
+                  ¥{{ item.productPrice*item.number }}
                 </li>
               </ul>
             </div>
@@ -216,6 +219,7 @@ export default {
         queryType: this.$route.params.queryType
       })
       this.order = res.data
+      console.error(this.order)
     },
     close() {
       this.$router.go(-1)
