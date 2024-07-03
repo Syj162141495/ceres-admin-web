@@ -49,7 +49,6 @@
       <div class="tableBox">
         <el-table
           ref="multipleTable"
-          v-fit-columns
           :data="tableData"
           border
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
@@ -57,20 +56,20 @@
           style="width: 100%"
           size="mini"
         >
-          <el-table-column prop="shopId" label="序号">
+          <el-table-column prop="shopId" label="序号" width="60">
             <template slot-scope="scope">
               {{ indexMethod(scope.$index) }}
             </template>
           </el-table-column>
-          <el-table-column prop="shopName" label="养老服务商名称" width="200" show-overflow-tooltip />
-          <el-table-column prop="serviceClassify" label="类型" />
-          <el-table-column prop="institutionalGrade" label="机构等级" />
-          <el-table-column prop="medicalcollaboration" label="医疗联合" />
-          <el-table-column prop="providersMajor" label="大类" />
-          <el-table-column prop="providersSubclass" label="小类" />
-          <el-table-column prop="institutionalClassify" label="注册" />
-          <el-table-column prop="chargePersonName" label="联系人" />
-          <el-table-column prop="chargePersonPhone" label="电话" />
+          <el-table-column prop="shopName" label="养老服务商名称" width="250" show-overflow-tooltip />
+          <el-table-column prop="serviceClassify" min-width="80" label="类型" show-overflow-tooltip />
+          <el-table-column prop="institutionalGrade" min-width="120" label="机构等级" show-overflow-tooltip />
+          <el-table-column prop="medicalcollaboration" min-width="80" label="医疗联合" show-overflow-tooltip />
+          <el-table-column prop="providersMajor" min-width="120" label="大类" show-overflow-tooltip />
+          <el-table-column prop="providersSubclass" min-width="180" label="小类" show-overflow-tooltip />
+          <el-table-column prop="institutionalClassify" min-width="120" label="注册" show-overflow-tooltip />
+          <el-table-column prop="chargePersonName" min-width="120" label="联系人" show-overflow-tooltip />
+          <el-table-column prop="chargePersonPhone" min-width="120" label="电话" show-overflow-tooltip />
           <!-- <el-table-column prop="area" label="地址" /> -->
           <!-- <el-table-column prop="city" label="城市" /> -->
           <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
@@ -252,10 +251,7 @@ import Vue from 'vue'
 import Plugin from 'v-fit-columns'
 import {
   getGroupSelect,
-  getserverClassify,
-  getClassifyAdd,
-  getClassifyGetById,
-  getClassifyUpdate
+  getserverClassify
 } from '@/api/commodity'
 Vue.use(Plugin)
 import {
@@ -732,7 +728,7 @@ export default {
       const res = await businessListGetAll(formInline)
       this.total = res.data.total
       this.tableData = res.data.list
-      this.$refs.multipleTable.doLayout();
+      this.$refs.multipleTable.doLayout()
       if (res.code === '') {
         this.ruleForm = res.data
         if (this.ruleForm.classifyId && this.ruleForm.classifyId !== '') {
@@ -770,7 +766,7 @@ export default {
       this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
       this.formInline.classifyId = this.classes[0].id
       console.log('this.classes', this.classes)
-      console.log('this.formInline.classifyId',this.formInline.classifyId)
+      console.log('this.formInline.classifyId', this.formInline.classifyId)
     }
   }
 }
@@ -811,9 +807,9 @@ export default {
 ::v-deep .el-input__inner{
   height: 30px;
 }
-::v-deep .el-form-item{
-    margin-bottom: 5px;
-}
+// ::v-deep .el-form-item{
+//     margin-bottom: 5px;
+// }
 
 .tableBox {
   overflow-x: auto;
