@@ -7,11 +7,11 @@
     <div class="cotent">
       <div class="left_part">
         <div class="pay_order_info">
-          <h2>下单人信息</h2>
+          <h2>服务订单信息</h2>
           <ul>
             <li>
               <p>
-                <span>下单账户:</span>
+                <span>客户账户:</span>
                 <span>{{ order.customerName }}</span>
               </p>
               <p>
@@ -21,7 +21,7 @@
             </li>
             <li>
               <p>
-                <span>下单备注:</span>
+                <span>备注:</span>
                 <span>{{ order.remark }}</span>
               </p>
             </li>
@@ -314,7 +314,7 @@ ul {
 
     .left_part {
       float: left;
-      width: calc(70% - 10px);
+      width: calc(100% - 10px);
       margin-right: 10px;
 
       .pay_order_info {

@@ -61,18 +61,19 @@
           v-fit-columns
           :data="tableData"
           border
-          :cell-style="{'text-align': 'center','box-sizing': 'border-box', padding: 0, margin: 0, height: '48px'}"
+          :cell-style="{'text-align': 'center'}"
           :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align': 'center' }"
           tooltip-effect="dark"
-          style="width: 100%"
+          style="width: 100%;"
+          size="mini"
         >
           <!-- <el-table-column label="订单id" show-overflow-tooltip><template slot-scope="scope">{{ scope.row.orderId }}</template></el-table-column>-->
           <!-- <el-table-column prop="number" label="服务数量" width="100px" /> -->
           <!-- <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip /> -->
           <!-- <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip /> -->
-          <el-table-column prop="shopName" label="服务商名称" min-width="200px" />
+          <el-table-column prop="shopName" label="服务商名称" min-width="200" />
           <el-table-column prop="price" label="支付金额" />
-          <el-table-column label="订单状态" show-overflow-tooltip>
+          <el-table-column label="订单状态" width="80" show-overflow-tooltip>
             <template slot-scope="scope">
               <span v-if="scope.row.state == 1">待支付</span>
               <span v-if="scope.row.state == 2">待接单</span>
@@ -81,10 +82,10 @@
               <span v-if="scope.row.state == 5">服务关闭</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="下单时间" width="180px" />
-          <el-table-column prop="buyerUserId" label="客户ID" width="180px" />
-          <el-table-column prop="receivePhone" label="手机号" show-overflow-tooltip />
-          <el-table-column label="操作" show-overflow-tooltip>
+          <el-table-column prop="createTime" label="下单时间" width="180" />
+          <el-table-column prop="buyerUserId" label="客户ID" width="180" />
+          <el-table-column prop="receivePhone" label="手机号" min-width="180" show-overflow-tooltip />
+          <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <div class="btnList">
                 <el-button type="text" @click="del(scope.row)">查看</el-button>
@@ -188,8 +189,10 @@ export default {
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
 @import url("../../../styles/elDialog.scss");
-
 .tab_show {
   padding-left: 30px;
+}
+.tableBox{
+  padding-right: 30px;
 }
 </style>
