@@ -76,7 +76,6 @@
       <div class="tableBox">
         <el-table
           ref="multipleTable"
-          v-fit-columns
           v-loading="loading"
           :data="tableData"
           border
@@ -91,11 +90,11 @@
             </template>
           </el-table-column> -->
           <el-table-column type="index" prop="productId" label="序号" min-width="80" />
-          <el-table-column prop="productName" label="服务名称" width="120" show-overflow-tooltip />
-          <el-table-column prop="productType" label="类型" />
-          <el-table-column prop="productCategory" label="大类" min-width="120" />
-          <el-table-column prop="productSubCategory" label="小类" min-width="120" />
-          <el-table-column prop="isRecommended" label="是否推荐" show-overflow-tooltip>
+          <el-table-column prop="productName" label="服务名称" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="productType" label="类型" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="productCategory" label="大类" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="productSubCategory" label="小类" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="isRecommended" label="是否推荐" min-width="120" show-overflow-tooltip>
             <template slot-scope="scope">
               <span v-if="scope.row.isRecommended==0">否</span>
               <span v-if="scope.row.isRecommended==1">是</span>
