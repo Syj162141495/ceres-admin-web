@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 3%; margin-right: 3%">
+  <div style="margin-left: 3%; margin-right: 3%; margin-bottom: 3%">
     <div style="margin-top: 20px;">
       <el-form :inline="true" :v-model="searchForm">
         <el-form-item label="业务系统">
@@ -107,7 +107,11 @@
           <el-row>
             <el-col :span="1" />
             <el-col :span="22">
-              <el-form-item label="返回示例">
+              <el-form-item
+                label="返回示例"
+                :rules="checkReturnJSON"
+                prop="dataInterfaceReturnTypeExample"
+              >
                 <el-input v-model="dynamicValidateForm.dataInterfaceReturnTypeExample" label="接口返回示例" type="textarea" style="width: 100%;" placeholder="请输入接口返回示例" />
               </el-form-item>
             </el-col>
@@ -152,9 +156,9 @@
         </el-form>
       </div>
     </el-dialog>
-    <el-table 
-      :data="dataInterfaceList" 
-      style="width: 100%" 
+    <el-table
+      :data="dataInterfaceList"
+      style="width: 100%"
       class="el-table"
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
@@ -166,7 +170,7 @@
       <el-table-column label="接口请求地址" prop="dataInterfaceUrl" />
       <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" />
       <el-table-column label="接口返回参数示例" prop="dataInterfaceReturnTypeExample" />
-      <el-table-column label="操作" width="100%">
+      <el-table-column label="操作" width="200%">
         <template slot-scope="scope">
           <el-button plain size="mini" type="text" @click="showView(scope.row)">查看接口参数</el-button>
           <el-button plain size="mini" type="text" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
@@ -199,7 +203,7 @@
     </el-dialog>
     <el-pagination
       :current-page="dynamicValidateForm.pageNumber"
-      :page-sizes="[5, 10, 20, 50, 100]"
+      :page-sizes="[10, 20, 50, 100]"
       :page-size="dynamicValidateForm.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
@@ -251,7 +255,51 @@ export default {
       }],
       parameterDialogFormVisible: false,
       dataInterfaceParameterList: [],
-      deleteDialogVisible: false
+      deleteDialogVisible: false,
+      checkReturnJSON: [
+        {
+          required: true,
+          message: '请输入接口返回类型示例',
+          trigger: 'blur'
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback() // 如果没有输入，直接通过必填校验的后续验证
+            } else {
+              try {
+                JSON.parse(value)
+                callback() // JSON格式正确，回调无参数表示验证通过
+              } catch (e) {
+                callback(new Error('请输入有效的JSON格式数据')) // JSON格式错误，回调错误信息
+              }
+            }
+          },
+          trigger: ['blur', 'change'] // 在失焦和内容改变时触发验证
+        }
+      ],
+      checkParamJSON: [
+        {
+          required: true,
+          message: '请输入接口参数示例',
+          trigger: 'blur'
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback() // 如果没有输入，直接通过必填校验的后续验证
+            } else {
+              try {
+                JSON.parse(value)
+                callback() // JSON格式正确，回调无参数表示验证通过
+              } catch (e) {
+                callback(new Error('请输入有效的JSON格式数据')) // JSON格式错误，回调错误信息
+              }
+            }
+          },
+          trigger: ['blur', 'change'] // 在失焦和内容改变时触发验证
+        }
+      ]
     }
   },
   created() {

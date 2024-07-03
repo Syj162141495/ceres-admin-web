@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 3%; margin-right: 3%">
+  <div style="margin-left: 3%; margin-right: 3%; margin-bottom: 3%">
     <div style="margin-top: 20px;">
       <el-form :inline="true" :v-model="searchForm">
         <el-form-item label="服务推荐名称">
@@ -12,7 +12,7 @@
           <el-input v-model="searchForm.searchType" placeholder="请输入推荐类型" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain @click="search">查询</el-button>
+          <el-button type="primary" plain @click="searchTable">查询</el-button>
           <el-button type="success" plain @click="showAddDialogForm">新增</el-button>
         </el-form-item>
       </el-form>
@@ -37,16 +37,37 @@
               <el-form-item label="推荐客户">
                 <el-select
                   v-model="dynamicValidateForm.serviceRecommendationBuyerId"
-                  :placeholder="dynamicValidateForm.serviceRecommendationBuyerId === null ? '请选择客户' : ''"
+                  placeholder="请选择或搜索客户"
                   style="width: 100%"
+                  filterable
+                  remote
+                  :remote-method="remoteMethod"
+                  @visible-change="visibleVirtualOptions"
                 >
-                  <el-option
-                    v-for="(item, index) in serviceRecommendationBuyerList"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.buyerUserId"
+                  <virtual-list
+                    style="max-height: 245px; overflow-y: auto;"
+                    :data-key="'buyerUserId'"
+                    :data-sources="filterList"
+                    :data-component="itemComponent"
+                    :keeps="20"
+                    :extra-props="{
+                      label: 'name',
+                      value: 'name'
+                    }"
                   />
                 </el-select>
+                <!--                <el-select-->
+                <!--                  v-model="dynamicValidateForm.serviceRecommendationBuyerId"-->
+                <!--                  :placeholder="dynamicValidateForm.serviceRecommendationBuyerId === null ? '请选择客户' : ''"-->
+                <!--                  style="width: 100%"-->
+                <!--                >-->
+                <!--                  <el-option-->
+                <!--                    v-for="(item, index) in serviceRecommendationBuyerList"-->
+                <!--                    :key="index"-->
+                <!--                    :label="item.name"-->
+                <!--                    :value="item.buyerUserId"-->
+                <!--                  />-->
+                <!--                </el-select>-->
               </el-form-item>
             </el-col>
             <el-col :span="2" />
@@ -119,7 +140,7 @@
       <el-table-column label="服务产品" prop="serviceRecommendationProductInfo" />
       <el-table-column label="推荐时间" prop="serviceRecommendationTime" width="160%" />
       <el-table-column label="是否采纳" prop="serviceRecommendationAdoption" width="80%" />
-      <el-table-column label="操作" width="120%">
+      <el-table-column label="操作" width="200%">
         <template slot-scope="scope">
           <el-button plain type="text" @click="showView(scope.$index, scope.row)">查看客户信息</el-button>
           <el-button plain type="text" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
@@ -157,7 +178,7 @@
     </el-dialog>
     <el-pagination
       :current-page="pageInfo.pageNumber"
-      :page-sizes="[5, 10, 20, 50, 100]"
+      :page-sizes="[10, 20, 50, 100]"
       :page-size="pageInfo.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
@@ -172,7 +193,10 @@
 import { insertServiceRecommendation, updateServiceRecommendation,
   deleteServiceRecommendation, recommendationBuyerList,
   recommendationProductList, getServiceRecommendationList } from '@/api/serviceRecommendation'
+import virtualList from 'vue-virtual-scroll-list'
+import ElOptionNode from './el-option-node'
 export default {
+  components: { 'virtual-list': virtualList },
   data() {
     return {
       searchForm: {
@@ -199,6 +223,9 @@ export default {
       userDialogFormVisible: false,
       serviceRecommendationList: [],
       serviceRecommendationBuyerList: [],
+      itemComponent: ElOptionNode,
+      searchBuyer: '',
+      filterList: [],
       serviceRecommendationProductList: [],
       productList: [],
       pageInfo: {
@@ -258,7 +285,6 @@ export default {
         }, [])
         this.serviceRecommendationProductList = productList
         this.productList = res.data
-        console.log('res', this.serviceRecommendationProductList)
       })
       recommendationBuyerList().then(res => {
         this.serviceRecommendationBuyerList = res.data
@@ -268,7 +294,16 @@ export default {
           for (let i = 0; i < this.serviceRecommendationList.length; i++) {
             this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
             this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
-            this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+            if (typeof this.serviceRecommendationBuyerList !== 'undefined' && this.serviceRecommendationBuyerList.length !== 0) {
+              const buyer = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId)
+              if (typeof buyer !== 'undefined') {
+                this.serviceRecommendationList[i].serviceRecommendationBuyerName = buyer.name
+              } else {
+                this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+              }
+            } else {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+            }
             this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
             this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
             const productInfo = []
@@ -284,13 +319,27 @@ export default {
             uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
             // 提取并去重 productName
             uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-            this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
-            this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
+            this.serviceRecommendationList[i].serviceRecommendationShopInfo = uniqueShopNames.join(', ')
+            this.serviceRecommendationList[i].serviceRecommendationProductInfo = uniqueProductNames.join(', ')
           }
         })
       })
     },
-    search() {
+    remoteMethod(query) {
+      if (query !== '') {
+        this.filterList = this.serviceRecommendationBuyerList.filter(item => {
+          return item.name.toLowerCase().includes(query.toLowerCase())
+        })
+      } else {
+        this.filterList = this.serviceRecommendationBuyerList
+      }
+    },
+    visibleVirtualOptions(bool) {
+      if (bool && this.dynamicValidateForm.serviceRecommendationBuyerId !== 0) {
+        this.filterList = this.serviceRecommendationBuyerList
+      }
+    },
+    searchTable() {
       this.pageInfo.serviceRecommendationName = this.searchForm.searchName
       const buyer = this.serviceRecommendationBuyerList.find(buyer => buyer.name === this.searchForm.searchBuyerName)
       if (typeof buyer === 'undefined') {
@@ -305,7 +354,16 @@ export default {
         for (let i = 0; i < this.serviceRecommendationList.length; i++) {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
-          this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          if (typeof this.serviceRecommendationBuyerList !== 'undefined' && this.serviceRecommendationBuyerList.length !== 0) {
+            const buyer = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId)
+            if (typeof buyer !== 'undefined') {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = buyer.name
+            } else {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+            }
+          } else {
+            this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+          }
           this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
           this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
           const productInfo = []
@@ -321,8 +379,8 @@ export default {
           uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
           // 提取并去重 productName
           uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-          this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
-          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = uniqueShopNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = uniqueProductNames.join(', ')
         }
       })
     },
@@ -440,7 +498,6 @@ export default {
       }
     },
     removeRow(index) {
-      console.log(index)
       this.productTableData.splice(index, 1)
       this.productIdList.splice(index, 1)
     },
@@ -455,7 +512,16 @@ export default {
         for (let i = 0; i < this.serviceRecommendationList.length; i++) {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
-          this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          if (typeof this.serviceRecommendationBuyerList !== 'undefined' && this.serviceRecommendationBuyerList.length !== 0) {
+            const buyer = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId)
+            if (typeof buyer !== 'undefined') {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = buyer.name
+            } else {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+            }
+          } else {
+            this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+          }
           this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
           this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
           const productInfo = []
@@ -471,8 +537,8 @@ export default {
           uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
           // 提取并去重 productName
           uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-          this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
-          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = uniqueShopNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = uniqueProductNames.join(', ')
         }
       })
     },
@@ -484,7 +550,16 @@ export default {
         for (let i = 0; i < this.serviceRecommendationList.length; i++) {
           this.serviceRecommendationList[i].serviceRecommendationServicesCount = this.serviceRecommendationList[i].serviceRecommendationProductIds.length
           this.serviceRecommendationList[i].serviceRecommendationType = this.serviceRecommendationList[i].serviceRecommendationProductIds.length === 1 ? '单项' : '套餐'
-          this.serviceRecommendationList[i].serviceRecommendationBuyerName = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId).name
+          if (typeof this.serviceRecommendationBuyerList !== 'undefined' && this.serviceRecommendationBuyerList.length !== 0) {
+            const buyer = this.serviceRecommendationBuyerList.find(buyer => buyer.buyerUserId === this.serviceRecommendationList[i].serviceRecommendationBuyerId)
+            if (typeof buyer !== 'undefined') {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = buyer.name
+            } else {
+              this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+            }
+          } else {
+            this.serviceRecommendationList[i].serviceRecommendationBuyerName = ''
+          }
           this.serviceRecommendationList[i].serviceRecommendationShopInfo = ''
           this.serviceRecommendationList[i].serviceRecommendationProductInfo = ''
           const productInfo = []
@@ -500,8 +575,8 @@ export default {
           uniqueShopNames = [...new Set(productInfo.map(item => item.shopName))]
           // 提取并去重 productName
           uniqueProductNames = [...new Set(productInfo.map(item => item.productName))]
-          this.serviceRecommendationList[i].serviceRecommendationShopInfo = '服务商: ' + uniqueShopNames.join(', ')
-          this.serviceRecommendationList[i].serviceRecommendationProductInfo = '服务: ' + uniqueProductNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationShopInfo = uniqueShopNames.join(', ')
+          this.serviceRecommendationList[i].serviceRecommendationProductInfo = uniqueProductNames.join(', ')
         }
       })
     }
