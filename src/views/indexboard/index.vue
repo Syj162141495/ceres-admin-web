@@ -57,28 +57,46 @@
             <p class="title">过去半年成交额{{ info.moneyNum }} 元</p>
             <div ref="myEcharts" class="full-size" />
           </div>
-          <div class="echart_item" style="height:400px">
-            <p class="title">热点页面</p>
+          <div class="echart_item" style="height:321px">
+            <p class="title" style="text-align: center;">热点页面</p>
             <div class="hotPage">
-              <p>1</p>
-              <p>2</p>
-              <p>3</p>
-              <p>4</p>
-              <p>5</p>
-              <p>6</p>
-              <p>7</p>
-              <p>8</p>
-              <p>9</p>
-              <p>10</p>
+              <span class="titleIcon">服务预约</span>
+              <span class="titleIcon">体征信息</span>
+              <span class="titleIcon">就医记录</span>
+              <span class="titleIcon">医生建议</span>
+              <span class="titleIcon">档案管理</span>
+              <span class="titleIcon">医疗服务管理</span>
+              <span class="titleIcon">服务分类</span>
+              <span class="titleIcon">养老服务管理</span>
+              <span class="titleIcon">养老服务订单</span>
+              <span class="titleIcon">标签管理</span>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div style="padding: 0 20px;">
+      <div style="padding: 20px 0">
+        <p class="title" style="font-size:20px;text-align: center;padding: 10px 0; border: 1px solid #ddd; border-bottom: 0;background-color: #fff;">区域统计</p>
+        <el-table :data="tableData" style="width: 100%;border:1px solid #ddd">
+          <!-- 纵向表头 -->
+          <el-table-column label="" width="200">
+            <template slot-scope="scope">
+              {{ scope.row.verticalHeader }}
+            </template>
+          </el-table-column>
+          <!-- 横向表头和数据列 -->
+          <el-table-column prop="value1" label="医康养服务商" />
+          <el-table-column prop="value2" label="服务分类" />
+          <el-table-column prop="value3" label="服务项目" />
+          <el-table-column prop="value4" label="客户数量" />
+          <el-table-column prop="value5" label="成交订单" />
+          <el-table-column prop="value6" label="总成交额(万元)" />
+        </el-table>
+      </div>
       <div style="padding: 20px 0;">
-        <!-- <p class="title" style="font-size:20px;text-align: center;">最新订单</p> -->
-        <el-table :data="orderTable" style="width:100%; padding: 0 20px; border: 2px solid #ddd">
+        <p class="title" style="font-size:20px;text-align: center;padding: 10px 0; border: 1px solid #ddd; border-bottom: 0;background-color: #fff;">实时订单</p>
+        <el-table :data="orderTable" style="width:100%; padding: 0 20px; border: 1px solid #ddd">
           <el-table-column label="订单号" prop="orderId" style="text-align: center;" />
           <el-table-column label="服务名称" prop="productName" style="text-align: center;" />
           <el-table-column label="订单金额" prop="price" style="text-align:center;" />
@@ -86,21 +104,6 @@
           <el-table-column label="下单时间" prop="createTime" style="text-align: center;" />
         </el-table>
       </div>
-      <el-table :data="tableData" style="width: 100%;border:2px solid #ddd">
-        <!-- 纵向表头 -->
-        <el-table-column label="" width="200">
-          <template slot-scope="scope">
-            {{ scope.row.verticalHeader }}
-          </template>
-        </el-table-column>
-        <!-- 横向表头和数据列 -->
-        <el-table-column prop="value1" label="医康养服务商" />
-        <el-table-column prop="value2" label="服务分类" />
-        <el-table-column prop="value3" label="服务项目" />
-        <el-table-column prop="value4" label="客户数量" />
-        <el-table-column prop="value5" label="成交订单" />
-        <el-table-column prop="value6" label="总成交额" />
-      </el-table>
     </div>
   </div></template>
 
@@ -126,48 +129,48 @@ export default {
       tableData: [
         {
           verticalHeader: '京津冀地区',
-          value1: 'A1',
-          value2: 'B1',
-          value3: 'C1',
-          value4: 'D1',
-          value5: 'E1',
-          value6: 'F1'
+          value1: '5',
+          value2: '4',
+          value3: '120',
+          value4: '3437',
+          value5: '12354',
+          value6: '12965'
         },
         {
           verticalHeader: '东北地区',
-          value1: 'A2',
-          value2: 'B2',
-          value3: 'C2',
-          value4: 'D2',
-          value5: 'E2',
-          value6: 'F2'
+          value1: '7',
+          value2: '6',
+          value3: '105',
+          value4: '2379',
+          value5: '9534',
+          value6: '9637'
         },
         {
           verticalHeader: '中原地区',
-          value1: 'A3',
-          value2: 'B3',
-          value3: 'C3',
-          value4: 'D3',
-          value5: 'E3',
-          value6: 'F3'
+          value1: '9',
+          value2: '6',
+          value3: '169',
+          value4: '3715',
+          value5: '15327',
+          value6: '32658'
         },
         {
           verticalHeader: '大湾区',
-          value1: 'A4',
-          value2: 'B4',
-          value3: 'C4',
-          value4: 'D4',
-          value5: 'E4',
-          value6: 'F4'
+          value1: '8',
+          value2: '8',
+          value3: '133',
+          value4: '1195',
+          value5: '7328',
+          value6: '11226'
         },
         {
           verticalHeader: '海南自贸区',
-          value1: 'A5',
-          value2: 'B5',
-          value3: 'C5',
-          value4: 'D5',
-          value5: 'E5',
-          value6: 'F5'
+          value1: '4',
+          value2: '5',
+          value3: '98',
+          value4: '1137',
+          value5: '4621',
+          value6: '7362'
         }
         // 添加更多数据项
       ],
@@ -178,6 +181,7 @@ export default {
   },
   mounted() {
     this.getTotalData()
+    this.setBackgroundColor()
   },
   methods: {
     async getTotalData() {
@@ -194,6 +198,15 @@ export default {
         this.draw(res.data.personTotal)
         this.draws(res.data.moneyTotal)
       }
+    },
+
+    setBackgroundColor(){
+      document.querySelectorAll('span.titleIcon').forEach((span) => {
+        // 生成一个随机的颜色
+        const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        // 设置背景颜色
+        span.style.backgroundColor = randomColor;
+      });
     },
 
     turnTime(v) {
@@ -265,8 +278,8 @@ ul {
       padding-left: 20px;
       font-size: 24px;
       color: rgba(51, 51, 51, 1);
-      line-height: 50px;
-      height: 50px;
+      line-height: 30px;
+      height: 30px;
       margin: 0;
     }
     ul {
@@ -279,7 +292,7 @@ ul {
         flex: 4;
         width: 400px;
         height: 140px;
-        // background: rgba(255, 255, 255, 1);
+        background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(224, 229, 235, 1);
         border-radius: 10px;
         margin: 20px;
@@ -371,14 +384,14 @@ ul {
         border-radius: 4px;
         float: left;
         .echart {
-          height: calc(100% - 300px);
+          height: calc(100% - 200px);
         }
         &:nth-child(-n + 2) {
           margin-right: 20px;
         }
         .title {
           margin: 0;
-          height: 50px;
+          height: 20px;
           line-height: 40px;
           font-size: 18px;
           color: #333333;
@@ -437,7 +450,7 @@ ul {
   }
 }
 .full-size {
-  height: 300px;
+  height: 280px;
 }
 /* 自定义样式，使纵向表头固定在左侧 */
 .el-table th.el-table-column--selection,
@@ -462,10 +475,15 @@ ul {
 }
 
 .hotPage {
-  p{
-    line-height: 20px;
-    font-size: 16px;
-    padding: 7px 0;
+  margin-top:30px;
+  span{
+    line-height: 50px;
+    font-size: 25px;
+    padding: 5px 50px;
+    margin-top: 15px;
+    margin-left: 20px;
+    border-radius: 10px;
+    color:white;
   }
 }
 
