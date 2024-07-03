@@ -60,20 +60,42 @@
           <div class="echart_item" style="height:321px">
             <p class="title" style="text-align: center;">热点页面</p>
             <div class="hotPage">
-              <p>1.医疗服务订单</p>
-              <p>2.养老服务订单</p>
-              <p>3.其他服务订单</p>
-              <p>4.服务推荐</p>
-              <p>5.客户信息</p>
-              <p>6.服务分类</p>
+              <span class="titleIcon">服务预约</span>
+              <span class="titleIcon">体征信息</span>
+              <span class="titleIcon">就医记录</span>
+              <span class="titleIcon">医生建议</span>
+              <span class="titleIcon">档案管理</span>
+              <span class="titleIcon">医疗服务管理</span>
+              <span class="titleIcon">服务分类</span>
+              <span class="titleIcon">养老服务管理</span>
+              <span class="titleIcon">养老服务订单</span>
+              <span class="titleIcon">标签管理</span>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div style="padding: 0 20px;">
+      <div style="padding: 20px 0">
+        <p class="title" style="font-size:20px;text-align: center;padding: 10px 0; border: 1px solid #ddd; border-bottom: 0;background-color: #fff;">区域统计</p>
+        <el-table :data="tableData" style="width: 100%;border:1px solid #ddd">
+          <!-- 纵向表头 -->
+          <el-table-column label="" width="200">
+            <template slot-scope="scope">
+              {{ scope.row.verticalHeader }}
+            </template>
+          </el-table-column>
+          <!-- 横向表头和数据列 -->
+          <el-table-column prop="value1" label="医康养服务商" />
+          <el-table-column prop="value2" label="服务分类" />
+          <el-table-column prop="value3" label="服务项目" />
+          <el-table-column prop="value4" label="客户数量" />
+          <el-table-column prop="value5" label="成交订单" />
+          <el-table-column prop="value6" label="总成交额(万元)" />
+        </el-table>
+      </div>
       <div style="padding: 20px 0;">
-        <p class="title" style="font-size:20px;text-align: center;padding: 10px 0; border: 1px solid #ddd; border-bottom: 0;">实时订单</p>
+        <p class="title" style="font-size:20px;text-align: center;padding: 10px 0; border: 1px solid #ddd; border-bottom: 0;background-color: #fff;">实时订单</p>
         <el-table :data="orderTable" style="width:100%; padding: 0 20px; border: 1px solid #ddd">
           <el-table-column label="订单号" prop="orderId" style="text-align: center;" />
           <el-table-column label="服务名称" prop="productName" style="text-align: center;" />
@@ -82,22 +104,6 @@
           <el-table-column label="下单时间" prop="createTime" style="text-align: center;" />
         </el-table>
       </div>
-      <p class="title" style="font-size:20px;text-align: center;padding: 10px 0; border: 1px solid #ddd; border-bottom: 0;">区域服务信息</p>
-      <el-table :data="tableData" style="width: 100%;border:1px solid #ddd">
-        <!-- 纵向表头 -->
-        <el-table-column label="" width="200">
-          <template slot-scope="scope">
-            {{ scope.row.verticalHeader }}
-          </template>
-        </el-table-column>
-        <!-- 横向表头和数据列 -->
-        <el-table-column prop="value1" label="医康养服务商" />
-        <el-table-column prop="value2" label="服务分类" />
-        <el-table-column prop="value3" label="服务项目" />
-        <el-table-column prop="value4" label="客户数量" />
-        <el-table-column prop="value5" label="成交订单" />
-        <el-table-column prop="value6" label="总成交额(万元)" />
-      </el-table>
     </div>
   </div></template>
 
@@ -175,6 +181,7 @@ export default {
   },
   mounted() {
     this.getTotalData()
+    this.setBackgroundColor()
   },
   methods: {
     async getTotalData() {
@@ -191,6 +198,15 @@ export default {
         this.draw(res.data.personTotal)
         this.draws(res.data.moneyTotal)
       }
+    },
+
+    setBackgroundColor(){
+      document.querySelectorAll('span.titleIcon').forEach((span) => {
+        // 生成一个随机的颜色
+        const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        // 设置背景颜色
+        span.style.backgroundColor = randomColor;
+      });
     },
 
     turnTime(v) {
@@ -257,7 +273,6 @@ ul {
 }
 .home-page {
   height: 100%;
-  background-color: white;
   .total-data {
     .p-title {
       padding-left: 20px;
@@ -277,7 +292,7 @@ ul {
         flex: 4;
         width: 400px;
         height: 140px;
-        // background: rgba(255, 255, 255, 1);
+        background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(224, 229, 235, 1);
         border-radius: 10px;
         margin: 20px;
@@ -460,11 +475,15 @@ ul {
 }
 
 .hotPage {
-  p{
-    line-height: 20px;
-    font-size: 16px;
-    padding: 7px 0;
-    margin-top: 15px
+  margin-top:30px;
+  span{
+    line-height: 50px;
+    font-size: 25px;
+    padding: 5px 50px;
+    margin-top: 15px;
+    margin-left: 20px;
+    border-radius: 10px;
+    color:white;
   }
 }
 
