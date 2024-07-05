@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left: 3%; margin-right: 3%">
+  <div style="margin-left: 3%; margin-right: 3%; margin-bottom: 3%">
     <div style="margin-top: 20px;">
       <el-form :inline="true" :v-model="searchForm">
         <el-form-item label="业务系统">
@@ -107,7 +107,11 @@
           <el-row>
             <el-col :span="1" />
             <el-col :span="22">
-              <el-form-item label="返回示例">
+              <el-form-item
+                label="返回示例"
+                :rules="checkReturnJSON"
+                prop="dataInterfaceReturnTypeExample"
+              >
                 <el-input v-model="dynamicValidateForm.dataInterfaceReturnTypeExample" label="接口返回示例" type="textarea" style="width: 100%;" placeholder="请输入接口返回示例" />
               </el-form-item>
             </el-col>
@@ -152,21 +156,36 @@
         </el-form>
       </div>
     </el-dialog>
-    <el-table 
-      :data="dataInterfaceList" 
-      style="width: 100%" 
+    <el-table
+      :data="dataInterfaceList"
+      style="width: 100%"
       class="el-table"
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
-      <el-table-column label="序号" prop="dataInterfaceId" width="50px" />
-      <el-table-column label="业务系统" prop="systemModuleName" />
-      <el-table-column label="接口名称" prop="dataInterfaceName" />
-      <el-table-column label="接口请求方式" prop="dataInterfaceHttpMethod" />
-      <el-table-column label="接口请求地址" prop="dataInterfaceUrl" />
-      <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" />
-      <el-table-column label="接口返回参数示例" prop="dataInterfaceReturnTypeExample" />
-      <el-table-column label="操作" width="100%">
+      <el-table-column label="序号" prop="dataInterfaceId" width="50px" align="center" />
+      <el-table-column label="业务系统" prop="systemModuleName" align="center" />
+      <el-table-column label="接口名称" prop="dataInterfaceName" align="center" />
+      <el-table-column label="接口请求方式" prop="dataInterfaceHttpMethod" align="center" />
+      <el-table-column label="接口请求地址" prop="dataInterfaceUrl" align="center" />
+      <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" align="center" />
+      <el-table-column label="接口返回参数示例" align="center">
+        <template slot-scope="scope">
+          <el-tooltip placement="top" effect="light">
+            <div slot="content" class="tooltip_content">
+              <vue-json-pretty
+                :deep="1"
+                selectable-type="single"
+                :show-select-controller="false"
+                :highlight-mouseover-node="true"
+                :data="JSON.parse(scope.row.dataInterfaceReturnTypeExample)"
+              />
+            </div>
+            <el-button plain size="mini" type="text" class="see_tooltip">查看</el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="200%" align="center">
         <template slot-scope="scope">
           <el-button plain size="mini" type="text" @click="showView(scope.row)">查看接口参数</el-button>
           <el-button plain size="mini" type="text" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
@@ -175,31 +194,45 @@
       </el-table-column>
     </el-table>
     <el-dialog title="接口参数信息" :visible.sync="parameterDialogFormVisible">
-      <div v-if="dataInterfaceParameterList.length === 0">
-        暂无参数
-      </div>
-      <el-form :model="dataInterfaceParameterList">
-        <div v-for="(dataInterfaceParameter, index) in dataInterfaceParameterList" :key="index">
-          <el-row>
-            <el-col :span="1" />
-            <el-col :span="11">
-              <el-form-item :label="`参数${index + 1}类型`">
-                <el-input v-model="dataInterfaceParameter.dataInterfaceParameterType" :disabled="true" style="width: 100%" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="11">
-              <el-form-item :label="`参数${index + 1}示例`" style="margin-left: 5%">
-                <el-input v-model="dataInterfaceParameter.dataInterfaceParameterExample" :disabled="true" style="width: 100%" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="1" />
-          </el-row>
-        </div>
-      </el-form>
+      <el-table
+        :data="dataInterfaceParameterList"
+        style="width: 100%"
+        class="el-table"
+        border
+        :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
+      >
+        <el-table-column label="序号" align="center">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="参数类型" prop="dataInterfaceParameterType" align="center" />
+        <el-table-column label="参数示例" align="center">
+          <template slot-scope="scope">
+            <el-tooltip placement="top" effect="light">
+              <div slot="content" class="tooltip_content">
+                <template v-if="isValidJson(scope.row.dataInterfaceParameterExample)">
+                  <vue-json-pretty
+                    :deep="1"
+                    selectable-type="single"
+                    :show-select-controller="false"
+                    :highlight-mouseover-node="true"
+                    :data="JSON.parse(scope.row.dataInterfaceParameterExample)"
+                  />
+                </template>
+                <template v-else>
+                  {{ scope.row.dataInterfaceParameterExample }}
+                </template>
+              </div>
+              <el-button plain size="mini" type="text" class="see_tooltip">查看</el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
     <el-pagination
       :current-page="dynamicValidateForm.pageNumber"
-      :page-sizes="[5, 10, 20, 50, 100]"
+      :page-sizes="[10, 20, 50, 100]"
       :page-size="dynamicValidateForm.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
@@ -212,8 +245,10 @@
 
 <script>
 import { getDataInterfaceList, insertDataInterface, updateDataInterface, deleteDataInterface } from '@/api/dataInterface'
+import VueJsonPretty from 'vue-json-pretty/lib/vue-json-pretty.js'
 
 export default {
+  components: { VueJsonPretty },
   data() {
     return {
       searchForm: {
@@ -251,13 +286,65 @@ export default {
       }],
       parameterDialogFormVisible: false,
       dataInterfaceParameterList: [],
-      deleteDialogVisible: false
+      deleteDialogVisible: false,
+      checkReturnJSON: [
+        {
+          required: true,
+          message: '请输入接口返回类型示例',
+          trigger: 'blur'
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback() // 如果没有输入，直接通过必填校验的后续验证
+            } else {
+              try {
+                JSON.parse(value)
+                callback() // JSON格式正确，回调无参数表示验证通过
+              } catch (e) {
+                callback(new Error('请输入有效的JSON格式数据')) // JSON格式错误，回调错误信息
+              }
+            }
+          },
+          trigger: ['blur', 'change'] // 在失焦和内容改变时触发验证
+        }
+      ],
+      checkParamJSON: [
+        {
+          required: true,
+          message: '请输入接口参数示例',
+          trigger: 'blur'
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback() // 如果没有输入，直接通过必填校验的后续验证
+            } else {
+              try {
+                JSON.parse(value)
+                callback() // JSON格式正确，回调无参数表示验证通过
+              } catch (e) {
+                callback(new Error('请输入有效的JSON格式数据')) // JSON格式错误，回调错误信息
+              }
+            }
+          },
+          trigger: ['blur', 'change'] // 在失焦和内容改变时触发验证
+        }
+      ]
     }
   },
   created() {
     this.load()
   },
   methods: {
+    isValidJson(jsonString) {
+      try {
+        JSON.parse(jsonString)
+        return true
+      } catch (e) {
+        return false
+      }
+    },
     reset() {
       this.searchForm = {
         searchSystemModuleName: '',
