@@ -188,7 +188,8 @@ export default {
       tipsList: [],
       checkList: [],
       addFormDialog: false,
-      buyerUserId: ''
+      buyerUserId: '',
+      truephone: ''
     }
   },
   created() {
@@ -312,12 +313,15 @@ export default {
       this.buyerUserId = buyerUserId
     },
     details(row) {
-      this.$router.push({
-        name: 'customerDetails',
-        params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
-      })
+      // this.$router.push({
+      //   name: 'customerDetails',
+      //   params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
+      // })
+      const url = "http://172.16.16.98:90/baseinfo?phone="+this.truephone;
+      window.open(url,'_blank')
     },
     hidePhone(phone) {
+      this.truephone = phone
       if (phone && phone.length === 11) {
         return phone.substring(0, 3) + '****' + phone.substring(7);
       }
