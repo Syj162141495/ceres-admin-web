@@ -163,14 +163,29 @@
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
-      <el-table-column label="序号" prop="dataInterfaceId" width="50px" />
-      <el-table-column label="业务系统" prop="systemModuleName" />
-      <el-table-column label="接口名称" prop="dataInterfaceName" />
-      <el-table-column label="接口请求方式" prop="dataInterfaceHttpMethod" />
-      <el-table-column label="接口请求地址" prop="dataInterfaceUrl" />
-      <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" />
-      <el-table-column label="接口返回参数示例" prop="dataInterfaceReturnTypeExample" />
-      <el-table-column label="操作" width="200%">
+      <el-table-column label="序号" prop="dataInterfaceId" width="50px" align="center" />
+      <el-table-column label="业务系统" prop="systemModuleName" align="center" />
+      <el-table-column label="接口名称" prop="dataInterfaceName" align="center" />
+      <el-table-column label="接口请求方式" prop="dataInterfaceHttpMethod" align="center" />
+      <el-table-column label="接口请求地址" prop="dataInterfaceUrl" align="center" />
+      <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" align="center" />
+      <el-table-column label="接口返回参数示例" align="center">
+        <template slot-scope="scope">
+          <el-tooltip placement="top" effect="light">
+            <div slot="content" class="tooltip_content">
+              <vue-json-pretty
+                :deep="1"
+                selectable-type="single"
+                :show-select-controller="false"
+                :highlight-mouseover-node="true"
+                :data="JSON.parse(scope.row.dataInterfaceReturnTypeExample)"
+              />
+            </div>
+            <el-button plain size="mini" type="text" class="see_tooltip">查看</el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="200%" align="center">
         <template slot-scope="scope">
           <el-button plain size="mini" type="text" @click="showView(scope.row)">查看接口参数</el-button>
           <el-button plain size="mini" type="text" @click="showEditDialogForm(scope.$index, scope.row)">编辑</el-button>
@@ -179,27 +194,41 @@
       </el-table-column>
     </el-table>
     <el-dialog title="接口参数信息" :visible.sync="parameterDialogFormVisible">
-      <div v-if="dataInterfaceParameterList.length === 0">
-        暂无参数
-      </div>
-      <el-form :model="dataInterfaceParameterList">
-        <div v-for="(dataInterfaceParameter, index) in dataInterfaceParameterList" :key="index">
-          <el-row>
-            <el-col :span="1" />
-            <el-col :span="11">
-              <el-form-item :label="`参数${index + 1}类型`">
-                <el-input v-model="dataInterfaceParameter.dataInterfaceParameterType" :disabled="true" style="width: 100%" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="11">
-              <el-form-item :label="`参数${index + 1}示例`" style="margin-left: 5%">
-                <el-input v-model="dataInterfaceParameter.dataInterfaceParameterExample" :disabled="true" style="width: 100%" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="1" />
-          </el-row>
-        </div>
-      </el-form>
+      <el-table
+        :data="dataInterfaceParameterList"
+        style="width: 100%"
+        class="el-table"
+        border
+        :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
+      >
+        <el-table-column label="序号" align="center">
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column label="参数类型" prop="dataInterfaceParameterType" align="center" />
+        <el-table-column label="参数示例" align="center">
+          <template slot-scope="scope">
+            <el-tooltip placement="top" effect="light">
+              <div slot="content" class="tooltip_content">
+                <template v-if="isValidJson(scope.row.dataInterfaceParameterExample)">
+                  <vue-json-pretty
+                    :deep="1"
+                    selectable-type="single"
+                    :show-select-controller="false"
+                    :highlight-mouseover-node="true"
+                    :data="JSON.parse(scope.row.dataInterfaceParameterExample)"
+                  />
+                </template>
+                <template v-else>
+                  {{ scope.row.dataInterfaceParameterExample }}
+                </template>
+              </div>
+              <el-button plain size="mini" type="text" class="see_tooltip">查看</el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
     <el-pagination
       :current-page="dynamicValidateForm.pageNumber"
@@ -216,8 +245,10 @@
 
 <script>
 import { getDataInterfaceList, insertDataInterface, updateDataInterface, deleteDataInterface } from '@/api/dataInterface'
+import VueJsonPretty from 'vue-json-pretty/lib/vue-json-pretty.js'
 
 export default {
+  components: { VueJsonPretty },
   data() {
     return {
       searchForm: {
@@ -306,6 +337,14 @@ export default {
     this.load()
   },
   methods: {
+    isValidJson(jsonString) {
+      try {
+        JSON.parse(jsonString)
+        return true
+      } catch (e) {
+        return false
+      }
+    },
     reset() {
       this.searchForm = {
         searchSystemModuleName: '',
