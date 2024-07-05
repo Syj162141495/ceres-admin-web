@@ -46,7 +46,7 @@ export const constantRoutes = [{
   redirect: '/indexboard',
   children: [{
     path: 'indexboard',
-    name: 'Indexboard',
+    name: 'indexboard',
     component: () => import('@/views/indexboard/index'),
     meta: {
       title: '首页',
@@ -55,9 +55,9 @@ export const constantRoutes = [{
   }]
 },
 {
-  path: '/',
+  path: '/business',
   component: Layout,
-  redirect: '/businessList',
+  name: 'business',
   meta: {
     title: '服务商管理',
     icon: 'el-icon-s-help'
