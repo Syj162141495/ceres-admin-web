@@ -215,7 +215,7 @@ export default {
         serviceRecommendationTime: '',
         serviceRecommendationAdoption: '',
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       },
       selectedProduct: [],
       dialogFormName: '',
@@ -238,7 +238,7 @@ export default {
         serviceRecommendationTime: '',
         serviceRecommendationAdoption: '',
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       },
       total: 0,
       userInfo: {
@@ -263,7 +263,7 @@ export default {
         productId: '',
         shopName: '',
         page: 1,
-        pageSize: 5
+        pageSize: 10
       }
       recommendationProductList(recommendationProductListData).then(res => {
         const productList = res.data.reduce((acc, currentItem) => {
