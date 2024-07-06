@@ -82,6 +82,7 @@
             <el-table-column prop="buyers" label="服务次数" min-width="80" align="center" />
             <el-table-column prop="time" label="最近消费时间" min-width="150" />
             <el-table-column prop="createTime" label="注册时间" min-width="150" />
+            <el-table-column prop="truephone" label="手机号(未脱敏,不显示)" hidden />
             <el-table-column prop="sourcePlatform" label="平台来源" min-width="150" />
             <el-table-column label="操作" fixed="right" width="220px" align="center">
               <template slot-scope="scope">
@@ -318,8 +319,8 @@ export default {
       //   name: 'customerDetails',
       //   params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
       // })
-      const url = 'http://172.16.16.98:90/baseinfo?phone=' + this.truephone
-      window.open(url, '_blank')
+      const url = "http://172.16.16.98:90/baseinfo?phone="+row.truephone;
+      window.open(url,'_blank')
     },
     hidePhone(phone) {
       this.truephone = phone
@@ -340,8 +341,9 @@ export default {
       this.tableData = res.data.list.map(item => ({
         ...item,
         cid: this.hideIdCard(item.cid),
-        phone: this.hidePhone(item.phone)
-      }))
+        phone: this.hidePhone(item.phone),
+        truephone: item.phone
+      }));
       this.total = res.data.total
     },
     // 初始化查询所有标签
