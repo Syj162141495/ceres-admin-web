@@ -81,7 +81,6 @@
             <el-table-column prop="buyers" label="服务次数" min-width="80" align="center" />
             <el-table-column prop="time" label="最近消费时间" min-width="150" />
             <el-table-column prop="createTime" label="注册时间" min-width="150" />
-            <el-table-column prop="truephone" label="手机号(未脱敏,不显示)" hidden/>
             <el-table-column label="操作" fixed="right" width="220px" align="center">
               <template slot-scope="scope">
                 <el-button type="text" @click.native.prevent="details(scope.row)">详情</el-button>
@@ -313,7 +312,7 @@ export default {
       this.addFormDialog = true
       this.buyerUserId = buyerUserId
     },
-    details(row) {
+    async details(row) {
       // this.$router.push({
       //   name: 'customerDetails',
       //   params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
