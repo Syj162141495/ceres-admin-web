@@ -61,6 +61,7 @@
             :data="tableData"
             border
             :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+            :cell-style="cellStyle"
             style="width: 100%"
             size="mini"
           >
@@ -76,11 +77,12 @@
             <el-table-column prop="phone" label="手机号" min-width="100" align="center" /> <!--中间四位-->
             <el-table-column prop="age" label="年龄" min-width="80" align="center" />
             <el-table-column prop="cid" label="身份证" min-width="200" align="center" /> <!--中间6位-->
-            <el-table-column prop="address" label="地址" min-width="100" />
+            <el-table-column prop="address" label="地址" min-width="150" show-overflow-tooltip />
             <el-table-column prop="total" label="消费总额" min-width="80" align="center" />
             <el-table-column prop="buyers" label="服务次数" min-width="80" align="center" />
             <el-table-column prop="time" label="最近消费时间" min-width="150" />
             <el-table-column prop="createTime" label="注册时间" min-width="150" />
+            <el-table-column prop="sourcePlatform" label="平台来源" min-width="150" />
             <el-table-column label="操作" fixed="right" width="220px" align="center">
               <template slot-scope="scope">
                 <el-button type="text" @click.native.prevent="details(scope.row)">详情</el-button>
@@ -237,10 +239,9 @@ export default {
       //  "ifBlack": "是否加入黑名单 1-是 0-否"
       console.log(row.ifBlack)
       this.$confirm(
-        `${
-          row.ifBlack
-            ? '确认是否取消黑名单'
-            : '加入黑名单后，对方将无法登录商城'
+        `${row.ifBlack
+          ? '确认是否取消黑名单'
+          : '加入黑名单后，对方将无法登录商城'
         }`,
         `${row.ifBlack ? '取消黑名单' : '加入黑名单'}`,
         {
@@ -317,21 +318,21 @@ export default {
       //   name: 'customerDetails',
       //   params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
       // })
-      const url = "http://172.16.16.98:90/baseinfo?phone="+this.truephone;
-      window.open(url,'_blank')
+      const url = 'http://172.16.16.98:90/baseinfo?phone=' + this.truephone
+      window.open(url, '_blank')
     },
     hidePhone(phone) {
       this.truephone = phone
       if (phone && phone.length === 11) {
-        return phone.substring(0, 3) + '****' + phone.substring(7);
+        return phone.substring(0, 3) + '****' + phone.substring(7)
       }
-      return phone;
+      return phone
     },
     hideIdCard(cid) {
       if (cid && cid.length === 18) {
-        return cid.substring(0, 6) + '******' + cid.substring(12);
+        return cid.substring(0, 6) + '******' + cid.substring(12)
       }
-      return cid;
+      return cid
     },
     // 初始化查询所有数据
     async getAll(formParams) {
@@ -340,13 +341,19 @@ export default {
         ...item,
         cid: this.hideIdCard(item.cid),
         phone: this.hidePhone(item.phone)
-      }));
+      }))
       this.total = res.data.total
     },
     // 初始化查询所有标签
     async getSelect(name) {
       const res = await getLabels(name)
       this.tipsList = res.data
+    },
+    // 调整具体单元格的样式
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (column.property === 'sourcePlatform') {
+        return 'background:pink;color:green !important;font-size:16px;'
+      }
     }
   }
 }

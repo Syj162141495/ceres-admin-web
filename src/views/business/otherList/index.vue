@@ -52,6 +52,7 @@
           :data="tableData"
           border
           :header-cell-style="{ background: '#EEF3FF', color: '#333333'}"
+          :cell-style="cellStyle"
           tooltip-effect="dark"
           style="width: 100%"
           size="mini"
@@ -70,6 +71,8 @@
           <el-table-column prop="institutionalClassify" min-width="120" label="注册" show-overflow-tooltip />
           <el-table-column prop="chargePersonName" min-width="120" label="联系人" show-overflow-tooltip />
           <el-table-column prop="chargePersonPhone" min-width="120" label="电话" show-overflow-tooltip />
+          <el-table-column prop="area" min-width="150" label="区域" show-overflow-tooltip />
+          <el-table-column prop="sourcePlatform" min-width="120" label="来源平台" show-overflow-tooltip />
           <!-- <el-table-column prop="area" label="地址" /> -->
           <!-- <el-table-column prop="city" label="城市" /> -->
           <!-- <el-table-column prop="serviceClassify" label="服务类型" /> -->
@@ -247,13 +250,10 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-import Vue from 'vue'
-import Plugin from 'v-fit-columns'
 import {
   getGroupSelect,
   getserverClassify
 } from '@/api/commodity'
-Vue.use(Plugin)
 import {
   businessListGetAll,
   businessListSave,
@@ -767,6 +767,12 @@ export default {
       this.formInline.classifyId = this.classes[0].id
       console.log('this.classes', this.classes)
       console.log('this.formInline.classifyId', this.formInline.classifyId)
+    },
+    // 调整具体单元格的样式
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (column.property === 'sourcePlatform') {
+        return 'background:pink;color:green !important;font-size:16px;'
+      }
     }
   }
 }
