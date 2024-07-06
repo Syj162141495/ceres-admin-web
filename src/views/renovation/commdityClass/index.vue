@@ -5,10 +5,7 @@
         共含有 <span>{{ firstClassNum }}</span> 个一级类别，<span>{{ secondClassNum }}</span> 个二级类别, <span>{{ thirdClassNum }}</span> 个三级类别
       </div>
       <div class="toolbar">
-        <el-button
-          type="success"
-          @click="addFirstClassifyLevel"
-        >添加一级类别</el-button>
+        <el-button type="success" @click="addFirstClassifyLevel">添加一级类别</el-button>
       </div>
     </div>
     <el-table
@@ -16,8 +13,9 @@
       style="width: 100%"
       row-key="classifyId"
       border
-      :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
+      :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align': 'center' }"
       size="mini"
+      :expand-row-keys="expandRowKeys"
     >
       <el-table-column prop="classifyName" label="服务分类" width="250px" />
       <el-table-column prop="previousClassifyName" label="上级分类" align="center" width="150px" />
@@ -44,13 +42,7 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <edit-dialog
-      ref="edit"
-      :dialog-visible="dialog.isVisible"
-      :type="dialog.type"
-      @close="editClose"
-      @success="init"
-    />
+    <edit-dialog ref="edit" :dialog-visible="dialog.isVisible" :type="dialog.type" @close="editClose" @success="init" />
   </div>
 </template>
 <script>
@@ -80,7 +72,8 @@ export default {
       dialog: {
         type: 'add',
         isVisible: false
-      }
+      },
+      expandRowKeys: []
     }
   },
   created() {
@@ -169,6 +162,10 @@ export default {
       }
       items.sort((a, b) => a.sort - b.sort)
       this.tableData = items
+      // 默认展开一级分类
+      for (const firstClass of items) {
+        this.expandRowKeys.push(firstClass.classifyId + '') // key需要是字符串类型
+      }
       this.calculate()
     },
     async setChildern(pitem) {
@@ -218,12 +215,12 @@ export default {
 
 .classification-page {
   padding: 15px 20px;
-  .infobar{
+  .infobar {
     margin-bottom: 10px;
     padding: 12px 20px;
     background-color: white;
     text-align: left;
-    span{
+    span {
       font-size: 20px;
       font-weight: bold;
     }

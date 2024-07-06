@@ -13,32 +13,17 @@
       <!-- 搜索 -->
       <div class="formSearch">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item>
+          <!-- <el-form-item>
             <div>
               <el-input v-model="formInline.search" placeholder="请输入内容">
                 <el-select slot="prepend" v-model="formInline.searchType" style="width: 130px" placeholder="请选择">
                   <el-option label="订单id" value="1" />
                   <el-option label="买家账户" value="2" />
-                  <!-- 原收件人姓名 -->
                   <el-option label="联系方式" value="3" />
-                  <!-- 原收件人手机号 -->
-                  <el-option label="客户手机号" value="4" />
-                  <!-- <el-option label="商品ID" value="5" /> -->
+                  <el-option label="客户手机" value="4" />
                 </el-select>
               </el-input>
             </div>
-          </el-form-item>
-          <el-form-item label="服务商名称">
-            <el-input v-model="formInline.shopName" placeholder="请输入" />
-          </el-form-item>
-          <!-- <el-form-item label="售后状态">
-            <el-select v-model="formInline.afterState" placeholder="请选择售后状态">
-              <el-option label="全部" :value="null" />
-              <el-option label="无售后" value="0" />
-              <el-option label="售后中" value="1" />
-              <el-option label="售后成功" value="2" />
-              <el-option label="售后关闭" value="3" />
-            </el-select>
           </el-form-item> -->
           <el-form-item label="下单时间">
             <el-date-picker
@@ -49,8 +34,65 @@
               end-placeholder="结束日期"
             />
           </el-form-item>
+          <el-form-item label="服务名称">
+            <el-input v-model="formInline.productName" placeholder="请输入服务名称" />
+          </el-form-item>
+          <el-form-item label="服务商名称">
+            <el-input v-model="formInline.shopName" placeholder="请输入" />
+          </el-form-item>
+          <!-- <el-form-item label="服务类型">
+            <el-select
+              v-model="formInline.firstClassifyID"
+              placeholder="请选择服务类型"
+              style="width: 150px;"
+              clearable
+              @change="changeFirstClass"
+              @clear="changeFirstClass"
+            >
+              <el-option
+                v-for="(item, index) in firstClasses"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item> -->
+          <el-form-item label="服务大类">
+            <el-select
+              v-model="formInline.secondClassifyID"
+              placeholder="请选择服务大类"
+              style="width: 150px;"
+              clearable
+              @change="changeSecondClass"
+              @clear="changeSecondClass"
+            >
+              <el-option
+                v-for="(item, index) in secondClasses"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="服务小类">
+            <el-select
+              v-model="formInline.thirdClassifyID"
+              placeholder="请选择服务小类"
+              :disabled="!formInline.secondClassifyID || formInline.secondClassifyID === ''"
+              style="width: 180px;"
+              clearable
+            >
+              <el-option
+                v-for="(item, index) in thirdClasses"
+                :key="index"
+                :label="item.categoryName"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="search">查询</el-button>
+            <el-button plain @click="clear">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -60,7 +102,7 @@
           ref="multipleTable"
           :data="tableData"
           border
-          :cell-style="{'text-align': 'center'}"
+          :cell-style="{ 'text-align': 'center' }"
           :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align': 'center' }"
           tooltip-effect="dark"
           style="width: 100%;"
@@ -70,9 +112,12 @@
           <!-- <el-table-column prop="number" label="服务数量" width="100px" /> -->
           <!-- <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip /> -->
           <!-- <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip /> -->
-          <el-table-column prop="shopName" label="服务商名称" min-width="200" />
-          <el-table-column prop="price" width="100" label="支付金额" />
-          <el-table-column label="订单状态" width="100" show-overflow-tooltip>
+          <el-table-column prop="productName" label="服务名称" min-width="200" />
+          <el-table-column prop="firstClass" label="服务类型" min-width="100" />
+          <el-table-column prop="secondClass" label="服务大类" min-width="150" />
+          <el-table-column prop="thirdClass" label="服务小类" min-width="200" show-overflow-tooltip />
+          <el-table-column prop="price" width="100" label="金额" />
+          <el-table-column label="状态" width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.state == 1">待支付</span>
               <span v-if="scope.row.state == 2">待接单</span>
@@ -81,9 +126,10 @@
               <span v-if="scope.row.state == 5">服务关闭</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="下单时间" width="180" />
-          <el-table-column prop="buyerUserId" label="客户ID" width="180" />
-          <el-table-column prop="receivePhone" label="手机号" width="180" show-overflow-tooltip />
+          <el-table-column prop="createTime" label="预约时间" width="180" />
+          <el-table-column prop="receiveName" label="客户名称" width="180" />
+          <el-table-column prop="receivePhone" label="客户手机" width="180" show-overflow-tooltip />
+          <el-table-column prop="shopName" label="服务商名称" min-width="250" show-overflow-tooltip />
           <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <div class="btnList">
@@ -111,7 +157,12 @@
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from '《组件路径》';
-import { orderGetAll } from '@/api/order'
+import {
+  orderGetAll
+} from '@/api/order'
+import {
+  getClassify
+} from '@/api/commodity'
 export default {
   components: {},
   data() {
@@ -121,6 +172,10 @@ export default {
       formInline: {
         searchType: '1',
         search: '', // 搜索字段
+        productName: '', // 服务名称
+        firstClassifyID: '',
+        secondClassifyID: '', // 服务大类
+        thirdClassifyID: '', // 服务小类
         state: '',
         afterState: '', // 售后状态 0-无售后 1-售后中 2-售后成功 3-售后关闭
         dates: [], // 下单时间数组
@@ -131,7 +186,11 @@ export default {
       },
       total: 1,
       tableData: [],
-      currentPage: 1
+      currentPage: 1,
+      classifyList: [],
+      firstClasses: [],
+      secondClasses: [],
+      thirdClasses: []
     }
   },
   // 监听属性 类似于data概念
@@ -143,8 +202,9 @@ export default {
     this.formInline.queryType = this.$route.params.queryType
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-    this.getAll(this.formInline)
+  async mounted() {
+    await this.queryAllCategory()
+    await this.getAll(this.formInline)
     this.handleClick({ name: '' })
   },
   // 方法集合
@@ -178,9 +238,63 @@ export default {
     async getAll(formInline) {
       console.log(formInline, 'formInline')
       const res = await orderGetAll(formInline)
-      console.log(res, '初始化订单')
       this.total = res.data.total
+      for (const item of res.data.list) {
+        const arr = item.classifyHierarchy.split('-')
+        item.firstClass = arr[1]
+        item.secondClass = arr[2]
+        item.thirdClass = arr[3]
+      }
       this.tableData = res.data.list
+      console.info(this.tableData)
+    },
+    // 根据类型初始化不同的订单分类
+    matchFirstClass(categoryName) {
+      const state = this.$route.params.queryType
+      if (state === 'medical') {
+        return categoryName === '医疗服务'
+      } else if (state === 'elderlycare') {
+        return categoryName === '养老服务'
+      } else {
+        return categoryName !== '医疗服务' && categoryName !== '养老服务'
+      }
+    },
+    // 初始化查询所有分类
+    async queryAllCategory() {
+      const res = await getClassify()
+      this.categoryList = res.data
+      console.error(this.categoryList)
+      this.firstClasses = this.categoryList.filter(item => this.matchFirstClass(item.categoryName))
+      this.secondClasses = this.firstClasses.flatMap(item => item.childs)
+      this.thirdClasses = this.secondClasses.find(item => item.id === this.formInline.secondClassifyID) && this.secondClasses.find(item => item.id === this.formInline.secondClassifyID)['childs']
+    },
+    changeFirstClass() {
+      if (!this.formInline.firstClassifyID) {
+        this.thirdClasses = []
+        this.formInline.thirdClassifyID = undefined
+        return
+      }
+    },
+    changeSecondClass() {
+      if (!this.formInline.secondClassifyID) {
+        this.thirdClasses = []
+        this.formInline.thirdClassifyID = undefined
+        return
+      }
+      this.thirdClasses = this.secondClasses.find(item => item.id === this.formInline.secondClassifyID) && this.secondClasses.find(item => item.id === this.formInline.secondClassifyID)['childs']
+      this.formInline.thirdClassifyID = this.thirdClasses[0].id
+    },
+    clear() {
+      this.formInline.shelveState = ''
+      this.formInline.productName = ''
+      this.formInline.productId = ''
+      this.formInline.shopName = ''
+      this.formInline.page = 1
+      this.formInline.pageSize = 10
+      this.formInline.isRecommended = ''
+      this.formInline.secondClassifyID = ''
+      this.formInline.thirdClassifyID = ''
+      this.getAll(this.formInline)
     }
   }
 }
@@ -191,7 +305,10 @@ export default {
 .tab_show {
   padding-left: 30px;
 }
-.tableBox{
+.tableBox {
   padding-right: 30px;
+}
+::v-deep .el-form-item {
+  margin-bottom: 10px;
 }
 </style>

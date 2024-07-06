@@ -312,7 +312,7 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ name: 'businessList' })
+              this.$router.push({ name: 'indexboard' })
               this.loading = false
             })
             .catch(() => {
