@@ -80,6 +80,7 @@
           :data="tableData"
           border
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+          :cell-style="cellStyle"
           tooltip-effect="dark"
           style="width: 100%"
           size="mini"
@@ -128,6 +129,12 @@
           <el-table-column
             prop="shopLocation"
             label="区域"
+            show-overflow-tooltip
+            width="200"
+          />
+          <el-table-column
+            prop="sourcePlatform"
+            label="来源平台"
             show-overflow-tooltip
             width="200"
           />
@@ -433,6 +440,12 @@ export default {
       }
       this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
       this.formInline.classifyId = this.classes[0].id
+    },
+    // 调整具体单元格的样式
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (column.property === 'sourcePlatform') {
+        return 'background:pink;color:green !important;font-size:16px;'
+      }
     }
   }
 }

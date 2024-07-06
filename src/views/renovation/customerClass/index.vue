@@ -18,6 +18,7 @@
       border
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
       size="mini"
+      :expand-row-keys="expandRowKeys"
     >
       <el-table-column prop="classifyName" label="客户分类" width="250px" />
       <el-table-column prop="previousClassifyName" label="上级分类" align="center" width="150px" />
@@ -85,7 +86,9 @@ export default {
       dialog: {
         type: 'add',
         isVisible: false
-      }
+      },
+      // 默认展开的行
+      expandRowKeys: []
     }
   },
 
@@ -172,6 +175,10 @@ export default {
       }
       items.sort((a, b) => a.sort - b.sort)
       this.tableData = items
+      // 默认展开一级分类
+      for (const firstClass of items) {
+        this.expandRowKeys.push(firstClass.classifyId + '') // key需要是字符串类型
+      }
       this.calculate()
     },
     async setChildern(pitem) {

@@ -34,7 +34,7 @@
           <p style="color:#111;text-align: center;padding:0">客户总数</p>
           <p style="color:green;font-size: 30px; text-align: center;line-height: 50px;font-size: 30px;font-weight: 600;">{{ info.personNum }} <span style="font-size: 20px;color:#111;font-weight:normal;">人</span></p>
           <hr style="margin-top: 5px">
-          <p style="text-align:center;font-size:15px">本月新增 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.newPersonNum }}</span> 人，活跃 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.activityPersonNum }}</span> 人</p>
+          <p style="text-align:center;font-size:15px">本月新增 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.newMonthPersonNum }}</span> 人，活跃 <span style="color:green;font-size:18px;font-weight: 600;">{{ info.activityPersonNum }}</span> 人</p>
         </li>
         <li>
           <p style="color:#111;text-align: center;padding:0">开放接口</p>
