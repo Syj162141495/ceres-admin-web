@@ -52,7 +52,7 @@
                     :keeps="20"
                     :extra-props="{
                       label: 'name',
-                      value: 'name'
+                      value: 'buyerUserId'
                     }"
                   />
                 </el-select>
@@ -131,13 +131,13 @@
     </el-dialog>
     <el-table :data="serviceRecommendationList" style="width: 100%" class="el-table" :header-cell-style="{ background: '#EEF3FF', color: '#333333' }" border>
       <el-table-column label="序号" prop="serviceRecommendationId" width="80%" />
-      <el-table-column label="推荐名称" prop="serviceRecommendationName" width="100%" />
+      <el-table-column label="推荐名称" prop="serviceRecommendationName" width="100%" show-overflow-tooltip />
       <!--      <el-table-column label="推荐客户" prop="recommendationCustomer" />-->
       <el-table-column label="推荐客户" prop="serviceRecommendationBuyerName" width="80%" />
       <el-table-column label="推荐类型" prop="serviceRecommendationType" width="80%" />
       <el-table-column label="推荐数量" prop="serviceRecommendationServicesCount" width="80%" />
-      <el-table-column label="服务商" prop="serviceRecommendationShopInfo" />
-      <el-table-column label="服务产品" prop="serviceRecommendationProductInfo" />
+      <el-table-column label="服务商" prop="serviceRecommendationShopInfo" show-overflow-tooltip />
+      <el-table-column label="服务产品" prop="serviceRecommendationProductInfo" show-overflow-tooltip />
       <el-table-column label="推荐时间" prop="serviceRecommendationTime" width="160%" />
       <el-table-column label="是否采纳" prop="serviceRecommendationAdoption" width="80%" />
       <el-table-column label="操作" width="200%">
