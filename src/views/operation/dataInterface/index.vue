@@ -164,11 +164,11 @@
       :header-cell-style="{ background: '#EEF3FF', color: '#333333', 'text-align':'center'}"
     >
       <el-table-column label="序号" prop="dataInterfaceId" width="50px" align="center" />
-      <el-table-column label="业务系统" prop="systemModuleName" align="center" />
-      <el-table-column label="接口名称" prop="dataInterfaceName" align="center" />
+      <el-table-column label="业务系统" prop="systemModuleName" align="center" show-overflow-tooltip />
+      <el-table-column label="接口名称" prop="dataInterfaceName" align="center" show-overflow-tooltip />
       <el-table-column label="接口请求方式" prop="dataInterfaceHttpMethod" align="center" />
-      <el-table-column label="接口请求地址" prop="dataInterfaceUrl" align="center" />
-      <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" align="center" />
+      <el-table-column label="接口请求地址" prop="dataInterfaceUrl" align="center" show-overflow-tooltip />
+      <el-table-column label="接口返回参数类型" prop="dataInterfaceReturnType" align="center" show-overflow-tooltip />
       <el-table-column label="接口返回参数示例" align="center">
         <template slot-scope="scope">
           <el-tooltip placement="top" effect="light">
@@ -245,10 +245,10 @@
 
 <script>
 import { getDataInterfaceList, insertDataInterface, updateDataInterface, deleteDataInterface } from '@/api/dataInterface'
-// import VueJsonPretty from 'vue-json-pretty/lib/vue-json-pretty.js'
+import VueJsonPretty from 'vue-json-pretty/lib/vue-json-pretty.js'
 
 export default {
-  // components: { VueJsonPretty },
+  components: { VueJsonPretty },
   data() {
     return {
       searchForm: {
@@ -363,7 +363,7 @@ export default {
         dataInterfaceReturnTypeExample: '',
         dataInterfaceParameterList: [],
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       }
       getDataInterfaceList(dataInterfaceParam).then(res => {
         this.dataInterfaceList = res.data.list
@@ -372,6 +372,7 @@ export default {
     },
     // 数据加载
     load() {
+      this.dynamicValidateForm.pageNumber = 1
       const dataInterfaceParam = {
         dataInterfaceId: 0,
         systemModuleName: this.searchForm.searchSystemModuleName,
@@ -382,7 +383,7 @@ export default {
         dataInterfaceReturnTypeExample: '',
         dataInterfaceParameterList: [],
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       }
       getDataInterfaceList(dataInterfaceParam).then(res => {
         this.dataInterfaceList = res.data.list
@@ -404,7 +405,7 @@ export default {
         dataInterfaceReturnTypeExample: '',
         dataInterfaceParameterList: [],
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       }
     },
     showView(row) {
@@ -417,7 +418,6 @@ export default {
       this.dialogFormVisible = true
       this.isAddOrEdit = 1
       this.dynamicValidateForm = row
-      console.log('showEditDialogForm', row)
     },
     // 数据删除
     handleDelete(index, row) {
@@ -450,14 +450,13 @@ export default {
             }
             insertDataInterface(dynamicValidateForm).then(res => {
               this.dialogFormVisible = false
-              this.load()
             })
           } else {
             updateDataInterface(dynamicValidateForm).then(res => {
               this.dialogFormVisible = false
-              this.load()
             })
           }
+          this.handleCurrentChange(1)
         } else {
           console.log('error submit!!')
           return false
@@ -488,7 +487,7 @@ export default {
         dataInterfaceReturnTypeExample: '',
         dataInterfaceParameterList: [],
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       }
       dataInterfaceParam.pageSize = val
       getDataInterfaceList(dataInterfaceParam).then(res => {
@@ -507,7 +506,7 @@ export default {
         dataInterfaceReturnTypeExample: '',
         dataInterfaceParameterList: [],
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       }
       dataInterfaceParam.pageNumber = val
       getDataInterfaceList(dataInterfaceParam).then(res => {
