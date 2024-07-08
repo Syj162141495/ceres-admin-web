@@ -130,6 +130,11 @@
           <el-table-column prop="receiveName" label="客户名称" width="180" />
           <el-table-column prop="receivePhone" label="客户手机" width="180" show-overflow-tooltip />
           <el-table-column prop="shopName" label="服务商名称" min-width="250" show-overflow-tooltip />
+          <el-table-column  label="推送来源" min-width="150" >
+              <template slot-scope="scope">
+                <div style="padding: 2px 2px; border:1px solid ; border-radius: 5px; background-color: #6bc7ff; color:white;text-align: center;">{{ scope.row.sourcePlatform }}</div>
+              </template>
+            </el-table-column>
           <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <div class="btnList">

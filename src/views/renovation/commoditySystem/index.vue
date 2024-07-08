@@ -80,6 +80,7 @@
           :data="tableData"
           border
           :header-cell-style="{ background: '#EEF3FF', color: '#333333' }"
+          :cell-style="cellStyle"
           tooltip-effect="dark"
           style="width: 100%"
           size="mini"
@@ -131,6 +132,11 @@
             show-overflow-tooltip
             width="200"
           />
+          <el-table-column  label="推送来源" min-width="150" >
+              <template slot-scope="scope">
+                <div style="padding: 2px 2px; border:1px solid ; border-radius: 5px; background-color: #6bc7ff; color:white;text-align: center;">{{ scope.row.sourcePlatform }}</div>
+              </template>
+            </el-table-column>
           <!-- <el-table-column
             prop="stockNumber"
             label="库存"
@@ -433,6 +439,12 @@ export default {
       }
       this.classes = this.parentClasses.find(item => item.id === this.formInline.classifyParentId) && this.parentClasses.find(item => item.id === this.formInline.classifyParentId)['childs']
       this.formInline.classifyId = this.classes[0].id
+    },
+    // 调整具体单元格的样式
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (column.property === 'sourcePlatform') {
+        return 'background:pink;color:green !important;font-size:16px;'
+      }
     }
   }
 }
