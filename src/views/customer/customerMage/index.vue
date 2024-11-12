@@ -72,19 +72,19 @@
             <el-table-column prop="time" label="最近消费时间" />
             <el-table-column prop="createTime" label="注册时间" /> -->
             <!--<el-table-column prop="memberLevelName" label="客户等级" />-->
-            <el-table-column prop="name" label="客户昵称" min-width="100" />
-            <el-table-column prop="sex" label="性别" min-width="80" align="center" />
+            <el-table-column prop="name" label="客户昵称" min-width="80" />
+            <el-table-column prop="sex" label="性别" min-width="60" align="center" />
             <el-table-column prop="phone" label="手机号" min-width="100" align="center" /> <!--中间四位-->
-            <el-table-column prop="age" label="年龄" min-width="80" align="center" />
+            <el-table-column prop="age" label="年龄" min-width="60" align="center" />
             <el-table-column prop="cid" label="身份证" min-width="200" align="center" /> <!--中间6位-->
             <el-table-column prop="address" label="地址" min-width="150" show-overflow-tooltip />
             <el-table-column prop="total" label="消费总额" min-width="80" align="center" />
             <el-table-column prop="buyers" label="服务次数" min-width="80" align="center" />
             <el-table-column prop="time" label="最近消费时间" min-width="150" />
             <el-table-column prop="createTime" label="注册时间" min-width="150" />
-            <el-table-column  label="推送来源" min-width="150" >
+            <el-table-column  label="推送平台" min-width="120" >
               <template slot-scope="scope">
-                <div style="padding: 2px 2px; border:1px solid ; border-radius: 5px; background-color: #6bc7ff; color:white;text-align: center;">{{ scope.row.sourcePlatform }}</div>
+                <div style="color:#6bc7ff;text-align: center;">{{ scope.row.sourcePlatform }}</div>
               </template>
             </el-table-column>
 
@@ -323,7 +323,7 @@ export default {
       //   name: 'customerDetails',
       //   params: { buyerUserId: row.buyerUserId, orderFormid: row.orderFormid }
       // })
-      const url = "http://172.16.16.98:90/baseinfo?phone="+row.truephone;
+      const url = "http://172.16.16.108:3100/baseinfo?phone="+row.truephone;
       window.open(url,'_blank')
     },
     hidePhone(phone) {

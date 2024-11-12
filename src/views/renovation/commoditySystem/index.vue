@@ -31,7 +31,7 @@
             />
           </el-form-item>
           <el-form-item label="服务大类">
-            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务大类" style="width: 150px;" clearable @change="changeParentClass" @clear="changeParentClass">
+            <el-select v-model="formInline.classifyParentId" placeholder="请选择服务大类" style="width: 120px;" clearable @change="changeParentClass" @clear="changeParentClass">
               <el-option
                 v-for="(item,index) in parentClasses"
                 :key="index"
@@ -41,7 +41,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="服务小类">
-            <el-select v-model="formInline.classifyId" placeholder="请选择服务小类" :disabled="!formInline.classifyParentId || formInline.classifyParentId === ''" style="width: 150px;" clearable>
+            <el-select v-model="formInline.classifyId" placeholder="请选择服务小类" :disabled="!formInline.classifyParentId || formInline.classifyParentId === ''" style="width: 120px;" clearable>
               <el-option
                 v-for="(item,index) in classes"
                 :key="index"
@@ -92,10 +92,10 @@
           </el-table-column> -->
           <el-table-column type="index" prop="productId" label="序号" min-width="80" />
           <el-table-column prop="productName" label="服务名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="productType" label="类型" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="productCategory" label="大类" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="productSubCategory" label="小类" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="isRecommended" label="是否推荐" min-width="120" show-overflow-tooltip>
+          <el-table-column prop="productType" label="类型" min-width="80" show-overflow-tooltip />
+          <el-table-column prop="productCategory" label="大类" min-width="80" show-overflow-tooltip />
+          <el-table-column prop="productSubCategory" label="小类" min-width="80" show-overflow-tooltip />
+          <el-table-column prop="isRecommended" label="是否推荐" min-width="60" show-overflow-tooltip>
             <template slot-scope="scope">
               <span v-if="scope.row.isRecommended==0">否</span>
               <span v-if="scope.row.isRecommended==1">是</span>
@@ -105,7 +105,7 @@
             prop="shelveState"
             label="服务状态"
             show-overflow-tooltip
-            width="100"
+            width="80"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.shelveState == 0">已下架</span>
@@ -118,7 +118,7 @@
             prop="sectionPrice"
             label="价格区间"
             show-overflow-tooltip
-            width="120"
+            width="150"
           />
           <el-table-column prop="shopName" label="服务商名称" min-width="260" show-overflow-tooltip />
           <!-- <el-table-column
@@ -132,9 +132,9 @@
             show-overflow-tooltip
             width="200"
           />
-          <el-table-column  label="推送来源" min-width="150" >
+          <el-table-column  label="推送平台" min-width="150" >
               <template slot-scope="scope">
-                <div style="padding: 2px 2px; border:1px solid ; border-radius: 5px; background-color: #6bc7ff; color:white;text-align: center;">{{ scope.row.sourcePlatform }}</div>
+                <div style="padding: 2px 2px; color:#6bc7ff;text-align: center;">{{ scope.row.sourcePlatform }}</div>
               </template>
             </el-table-column>
           <!-- <el-table-column

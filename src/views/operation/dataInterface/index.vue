@@ -245,10 +245,10 @@
 
 <script>
 import { getDataInterfaceList, insertDataInterface, updateDataInterface, deleteDataInterface } from '@/api/dataInterface'
-import VueJsonPretty from 'vue-json-pretty/lib/vue-json-pretty.js'
+// import VueJsonPretty from 'vue-json-pretty/lib/vue-json-pretty.js'
 
 export default {
-  components: { VueJsonPretty },
+  // components: { VueJsonPretty },
   data() {
     return {
       searchForm: {
@@ -269,7 +269,7 @@ export default {
         dataInterfaceReturnTypeExample: '',
         dataInterfaceParameterList: [],
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 10
       },
       dataInterfaceList: [],
       total: 0,

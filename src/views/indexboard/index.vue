@@ -227,7 +227,15 @@ export default {
         series: [
           {
             data: arr.personList,
-            type: 'line'
+            type: 'line',
+            areaStyle: {//设置面积图的颜色，通过 new echarts.graphic.LinearGradient(0,0,0,1,[xxx]);
+              //可以设置渐变色的面积图，可以面积图渐变色的朝向，也可以设置面积图起始的颜色等。
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#4992FF' },
+                { offset: 0.2, color: '#4992FF' },
+                { offset: 1, color: 'transparent' },
+              ]),
+            },
           }
         ]
       }
@@ -248,7 +256,22 @@ export default {
         series: [
           {
             data: arr.data,
-            type: 'bar'
+            type: 'bar',
+            itemStyle: {
+              color: function (params) {
+                // 根据params的
+                const colorsMap = [
+                  '#4FE773',
+                  '#b666ea',
+                  '#CAC8CA',
+                  '#7a8bc5',
+                  '#2fc8c5',
+                  '#19ab41'
+                ]
+                //返回对应的颜色
+                return colorsMap[params.dataIndex]
+              }
+            },
           }
         ]
       }
@@ -478,7 +501,7 @@ ul {
   margin-top:30px;
   span{
     line-height: 50px;
-    font-size: 25px;
+    font-size: 15px;
     padding: 5px 50px;
     margin-top: 15px;
     margin-left: 20px;

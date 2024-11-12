@@ -72,9 +72,9 @@
           <el-table-column prop="chargePersonName" min-width="120" label="联系人" show-overflow-tooltip />
           <el-table-column prop="chargePersonPhone" min-width="120" label="电话" show-overflow-tooltip />
           <el-table-column prop="area" min-width="150" label="区域" show-overflow-tooltip />
-          <el-table-column  label="推送来源" min-width="150" >
+          <el-table-column  label="推送平台" min-width="150" >
               <template slot-scope="scope">
-                <div style="padding: 2px 2px; border:1px solid ; border-radius: 5px; background-color: #6bc7ff; color:white;text-align: center;">{{ scope.row.sourcePlatform }}</div>
+                <div style="padding: 2px 2px; color:#6bc7ff;text-align: center;">{{ scope.row.sourcePlatform }}</div>
               </template>
             </el-table-column>
           <!-- <el-table-column prop="area" label="地址" /> -->
@@ -817,9 +817,9 @@ export default {
 ::v-deep .el-input__inner{
   height: 30px;
 }
-// ::v-deep .el-form-item{
-//     margin-bottom: 5px;
-// }
+::v-deep .el-form-item{
+  margin-bottom: 5px;
+}
 
 .tableBox {
   overflow-x: auto;

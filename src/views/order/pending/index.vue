@@ -112,10 +112,10 @@
           <!-- <el-table-column prop="number" label="服务数量" width="100px" /> -->
           <!-- <el-table-column prop="customerName" label="下单账户" show-overflow-tooltip /> -->
           <!-- <el-table-column prop="receiveName" label="收件人" show-overflow-tooltip /> -->
-          <el-table-column prop="productName" label="服务名称" min-width="200" />
+          <el-table-column prop="productName" label="服务名称" min-width="120" />
           <el-table-column prop="firstClass" label="服务类型" min-width="100" />
-          <el-table-column prop="secondClass" label="服务大类" min-width="150" />
-          <el-table-column prop="thirdClass" label="服务小类" min-width="200" show-overflow-tooltip />
+          <el-table-column prop="secondClass" label="服务大类" min-width="120" />
+          <el-table-column prop="thirdClass" label="服务小类" min-width="120" show-overflow-tooltip />
           <el-table-column prop="price" width="100" label="金额" />
           <el-table-column label="状态" width="100">
             <template slot-scope="scope">
@@ -127,12 +127,12 @@
             </template>
           </el-table-column>
           <el-table-column prop="createTime" label="预约时间" width="180" />
-          <el-table-column prop="receiveName" label="客户名称" width="180" />
-          <el-table-column prop="receivePhone" label="客户手机" width="180" show-overflow-tooltip />
+          <el-table-column prop="receiveName" label="客户名称" width="120" />
+          <el-table-column prop="receivePhone" label="客户手机" width="150" show-overflow-tooltip />
           <el-table-column prop="shopName" label="服务商名称" min-width="250" show-overflow-tooltip />
-          <el-table-column  label="推送来源" min-width="150" >
+          <el-table-column  label="推送平台" min-width="150" >
               <template slot-scope="scope">
-                <div style="padding: 2px 2px; border:1px solid ; border-radius: 5px; background-color: #6bc7ff; color:white;text-align: center;">{{ scope.row.sourcePlatform }}</div>
+                <div style="padding: 2px 2px; color:#6bc7ff;text-align: center;">{{ scope.row.sourcePlatform }}</div>
               </template>
             </el-table-column>
           <el-table-column label="操作" width="120">
